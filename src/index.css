@@ -1,0 +1,104 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+.imageLogo{
+  height: 2rem;
+}
+.link{
+  color: #ffffff;
+  text-decoration: none;
+}
+.linkPages{
+  color: #000000;
+  text-decoration: none;
+}
+.linkPages:hover{
+  color: #000000;
+}
+.link:hover{
+  color: #D0C9C0;
+}
+
+.home-row{
+  background-image: url("images/new_york.jpeg");
+  height: 100vh;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+.div-welcome{
+  background-color: rgba(255, 255, 255, .7); 
+  height: 100vh;
+  height: auto;
+}
+
+.logo-welcome{
+  width: 20rem;
+}
+
+.div-welcome-mision{
+  background-color: black; 
+  height: 50vh;
+}
+
+.image-mision{
+  width : 60vh;
+}
+
+.image-vision{
+  width : 60vh;
+}
+
+.div-welcome-vision{
+  background-color: black; 
+  height: 50vh;
+}
+
+@media (max-width: 633px){
+  .div-welcome-mision{
+    background-color: black; 
+    height: auto;
+  }
+
+  .div-welcome-vision{
+    background-color: black; 
+    height: auto;
+  }
+
+  .image-vision{
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .image-mision{
+    margin-bottom: 2rem;
+  }
+}
+
+@media (max-height: 386px){
+  .logo-welcome{
+    width: 10rem;
+  }
+
+  .div-welcome-mision{
+    background-color: black; 
+    height: auto;
+  }
+
+  .div-welcome-vision{
+    background-color: black; 
+    height: auto;
+  }
+}
