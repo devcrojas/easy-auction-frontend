@@ -5,7 +5,7 @@ import "../nav.css"
 import NavBarMenu from './NavBarMenu'
 import MenuLateral from './MenuLateral';
 
-function Home() {
+function Profile() {
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -55,4 +55,4 @@ function Home() {
   )
 }
 
-export default Home
+export default Profile
