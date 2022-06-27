@@ -23,7 +23,7 @@ function Productos() {
     let produc= await fetch("http://localhost:3002/products",
       {
         method:"GET"
-        
+
       }
     );
     let awProduc= await produc.json();
