@@ -1,0 +1,340 @@
+{
+    "products": [
+        {
+            "_id": {
+                "$oid": "62b26c35dca2019c8e8442d9"
+            },
+            "nameProduct": "guitarra",
+            "category": "instrumentos musicales",
+            "description": {
+                "material": "madera de pino",
+                "marca": "paracho",
+                "dimensions": "50 cm de alto, 30cm de ancho",
+                "actualCondition": "usado",
+                "observations": ""
+            },
+            "price": {
+                "initial": 200,
+                "buyNow": 1500,
+                "offered": 0
+            },
+            "auctionDate": {
+                "initial": "2022-06-30",
+                "final": "2022-07-15"
+            },
+            "images": ["../images/guitarra.jpg"]
+        },
+        {
+            "_id": {
+                "$oid": "62b27360dca2019c8e8442da"
+            },
+            "nameProduct": "laptop",
+            "category": "tecnologia",
+            "description": {
+                "material": "plastico",
+                "marca": "Dell",
+                "dimensions": "35cm de largo, 25cm de ancho",
+                "actualCondition": "usado",
+                "observations": "sistema operativo windows 10, 8GB de Ram, 500GB de almacenamiento"
+            },
+            "price": {
+                "initial": 6000,
+                "buyNow": 15000,
+                "offered": 0
+            },
+            "auctionDate": {
+                "initial": "2022-06-25",
+                "final": "2022-07-15"
+            },
+            "images": ["../images/laptop.jpeg"]
+        },
+        {
+            "_id": {
+                "$oid": "62b274c4dca2019c8e8442db"
+            },
+            "nameProduct": "funkoPop Marty back to the future",
+            "category": "juguetes",
+            "description": {
+                "material": "plastico",
+                "marca": "Funko",
+                "dimensions": "15cm de ancho, 20cm de alto",
+                "actualCondition": "sin abrir",
+                "observations": "figura coleccionable de marty de la pelicula volver al futuro"
+            },
+            "price": {
+                "initial":800,
+                "buyNow": 3000,
+                "offered": 0
+            },
+            "auctionDate": {
+                "initial": "2022-06-25",
+                "final": "2022-07-05"
+            },
+            "images": ["../images/funko.jpg"]
+        },
+        {
+            "_id": {
+                "$oid": "62b26c35dca2019c8e8442d9"
+            },
+            "nameProduct": "piano",
+            "category": "instrumentos musicales",
+            "description": {
+                "material": "piano",
+                "marca": "paracho",
+                "dimensions": "50 cm de alto, 30cm de ancho",
+                "actualCondition": "usado",
+                "observations": ""
+            },
+            "price": {
+                "initial": 200,
+                "buyNow": 1500,
+                "offered": 0
+            },
+            "auctionDate": {
+                "initial": "2022-06-30",
+                "final": "2022-07-15"
+            },
+            "images": ["../images/piano.jpg"]
+        },
+        {
+            "_id": {
+                "$oid": "62b27360dca2019c8e8442da"
+            },
+            "nameProduct": "telefono",
+            "category": "tecnologia",
+            "description": {
+                "material": "plastico",
+                "marca": "Dell",
+                "dimensions": "35cm de largo, 25cm de ancho",
+                "actualCondition": "usado",
+                "observations": "sistema operativo windows 10, 8GB de Ram, 500GB de almacenamiento"
+            },
+            "price": {
+                "initial": 6000,
+                "buyNow": 15000,
+                "offered": 0
+            },
+            "auctionDate": {
+                "initial": "2022-06-25",
+                "final": "2022-07-15"
+            },
+            "images": ["../images/telefono.jpeg"]
+        },
+        {
+            "_id": {
+                "$oid": "62b274c4dca2019c8e8442db"
+            },
+            "nameProduct": "funkoPop Goku",
+            "category": "juguetes",
+            "description": {
+                "material": "plastico",
+                "marca": "Funko",
+                "dimensions": "15cm de ancho, 20cm de alto",
+                "actualCondition": "sin abrir",
+                "observations": "figura coleccionable de marty de la pelicula volver al futuro"
+            },
+            "price": {
+                "initial":800,
+                "buyNow": 3000,
+                "offered": 0
+            },
+            "auctionDate": {
+                "initial": "2022-06-25",
+                "final": "2022-07-05"
+            },
+            "images": ["../images/funkoGoku.jpg"]
+        },
+         {
+            "_id": {
+                "$oid": "62b26c35dca2019c8e8442d9"
+            },
+            "nameProduct": "guitarra electrica",
+            "category": "instrumentos musicales",
+            "description": {
+                "material": "madera de pino",
+                "marca": "paracho",
+                "dimensions": "50 cm de alto, 30cm de ancho",
+                "actualCondition": "usado",
+                "observations": ""
+            },
+            "price": {
+                "initial": 200,
+                "buyNow": 1500,
+                "offered": 0
+            },
+            "auctionDate": {
+                "initial": "2022-06-30",
+                "final": "2022-07-15"
+            },
+            "images": ["../images/guitarraElec.jpg"]
+        },
+        {
+            "_id": {
+                "$oid": "62b27360dca2019c8e8442da"
+            },
+            "nameProduct": "Compuradora de escritorio",
+            "category": "tecnologia",
+            "description": {
+                "material": "plastico",
+                "marca": "Dell",
+                "dimensions": "35cm de largo, 25cm de ancho",
+                "actualCondition": "usado",
+                "observations": "sistema operativo windows 10, 8GB de Ram, 500GB de almacenamiento"
+            },
+            "price": {
+                "initial": 6000,
+                "buyNow": 15000,
+                "offered": 0
+            },
+            "auctionDate": {
+                "initial": "2022-06-25",
+                "final": "2022-07-15"
+            },
+            "images": ["../images/desk.jpeg"]
+        },
+        {
+            "_id": {
+                "$oid": "62b274c4dca2019c8e8442db"
+            },
+            "nameProduct": "funkoPop Vegeta777",
+            "category": "juguetes",
+            "description": {
+                "material": "plastico",
+                "marca": "Funko",
+                "dimensions": "15cm de ancho, 20cm de alto",
+                "actualCondition": "sin abrir",
+                "observations": "figura coleccionable de marty de la pelicula volver al futuro"
+            },
+            "price": {
+                "initial":800,
+                "buyNow": 3000,
+                "offered": 0
+            },
+            "auctionDate": {
+                "initial": "2022-06-25",
+                "final": "2022-07-05"
+            },
+            "images": ["../images/funkoVegeta.jpg"]
+        },
+         {
+            "_id": {
+                "$oid": "62b26c35dca2019c8e8442d9"
+            },
+            "nameProduct": "Acordion",
+            "category": "instrumentos musicales",
+            "description": {
+                "material": "madera de pino",
+                "marca": "paracho",
+                "dimensions": "50 cm de alto, 30cm de ancho",
+                "actualCondition": "usado",
+                "observations": ""
+            },
+            "price": {
+                "initial": 200,
+                "buyNow": 1500,
+                "offered": 0
+            },
+            "auctionDate": {
+                "initial": "2022-06-30",
+                "final": "2022-07-15"
+            },
+            "images": ["../images/acordeon.jpg"]
+        },
+        {
+            "_id": {
+                "$oid": "62b27360dca2019c8e8442da"
+            },
+            "nameProduct": "Tableta",
+            "category": "tecnologia",
+            "description": {
+                "material": "plastico",
+                "marca": "Dell",
+                "dimensions": "35cm de largo, 25cm de ancho",
+                "actualCondition": "usado",
+                "observations": "sistema operativo windows 10, 8GB de Ram, 500GB de almacenamiento"
+            },
+            "price": {
+                "initial": 6000,
+                "buyNow": 15000,
+                "offered": 0
+            },
+            "auctionDate": {
+                "initial": "2022-06-25",
+                "final": "2022-07-15"
+            },
+            "images": ["../images/tablet.jpg"]
+        },
+        {
+            "_id": {
+                "$oid": "62b274c4dca2019c8e8442db"
+            },
+            "nameProduct": "funkoPop Marvel",
+            "category": "juguetes",
+            "description": {
+                "material": "plastico",
+                "marca": "Funko",
+                "dimensions": "15cm de ancho, 20cm de alto",
+                "actualCondition": "sin abrir",
+                "observations": "figura coleccionable de marty de la pelicula volver al futuro"
+            },
+            "price": {
+                "initial":800,
+                "buyNow": 3000,
+                "offered": 0
+            },
+            "auctionDate": {
+                "initial": "2022-06-25",
+                "final": "2022-07-05"
+            },
+            "images": ["../images/funkoMarvel.jpg"]
+        },
+         {
+            "_id": {
+                "$oid": "62b26c35dca2019c8e8442d9"
+            },
+            "nameProduct": "Bongo",
+            "category": "instrumentos musicales",
+            "description": {
+                "material": "madera de pino",
+                "marca": "paracho",
+                "dimensions": "50 cm de alto, 30cm de ancho",
+                "actualCondition": "usado",
+                "observations": ""
+            },
+            "price": {
+                "initial": 200,
+                "buyNow": 1500,
+                "offered": 0
+            },
+            "auctionDate": {
+                "initial": "2022-06-30",
+                "final": "2022-07-15"
+            },
+            "images": ["../images/acordeon.jpg"]
+        },
+        {
+            "_id": {
+                "$oid": "62b27360dca2019c8e8442da"
+            },
+            "nameProduct": "smarthwhatch",
+            "category": "tecnologia",
+            "description": {
+                "material": "plastico",
+                "marca": "Dell",
+                "dimensions": "35cm de largo, 25cm de ancho",
+                "actualCondition": "usado",
+                "observations": "sistema operativo windows 10, 8GB de Ram, 500GB de almacenamiento"
+            },
+            "price": {
+                "initial": 6000,
+                "buyNow": 15000,
+                "offered": 0
+            },
+            "auctionDate": {
+                "initial": "2022-06-25",
+                "final": "2022-07-15"
+            },
+            "images": ["../images/smart.jpg"]
+        }
+    ]
+}

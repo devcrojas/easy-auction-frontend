@@ -13,7 +13,7 @@ const login = (body) => {
 
 const logout = (navigate) => {
     localStorage.removeItem("token");
-    navigate("/");
+    navigate("/producto");
 };
 
 const getCurrentUser = () => {
