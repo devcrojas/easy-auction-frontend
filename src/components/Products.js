@@ -188,8 +188,13 @@ function Productos() {
                 <div>Precio actual:{detalle.price.buyNow}</div>
                 <div>Precio ofertado:{detalle.price.offered}</div>
                 <div>Inicio subasta:{detalle.auctionDate.initialD}</div>
+<<<<<<< HEAD
                 <div>Final subasta {detalle.auctionDate.final}</div>
   
+=======
+          <div>Final subasta {detalle.auctionDate.final}</div>
+            
+>>>>>>> staging
           </Col>
 
           </Row>
