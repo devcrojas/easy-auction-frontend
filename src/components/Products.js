@@ -176,7 +176,7 @@ function Productos() {
             </div>
                 
             </Col>*/}
-            <Col md={6} className="fuente">
+            {/*<Col md={6} className="fuente">
              
                 <p>Categoria: {detalle.category}</p>
                 <div>Material: {detalle.description.material}</div>
@@ -188,14 +188,10 @@ function Productos() {
                 <div>Precio actual:{detalle.price.buyNow}</div>
                 <div>Precio ofertado:{detalle.price.offered}</div>
                 <div>Inicio subasta:{detalle.auctionDate.initialD}</div>
-<<<<<<< HEAD
-                <div>Final subasta {detalle.auctionDate.final}</div>
-  
-=======
           <div>Final subasta {detalle.auctionDate.final}</div>
-            
->>>>>>> staging
-          </Col>
+              
+
+          </Col>*/}
 
           </Row>
          
