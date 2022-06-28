@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import objecProducts from '../json/products.json';
 import { Col, Container, Modal, Row } from 'react-bootstrap';
 import { Card, CardContent, CardMedia, Typography, CardActionArea, List, ListItem, ListItemAvatar, Avatar, ListItemText } from '@mui/material'
 import MonetizationOnRoundedIcon from '@mui/icons-material/MonetizationOnRounded';
@@ -12,15 +11,15 @@ function Productos() {
 
   const [show, setShow] = useState(false);
   const [apis,setApis] = useState([]); 
-
-  let products = objecProducts.products;
+  const [detalle,setDetalle] = useState([]);
+  //let products = objecProducts.products;
   
   useEffect(() => {
     getProductos()
   },[])
 
   var getProductos= async function(){
-    let produc= await fetch("http://localhost:3002/products",
+    let produc= await fetch("http://localhost:8080/products",
       {
         method:"GET"
 
@@ -33,7 +32,7 @@ function Productos() {
   };
 
   
-  const [detalle,setDetalle]= useState(
+  /*const [detalle,setDetalle]= useState(
     {
       "_id": "",
       "nameProduct": "",
@@ -56,19 +55,19 @@ function Productos() {
       },
       "images": []
   }
-)
+)*/
 
   function handleShow(id) {
     setShow(true);
-    setDetalle(products.find(product => product._id === id));
+    setDetalle(apis.find(product => product._id === id));
       
   }
 
 
   function cards() {
-    let card = products.map((producto) => {
+    let card = apis.map((producto) => {
 
-      let img = showImages(producto.images);
+      //let img = showImages(producto.images);
       return (
         <Card sx={{ minWidth:345, maxWidth: 345, margin: 1 }} key= {producto._id}>
           <CardActionArea onClick={() => {
@@ -79,7 +78,7 @@ function Productos() {
               component="img"
               height="400"
               width="250"
-              image={require(`../../public/images/${img[0][0]}`)}
+              image={producto.images}
               alt={producto.nameProduct}
             />
             <CardContent>
@@ -97,7 +96,7 @@ function Productos() {
                         <MonetizationOnRoundedIcon />
                       </Avatar>
                     </ListItemAvatar>
-                    <ListItemText primary="Inicial" secondary={producto.price.initial} />
+                    <ListItemText primary="Inicial" secondary={producto.price.initialP} />
                   </ListItem>
                   <ListItem>
                     <ListItemAvatar>
@@ -118,7 +117,7 @@ function Productos() {
                 </List>
                 <Typography component="span" display="flex" variant="overline">
                   <CalendarMonthIcon sx={{ width: '1.5rem', height: '1.5rem' }} />
-                  <ListItemText primary="Inicio de Subasta: " secondary={producto.auctionDate.initial} sx={{ marginRight: 5 }} />
+                  <ListItemText primary="Inicio de Subasta: " secondary={producto.auctionDate.initialD} sx={{ marginRight: 5 }} />
                   <CalendarMonthIcon sx={{ width: '1.5rem', height: '1.5rem' }} />
                   <ListItemText primary="Fin de Subasta: " secondary={producto.auctionDate.final} />
                 </Typography>
@@ -131,22 +130,22 @@ function Productos() {
     return card
   }
    
-  function showImages(images) {
+  /*function showImages(images) {
     
     let image = images.map((ur => {
       return ur.split('/').reverse()
     }));
     return image;
-  }
+  }*/
 
-  function showSlider(detImages){
+  /*function showSlider(detImages){
     let img = showImages(detImages);
     let slider = img.map(((im,index) =>{
       console.log(im);
       return <img key={index} style={{width: "100%", height:350, border:5 }} src={require(`../../public/images/${im[0]}`)} alt={index} /> 
     }));
     return slider;
-  }
+  }*/
 
   return (
     <Container>
@@ -167,7 +166,7 @@ function Productos() {
         </Modal.Header>
         <Modal.Body>
           <Row>
-            <Col md={6}>
+            {/*<Col md={6}>
             <div className="slide-container">
                 <Zoom scale={0.4}>
                  {
@@ -176,23 +175,22 @@ function Productos() {
                 </Zoom>
             </div>
                 
-            </Col>
+            </Col>*/}
             <Col md={6} className="fuente">
-              <Typography gutterBottom component="div" sx={{ height: 35, width: 'auto'}}> 
+             
                 <p>Categoria: {detalle.category}</p>
-                <p>Material: {detalle.description.material}</p>
-                <p>Marca: {detalle.description.marca}</p>
-                <p>Dimensiones: {detalle.description.dimensions}</p>
-                <p>Condicion: {detalle.description.actualCondition}</p>
-                <p>Observaciones: {detalle.description.observations}</p>
-                <p>Precio inicial:${detalle.price.initial}</p>
-                <p>Precio actual:{detalle.price.buyNow}</p>
-                <p>Precio ofertado:{detalle.price.offered}</p>
-                <p>Inicio subasta:{detalle.auctionDate.initial}</p>
-                <p>Final subasta {detalle.auctionDate.final}</p>
-              </Typography>
-
-            </Col>
+                <div>Material: {detalle.description.material}</div>
+                <div>Marca: {detalle.description.marca}</div>
+                <div>Dimensiones: {detalle.description.dimensions}</div>
+                <div>Condicion: {detalle.description.actualCondition}</div>
+                <div>Observaciones: {detalle.description.observations}</div>
+                <div>Precio inicial:${detalle.price.initialP}</div>
+                <div>Precio actual:{detalle.price.buyNow}</div>
+                <div>Precio ofertado:{detalle.price.offered}</div>
+                <div>Inicio subasta:{detalle.auctionDate.initialD}</div>
+          <div>Final subasta {detalle.auctionDate.final}</div>
+            
+          </Col>
 
           </Row>
          
