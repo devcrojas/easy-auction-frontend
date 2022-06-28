@@ -41,67 +41,79 @@ const CreateProduct = (props) => {
     const sendData = (e) => {
         e.preventDefault();
 
-        //Se obtiene la fecha actual de la subasta
-        const actualDate = new Date();
-        const finalDate = new Date(closeDate)
-        // Se genera el id de las imagenes
-        const buyNowForId = Math.round(buyNow)
-        const productNameForId = productName.substring(-1,3).replace(' ','_');
-        const categoryForId = category.substring(-1,3)
-        const imagesId = productNameForId+'_'+categoryForId+'_'+buyNowForId;
         //Se llena el array de imagenes
         const imagesArray = [];
-        (image1) ? imagesArray.push(image1):'';
+        imagesArray.push(image1);
         (image2) ? imagesArray.push(image2):'';
         (image3) ? imagesArray.push(image3):'';
         (image4) ? imagesArray.push(image4):'';
         (image5) ? imagesArray.push(image5):'';
         (image6) ? imagesArray.push(image6):'';
-
+        console.log("img",imagesArray);
+        
         //Se crea el objeto a mandar
-        const product = {
-            nameProduct: productName,
-            category: category,
-            description: {
-                material: material,
-                marca: marca,
-                dimensions: dimensions,
-                actualCondition: conditions,
-                observations: observations
-            },
-            price:{
-                initialP:initialPrice,
-                buyNow:buyNow
-            },
-            auctionDate: {
-                initialD: actualDate,
-                final: finalDate
-            },
-            image: image1
-            // images: {
-            //     id: imagesId,
-            //     imgs: imagesArray
-            // }
-        };
-        console.log("producto",product)
+        //Se obtiene la fecha actual de la subasta
+        // const actualDate = new Date();
+        // const product = {
+        //     nameProduct: productName,
+        //     category: category,
+        //     description: {
+        //         material: material,
+        //         marca: marca,
+        //         dimensions: dimensions,
+        //         actualCondition: conditions,
+        //         observations: observations
+        //     },
+        //     price:{
+        //         initialP:initialPrice,
+        //         buyNow:buyNow
+        //     },
+        //     auctionDate: {
+        //         initialD: actualDate,
+        //         final: closeDate
+        //     },
+        //     files: imagesArray
+        // };
+        // console.log("producto",product)
 
-        fetchingData(product)
+        fetchingData(imagesArray)
     
     }
 
-    const fetchingData = async (product) => {
+    const fetchingData = async (imagesArray) => {
 
-        const myHeaders = new Headers();
-        myHeaders.append('Content-Type', 'application/json');
+        let formData = new FormData();
+        const actualDate = new Date();
+        const finalDate = new Date(closeDate)
+
+        // formData.append("body", product)
+        formData.append("files", imagesArray)
+        formData.append("nameProduct", productName)
+        formData.append("category", category)
+        formData.append("material", material)
+        formData.append("marca", marca)
+        formData.append("dimensions", dimensions)
+        formData.append("actualCondition", conditions)
+        formData.append("observations", observations)
+        formData.append("initialP", initialPrice)
+        formData.append("buyNow", buyNow)
+        formData.append("initialD", actualDate)
+        formData.append("final", finalDate)
+
+        console.log("formData",formData)
+
+        // const myHeaders = new Headers();
+        // myHeaders.append("Content-Type", "multipart/form-data");
         let resp = await fetch('http://localhost:8080/products',
         {
             method: 'POST',
-            headers: myHeaders,
-            body: JSON.stringify(product)
+            // headers: myHeaders,
+            body: formData
         })
 
-        if(resp){
-            console.log("producto",product)
+        console.log("resp",resp)
+
+        if(resp.ok){
             //props.modal = false;
             Swal.fire({
                 icon: 'success',
@@ -111,8 +123,8 @@ const CreateProduct = (props) => {
         }else{
             Swal.fire({
                 icon: 'error',
-                title: '¡Ah habido un error!',
-                text: 'Ah sucedido un error, en unos momentos lo arreglaremos!',
+                title: 'Error: '+resp.status,
+                text: resp.statusText,
             })
         }
 
@@ -177,6 +189,9 @@ const CreateProduct = (props) => {
 
     const imageValidator = async (file, setter, reference) => {
         if(file.type === 'image/png' || file.type === 'image/jpeg'){
+            file.path = file.name
+            file.originalname = file.name
+            file.mimetype = file.type
             await setter(file)
         }else{
             await setter('')
@@ -281,30 +296,30 @@ return (
             <Row className='mt-3'>
                 <Col>
                     <h4> Imagen del articulo<strong className='text-danger'>*</strong>
-                        {/* <Button disabled={(countInput === 1) ? true:false} className='mx-2' variant="primary" size="sm" onClick={() => substractCountImage()}>
+                        <Button disabled={(countInput === 1) ? true:false} className='mx-2' variant="primary" size="sm" onClick={() => substractCountImage()}>
                             -
                         </Button>
                         <Button disabled={(countInput === 6) ? true:false} className='mx-2' variant="primary" size="sm" onClick={() => (countInput === 6) ? null:setCountInput(countInput+1) }>
                             +
-                        </Button> */}
+                        </Button>
                     </h4>
                 </Col>
             </Row>
 
             <Row>
                 <Col>
-                    <Form.Control type="file" accept="image/png,image/jpeg" ref={imgRef1} onChange= {(e) => imageValidator(e.target.files[0], setImage1, imgRef1)}/>
+                    <Form.Control type="file" accept="image/png,image/jpeg" ref={imgRef1} multiple onChange= {(e) => imageValidator(e.target.files[0], setImage1, imgRef1)}/>
                 </Col>
-                {/* {(countInput >= 2) ? <Col><Form.Control type="file" accept="image/png,image/jpeg" ref={imgRef2} onChange= {(e) => imageValidator(e.target.files[0], setImage2, imgRef2)} /></Col> : null} */}
+                {(countInput >= 2) ? <Col><Form.Control type="file" accept="image/png,image/jpeg" ref={imgRef2} onChange= {(e) => imageValidator(e.target.files[0], setImage2, imgRef2)} /></Col> : null}
             </Row>
-            {/* <Row className='mt-2'>
+            <Row className='mt-2'>
                 {(countInput >= 3) ? <Col><Form.Control type="file" accept="image/png,image/jpeg" ref={imgRef3} onChange= {(e) => imageValidator(e.target.files[0], setImage3, imgRef3)} /></Col> : null}
                 {(countInput >= 4) ? <Col><Form.Control type="file" accept="image/png,image/jpeg" ref={imgRef4} onChange= {(e) => imageValidator(e.target.files[0], setImage4, imgRef4)} /></Col> : null}
             </Row>
             <Row className='mt-2'>
                 {(countInput >= 5) ? <Col><Form.Control type="file" accept="image/png,image/jpeg" ref={imgRef5} onChange= {(e) => imageValidator(e.target.files[0], setImage5, imgRef5)} /></Col> : null}
                 {(countInput === 6) ? <Col><Form.Control type="file" accept="image/png,image/jpeg" ref={imgRef6} onChange= {(e) => imageValidator(e.target.files[0], setImage6, imgRef6)} /></Col> : null}
-            </Row> */}
+            </Row>
 
             <Row className='mt-3'>
                 <Col className='d-flex justify-content-center'>
