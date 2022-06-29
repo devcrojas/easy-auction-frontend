@@ -6,20 +6,35 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import 'react-slideshow-image/dist/styles.css'
 import { Zoom } from 'react-slideshow-image';
 
-
-let p = {}
-let productDesc = {}
-let productPrice = {}
-let productDate = {}
-let initialDate;
-let finalDate;
 function Productos() { 
 
   const [show, setShow] = useState(false);
   const [apis,setApis] = useState([]); 
-  const [detalle,setDetalle] = useState([]);
-
   
+  const [detalle, setDetalles] = useState({
+    
+      "_id": "",
+      "nameProduct": "",
+      "category": "",
+      "description": {
+          "material": "",
+          "marca": "",
+          "dimensions": "",
+          "actualCondition": "",
+          "observations": ""
+      },
+      "price": {
+          "initialP":0,
+          "buyNow": 0,
+          "offered": 0
+      },
+      "auctionDate": {
+          "initialD": "",
+          "final": ""
+      },
+      "files": []
+  });
+ 
   useEffect(() => {
     getProductos()
   },[])
@@ -32,36 +47,30 @@ function Productos() {
     );
     let awProduc= await produc.json();
     setApis(awProduc);
-    console.log(awProduc);
     return;
   };
-
-  const handleShow = (id) => {
-    setShow(true);
-    p = apis.find(product => product._id === id)
-    productDesc = p.description
-    productPrice = p.price
-    productDate = p.auctionDate
-    initialDate = new Date(productDate.initialD).toLocaleDateString() +' - '+ new Date(productDate.initialD).toLocaleTimeString() ;
-    finalDate = new Date(productDate.final).toLocaleDateString() +' - '+ new Date(productDate.final).toLocaleTimeString() ;
-    setDetalle(p);
-    console.log("detalle",detalle);
-  }
-
+  
+  const handleShow = () => setShow(true);
+  const handleClose = () => setShow(false);
 
   const cards = () => {
     let card = apis.map((producto) => {
-
-      //let img = showImages(producto.images);
+    let imag= showPrincipalImage(producto.files)
+    
       return (
+
         <Card sx={{ minWidth:345, maxWidth: 345, margin: 1 }} key= {producto._id}>
-          <CardActionArea onClick={() => handleShow(producto._id) }>
+          <CardActionArea onClick={() => {
+            handleShow(); 
+            setDetalles(apis.find(product => product._id === producto._id)) }
+            }>
+
             <CardMedia
               id={producto._id}
               component="img"
               height="400"
-              width="250"
-              image={producto.images}
+              width="250"   
+              image={`http://localhost:8080\\${imag}`}
               alt={producto.nameProduct}
             />
             <CardContent>
@@ -113,22 +122,70 @@ function Productos() {
     return card
   }
    
-  /*function showImages(images) {
-    
-    let image = images.map((ur => {
-      return ur.split('/').reverse()
-    }));
-    return image;
-  }*/
+  function showPrincipalImage(images){ 
+    let uri = "uploads\\sin.jpg"
+    if(images !== undefined && images.length > 0 ){
+      uri=images[0].filePath;
+    }
+    return uri;
+ 
+  }
 
-  /*function showSlider(detImages){
-    let img = showImages(detImages);
-    let slider = img.map(((im,index) =>{
-      console.log(im);
-      return <img key={index} style={{width: "100%", height:350, border:5 }} src={require(`../../public/images/${im[0]}`)} alt={index} /> 
-    }));
-    return slider;
-  }*/
+ 
+  function verModal(detalle){ 
+    let imagenArreglo = detalle.files !== undefined ? detalle.files : [{filePath:"uploads\\sin.jpg"}] 
+    console.log("arreglo img",imagenArreglo);
+    return(
+      <Modal show={show}  size="xl" onHide={handleClose} >
+      <Modal.Header closeButton>
+      <Typography gutterBottom variant="h2" component="div" sx={{ height: 50, width: 'auto'}}>
+          {detalle.nameProduct}
+      </Typography>
+      </Modal.Header>
+      <Modal.Body>
+        <Row>
+          <Col md={6}>
+          <div className="slide-container">
+              <Zoom scale={0.4}>
+               {
+                showSlider(imagenArreglo)
+               }
+              </Zoom>
+          </div>
+              
+          </Col>
+          <Col md={6} className="fuente">
+           
+              <p>Categoria: {detalle.category}</p>
+              <div>Material: { detalle.description.material}</div>
+              <div>Marca: {detalle.description.marca}</div>
+              <div>Dimensiones: {detalle.description.dimensions}</div>
+              <div>Condicion: {detalle.description.actualCondition}</div>
+              <div>Observaciones: {detalle.description.observations}</div>
+              <div>Precio inicial:${detalle.price.initialP}</div>
+              <div>Precio actual:{detalle.price.buyNow}</div>
+              <div>Precio ofertado:{detalle.price.offered}</div>
+              <div>Inicio subasta:{detalle.auctionDate.initialD}</div>
+              <div>Final subasta {detalle.auctionDate.final}</div>
+        </Col>
+        </Row>
+      </Modal.Body>
+    </Modal>
+      )
+  }
+
+  function showSlider(detImages){
+      if(detImages.length > 0){
+        let slider = detImages.map(((im,index) =>{
+          return <img key={index} style={{width: "100%", height:350, border:5 }} src={`http://localhost:8080\\${im.filePath}`} alt={index} /> 
+        }));
+        return slider;
+      }else{
+        console.log("pruebita de ima",detImages[0]);
+      }
+  }
+ 
+
 
   return (
     <Container>
@@ -139,50 +196,15 @@ function Productos() {
           }
         </>
       </Row>
-
-      <Modal show={show}  size="xl" onHide={() => setShow(false)}>
-        <Modal.Header closeButton>
-        <Typography gutterBottom variant="h2" component="div" sx={{ height: 50, width: 'auto'}}>
-                {p.nameProduct}
-              </Typography>
-        
-        </Modal.Header>
-        <Modal.Body>
-          <Row>
-            {/*<Col md={6}>
-            <div className="slide-container">
-                <Zoom scale={0.4}>
-                 {
-                  showSlider(detalle.images)
-                 }
-                </Zoom>
-            </div>
-                
-            </Col>*/}
-            <Col md={6} className="fuente">
-             
-                <p>Categoria: {p.category}</p>
-                <div>Material: {productDesc.material}</div>
-                <div>Marca: {productDesc.marca}</div>
-                <div>Dimensiones: {productDesc.dimensions}</div>
-                <div>Condicion: {productDesc.actualCondition}</div>
-                <div>Observaciones: {productDesc.observations}</div>
-                <div>Precio inicial:${productPrice.initialP}</div>
-                <div>Precio actual:{productPrice.buyNow}</div>
-                <div>Precio ofertado:{productPrice.offered}</div>
-                <div>Inicio subasta:{initialDate}</div>
-          <div>Final subasta {finalDate}</div>
-              
-          </Col>
-
-          </Row>
+      <>
+          {
+            verModal(detalle)
+          }
+        </>
          
-        </Modal.Body>
-      </Modal>
     </Container>
   ) 
-     
-    
 }
 
 export default Productos;
+
