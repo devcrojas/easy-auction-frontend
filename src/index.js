@@ -7,6 +7,7 @@ import Welcome from './components/Welcome';
 import Register from './components/Register';
 import serviceAuth from './services/auth.service'
 import Profile from './components/Profile';
+import Products from './components/Products';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 const ProtectedRoute = ({ children }) => {
@@ -31,7 +32,7 @@ root.render(
       <Route exact path="/" element={ <ProtectedRouteLogin >  <Welcome /> </ProtectedRouteLogin>}></Route>
       <Route exact path='/producto' element={ <ProtectedRoute >  <Home /> </ProtectedRoute> }></Route>
       <Route exact path="/register" element={<Register />}></Route>
-      <Route exact path="/" element={ <ProtectedRouteLogin >  <Profile /> </ProtectedRouteLogin>}></Route>
+      <Route exact path="/perfil" element={ <ProtectedRoute >  <Profile /> </ProtectedRoute>}></Route>
     </Routes>
   </Router>
 );
