@@ -6,70 +6,71 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import 'react-slideshow-image/dist/styles.css'
 import { Zoom } from 'react-slideshow-image';
 
-function Productos() { 
+function Productos() {
 
   const [show, setShow] = useState(false);
-  const [apis,setApis] = useState([]); 
-  
+  const [apis, setApis] = useState([]);
+
   const [detalle, setDetalles] = useState({
-    
-      "_id": "",
-      "nameProduct": "",
-      "category": "",
-      "description": {
-          "material": "",
-          "marca": "",
-          "dimensions": "",
-          "actualCondition": "",
-          "observations": ""
-      },
-      "price": {
-          "initialP":0,
-          "buyNow": 0,
-          "offered": 0
-      },
-      "auctionDate": {
-          "initialD": "",
-          "final": ""
-      },
-      "files": []
+
+    "_id": "",
+    "nameProduct": "",
+    "category": "",
+    "description": {
+      "material": "",
+      "marca": "",
+      "dimensions": "",
+      "actualCondition": "",
+      "observations": ""
+    },
+    "price": {
+      "initialP": 0,
+      "buyNow": 0,
+      "offered": 0
+    },
+    "auctionDate": {
+      "initialD": "",
+      "final": ""
+    },
+    "files": []
   });
- 
+
   useEffect(() => {
     getProductos()
-  },[])
+  }, [])
 
-  var getProductos= async function(){
-    let produc= await fetch("http://localhost:8080/products",
+  var getProductos = async function () {
+    let produc = await fetch("http://localhost:8080/products",
       {
-        method:"GET"
+        method: "GET"
       }
     );
-    let awProduc= await produc.json();
+    let awProduc = await produc.json();
     setApis(awProduc);
     return;
   };
-  
+
   const handleShow = () => setShow(true);
   const handleClose = () => setShow(false);
 
   const cards = () => {
     let card = apis.map((producto) => {
-    let imag= showPrincipalImage(producto.files)
-    
+      let imag = showPrincipalImage(producto.files)
+
       return (
 
-        <Card sx={{ minWidth:345, maxWidth: 345, margin: 1 }} key= {producto._id}>
+        <Card sx={{ minWidth: 345, maxWidth: 345, margin: 1 }} key={producto._id}>
           <CardActionArea onClick={() => {
-            handleShow(); 
-            setDetalles(apis.find(product => product._id === producto._id)) }
-            }>
+            handleShow();
+            setDetalles(apis.find(product => product._id === producto._id))
+          }
+          }>
 
             <CardMedia
               id={producto._id}
               component="img"
               height="400"
-              width="250"   
+              width="250"
               image={`http://localhost:8080\\${imag}`}
               alt={producto.nameProduct}
             />
@@ -121,43 +122,42 @@ function Productos() {
     });
     return card
   }
-   
-  function showPrincipalImage(images){ 
+
+  function showPrincipalImage(images) {
     let uri = "uploads\\sin.jpg"
-    if(images !== undefined && images.length > 0 ){
-      uri=images[0].filePath;
+    if (images !== undefined && images.length > 0) {
+      uri = images[0].filePath;
     }
     return uri;
- 
+
   }
 
- 
-  function verModal(detalle){ 
-    let imagenArreglo = detalle.files !== undefined ? detalle.files : [{filePath:"uploads\\sin.jpg"}] 
-    console.log("arreglo img",imagenArreglo);
-    return(
-      <Modal show={show}  size="xl" onHide={handleClose} >
-      <Modal.Header closeButton>
-      <Typography gutterBottom variant="h2" component="div" sx={{ height: 50, width: 'auto'}}>
-          {detalle.nameProduct}
-      </Typography>
-      </Modal.Header>
-      <Modal.Body>
-        <Row>
-          <Col md={6}>
-          <div className="slide-container">
-              <Zoom scale={0.4}>
-               {
-                showSlider(imagenArreglo)
-               }
-              </Zoom>
-          </div>
-              
-          </Col>
-          <Col md={6} className="fuente">
-           
+  function verModal(detalle) {
+    let imagenArreglo = detalle.files !== undefined ? detalle.files : [{ filePath: "uploads\\sin.jpg" }]
+    
+    return (
+      <Modal show={show} size="xl" onHide={handleClose} >
+        <Modal.Header closeButton>
+          <Typography gutterBottom variant="h2" component="div" sx={{ height: 50, width: 'auto' }}>
+            {detalle.nameProduct}
+          </Typography>
+        </Modal.Header>
+        <Modal.Body>
+          <Row>
+            <Col md={6}>
+              <div className="slide-container">
+                <Zoom scale={0.4}>
+                  {
+                    showSlider(imagenArreglo)
+                  }
+                </Zoom>
+              </div>
+
+            </Col>
+            <Col md={6} className="fuente">
+
               <p>Categoria: {detalle.category}</p>
-              <div>Material: { detalle.description.material}</div>
+              <div>Material: {detalle.description.material}</div>
               <div>Marca: {detalle.description.marca}</div>
               <div>Dimensiones: {detalle.description.dimensions}</div>
               <div>Condicion: {detalle.description.actualCondition}</div>
@@ -167,27 +167,25 @@ function Productos() {
               <div>Precio ofertado:{detalle.price.offered}</div>
               <div>Inicio subasta:{detalle.auctionDate.initialD}</div>
               <div>Final subasta {detalle.auctionDate.final}</div>
-        </Col>
-        </Row>
-      </Modal.Body>
-    </Modal>
-      )
+            </Col>
+          </Row>
+        </Modal.Body>
+      </Modal>
+    )
   }
 
-  function showSlider(detImages){
-      if(detImages.length > 0){
-        let slider = detImages.map(((im,index) =>{
-          return <img key={index} style={{width: "100%", height:350, border:5 }} src={`http://localhost:8080\\${im.filePath}`} alt={index} /> 
-        }));
-        return slider;
-      }else{
-        console.log("pruebita de ima",detImages[0]);
-      }
+  function showSlider(detImages) {
+    if (detImages.length > 0) {
+      let slider = detImages.map(((im, index) => {
+        return <img key={index} style={{ width: "100%", height: 350, border: 5 }} src={`http://localhost:8080\\${im.filePath}`} alt={index} />
+      }));
+      return slider;
+    } 
   }
- 
 
 
   return (
+
     <Container>
       <Row md="auto" className='d-flex justify-content-around mt-5'>
         <>
@@ -197,14 +195,19 @@ function Productos() {
         </>
       </Row>
       <>
-          {
-            verModal(detalle)
-          }
-        </>
-         
+        {
+          verModal(detalle)
+        }
+      </>
+
     </Container>
-  ) 
+
+
+
+
+  )
 }
 
 export default Productos;
+
 
