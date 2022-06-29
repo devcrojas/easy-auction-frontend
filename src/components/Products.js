@@ -30,10 +30,11 @@ function Productos() {
                             <Modal.Header closeButton>
                             <Modal.Title id="example-modal-sizes-title-lg">
                                 Solicitar subasta
+                                <h6 className='mandatories'>Los campos con <strong className='text-danger'>*</strong> son obligatorios</h6>
                             </Modal.Title>
                             </Modal.Header>
                             <Modal.Body>
-                                <CreateProduct modal={showModal}/>
+                                <CreateProduct modal={setShowModal}/>
                             </Modal.Body>
                         </Modal>
                     </Col>
