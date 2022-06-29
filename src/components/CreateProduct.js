@@ -1,9 +1,8 @@
-/* eslint-disable no-unused-expressions */
 import React, { useState, useRef } from 'react'
 import { Form, Container, Col, Row, Button } from 'react-bootstrap'
-import Productos from './Products'
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import '@sweetalert2/theme-material-ui/material-ui.css'
+import axios from 'axios';
 
 const CreateProduct = (props) => {
 
@@ -20,74 +19,23 @@ const CreateProduct = (props) => {
     const [buyNow, setBuyNow] = useState('');
     const [initialPrice, setInitialPrice] = useState('');
     const [closeDate, setCloseDate] = useState('');
-    //Variables para las imagenes
-    const [image1, setImage1] = useState();
-    const [image2, setImage2] = useState();
-    const [image3, setImage3] = useState();
-    const [image4, setImage4] = useState();
-    const [image5, setImage5] = useState();
-    const [image6, setImage6] = useState();
-    // const [images, setImages] = useState([]);X
+    const [images, setImages] = useState();
     //Referencias de imagenes
-    let imgRef1 = useRef(null);
-    let imgRef2 = useRef(null);
-    let imgRef3 = useRef(null);
-    let imgRef4 = useRef(null);
-    let imgRef5 = useRef(null);
-    let imgRef6 = useRef(null);
+    let imgRef = useRef(null);
     //Contador para los inputs de tipo file
-    const [countInput, setCountInput] = useState(1);
 
     const sendData = (e) => {
         e.preventDefault();
-
-        //Se llena el array de imagenes
-        const imagesArray = [];
-        imagesArray.push(image1);
-        (image2) ? imagesArray.push(image2):'';
-        (image3) ? imagesArray.push(image3):'';
-        (image4) ? imagesArray.push(image4):'';
-        (image5) ? imagesArray.push(image5):'';
-        (image6) ? imagesArray.push(image6):'';
-        console.log("img",imagesArray);
-        
-        //Se crea el objeto a mandar
-        //Se obtiene la fecha actual de la subasta
-        // const actualDate = new Date();
-        // const product = {
-        //     nameProduct: productName,
-        //     category: category,
-        //     description: {
-        //         material: material,
-        //         marca: marca,
-        //         dimensions: dimensions,
-        //         actualCondition: conditions,
-        //         observations: observations
-        //     },
-        //     price:{
-        //         initialP:initialPrice,
-        //         buyNow:buyNow
-        //     },
-        //     auctionDate: {
-        //         initialD: actualDate,
-        //         final: closeDate
-        //     },
-        //     files: imagesArray
-        // };
-        // console.log("producto",product)
-
-        fetchingData(imagesArray)
-    
-    }
-
-    const fetchingData = async (imagesArray) => {
 
         let formData = new FormData();
         const actualDate = new Date();
         const finalDate = new Date(closeDate)
 
-        // formData.append("body", product)
-        formData.append("files", imagesArray)
+        // Se mandan las imagenes
+        for (let i = 0; i < images.length; i++) {
+            formData.append('files', images[i]);                      
+        }
+        // Se mandan los demas atributos
         formData.append("nameProduct", productName)
         formData.append("category", category)
         formData.append("material", material)
@@ -99,21 +47,18 @@ const CreateProduct = (props) => {
         formData.append("buyNow", buyNow)
         formData.append("initialD", actualDate)
         formData.append("final", finalDate)
+        // Se manda a realizar la peticion
+        fetchingData(formData)
+    
+    }
 
-        console.log("formData",formData)
+    const fetchingData = async (formData) => {
 
-        // const myHeaders = new Headers();
-        // myHeaders.append("Content-Type", "multipart/form-data");
-        let resp = await fetch('http://localhost:8080/products',
-        {
-            method: 'POST',
-            // headers: myHeaders,
-            body: formData
-        })
+        let resp = await axios.post('http://localhost:8080/products', formData);
 
         console.log("resp",resp)
 
-        if(resp.ok){
+        if(resp.status === 201){
             //props.modal = false;
             Swal.fire({
                 icon: 'success',
@@ -130,78 +75,49 @@ const CreateProduct = (props) => {
 
     }
 
-    //Funcion para quitar el contador de la imagen
-    const substractCountImage = () => {
-        if (countInput === 2) {
-            setImage2('')
-            setImage3('')
-            setImage4('')
-            setImage5('')
-            setImage6('')
-        }
-        if (countInput === 3) {
-            setImage3('')
-            setImage4('')
-            setImage5('')
-            setImage6('')
-        }
-        if (countInput === 4) {
-            setImage4('')
-            setImage5('')
-            setImage6('')
-        }
-        if (countInput === 5) {
-            setImage5('')
-            setImage6('')
-        }
-        if (countInput === 6) {
-            setImage6('')
-        }
-        (countInput === 1) ? setCountInput(countInput):setCountInput(countInput-1)
-    }
-
     //Funcion para validar si el boton se lo bloquea o no
     const validateButton = () => {
-        if(productName === '' || category === '' || material === '' || marca === '' || dimensions === '' || conditions === '' || observations === '' || buyNow === '' || initialPrice === '' || closeDate === '' ){
+        if(productName === '' || category === '' || material === '' || marca === '' || dimensions === '' || conditions === '' || observations === '' || buyNow === '' || initialPrice === '' || closeDate === '' || images === ''){
             return true;
         }else{
-            if(countInput === 1 && image1){
-                return false;
-            }
-            if(countInput <= 2 && (image1 && image2)){
-                return false;
-            }
-            if(countInput <= 3 && (image1 && image2 && image3)){
-                return false;
-            }
-            if(countInput <= 4 && (image1 && image2 && image3 && image4)){
-                return false;
-            }
-            if(countInput <= 5 && (image1 && image2 && image3 && image4 && image5)){
-                return false;
-            }
-            if(countInput <= 6 && (image1 && image2 && image3 && image4 && image5 && image6)){
-                return false;
-            }
-            return true;
+            return false;
         }
     }
 
     const imageValidator = async (file, setter, reference) => {
-        if(file.type === 'image/png' || file.type === 'image/jpeg'){
-            file.path = file.name
-            file.originalname = file.name
-            file.mimetype = file.type
-            await setter(file)
-        }else{
+
+        //valida que sean 6 o menos
+        if(file.length <= 6){
+            // Recorre los files
+            for (let i = 0; i < file.length; i++) {
+                //Valida que sea una imagen
+                if(file[i].type === 'image/png' || file[i].type === 'image/jpeg'){
+                    //Le da su valor
+                    await setter(file)
+                }else{
+                    await setter('')
+                    reference.current.value = '';
+                    Swal.fire({
+                        icon: 'error',
+                        title: '¡Un archivo no es una imagen!',
+                        text: 'Por favor solo suba archivos PNG y JPEG'
+                    });
+                }
+            }
+        } else {
             await setter('')
             reference.current.value = '';
             Swal.fire({
                 icon: 'error',
-                title: '¡No es una imagen!',
-                text: 'Por favor solo suba archivos PNG y JPEG'
+                title: '¡Son mas de 6!',
+                text: 'Por favor suba solo 6 imagenes o menos'
             });
         }
+
+
+
+
+
 
 
     }
@@ -295,30 +211,14 @@ return (
 
             <Row className='mt-3'>
                 <Col>
-                    <h4> Imagen del articulo<strong className='text-danger'>*</strong>
-                        <Button disabled={(countInput === 1) ? true:false} className='mx-2' variant="primary" size="sm" onClick={() => substractCountImage()}>
-                            -
-                        </Button>
-                        <Button disabled={(countInput === 6) ? true:false} className='mx-2' variant="primary" size="sm" onClick={() => (countInput === 6) ? null:setCountInput(countInput+1) }>
-                            +
-                        </Button>
-                    </h4>
+                    <h4>Imagenes del articulo<strong className='text-danger'>*</strong> (Max 6)</h4>
                 </Col>
             </Row>
 
             <Row>
                 <Col>
-                    <Form.Control type="file" accept="image/png,image/jpeg" ref={imgRef1} multiple onChange= {(e) => imageValidator(e.target.files[0], setImage1, imgRef1)}/>
+                    <Form.Control type="file" accept="image/png,image/jpeg" className="form-control" ref={imgRef} multiple onChange= {(e) => imageValidator(e.target.files, setImages, imgRef)}/>
                 </Col>
-                {(countInput >= 2) ? <Col><Form.Control type="file" accept="image/png,image/jpeg" ref={imgRef2} onChange= {(e) => imageValidator(e.target.files[0], setImage2, imgRef2)} /></Col> : null}
-            </Row>
-            <Row className='mt-2'>
-                {(countInput >= 3) ? <Col><Form.Control type="file" accept="image/png,image/jpeg" ref={imgRef3} onChange= {(e) => imageValidator(e.target.files[0], setImage3, imgRef3)} /></Col> : null}
-                {(countInput >= 4) ? <Col><Form.Control type="file" accept="image/png,image/jpeg" ref={imgRef4} onChange= {(e) => imageValidator(e.target.files[0], setImage4, imgRef4)} /></Col> : null}
-            </Row>
-            <Row className='mt-2'>
-                {(countInput >= 5) ? <Col><Form.Control type="file" accept="image/png,image/jpeg" ref={imgRef5} onChange= {(e) => imageValidator(e.target.files[0], setImage5, imgRef5)} /></Col> : null}
-                {(countInput === 6) ? <Col><Form.Control type="file" accept="image/png,image/jpeg" ref={imgRef6} onChange= {(e) => imageValidator(e.target.files[0], setImage6, imgRef6)} /></Col> : null}
             </Row>
 
             <Row className='mt-3'>
