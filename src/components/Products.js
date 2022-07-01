@@ -37,6 +37,7 @@ function Productos() {
                                 <CreateProduct modal={setShowModal}/>
                             </Modal.Body>
                         </Modal>
+                        
                     </Col>
                 </Row>
             </Container>

@@ -118,13 +118,13 @@ return (
     <Container>
         <Form className="createForm" onSubmit={prepareData} encType='multipart/form-data'>
             <Row>
-                <Col>
-                    <FormControl sx={{ m: 1, minWidth: 300 }}>
+                <Col xs={12} sm={6}>
+                    <FormControl className='w-100 my-2'>
                         <TextField required id="outlined-required" label="Nombre del producto" onChange={(event) => setProductName(event.target.value)} placeholder="Nombre"/>
                     </FormControl>
                 </Col>
-                <Col>
-                    <FormControl sx={{ m: 1, minWidth: 300 }}>
+                <Col xs={12} sm={6}>
+                    <FormControl className='w-100 my-2'>
                         <InputLabel id="categoryLabel">Categoria *</InputLabel>
                         <Select labelId="categoryLabel" required label="Categoria *" onChange={(event) => setCategory(event.target.value)} >
                             <MenuItem value=""> <em>Seleccione una</em> </MenuItem>
@@ -142,26 +142,27 @@ return (
                 </Col>
             </Row>
 
-            <Row className='mt-3'>
-                <Col>
-                    <FormControl sx={{ m: 1, minWidth: 200 }}>
+            <Row>
+                <Col xs={12} sm={4}>
+                    <FormControl className='w-100 my-2'>
                         <TextField required id="outlined-required" label="Material" onChange={(event) => setMaterial(event.target.value)} placeholder="Material del producto"/>
                     </FormControl>
                 </Col>
-                <Col>
-                    <FormControl sx={{ m: 1, minWidth: 200 }}>
+                <Col xs={12} sm={4}>
+                    <FormControl className='w-100 my-2'>
                         <TextField required id="outlined-required" label="Marca" onChange={(event) => setMarca(event.target.value)} placeholder="Marca del producto"/>
                     </FormControl>
                 </Col>
-                <Col>
-                    <FormControl sx={{ m: 1, minWidth: 200 }}>
+                <Col xs={12} sm={4}>
+                    <FormControl className='w-100 my-2'>
                         <TextField required id="outlined-required" label="Dimensiones" onChange={(event) => setDimensions(event.target.value)} placeholder="Dimensiones del producto"/>
                     </FormControl>
                 </Col>
             </Row>
-            <Row className='mt-3'>
-                <Col>
-                    <FormControl sx={{ m: 1, minWidth: 220 }}>
+
+            <Row>
+                <Col xs={12} sm={4}>
+                    <FormControl className='w-100 my-2'>
                         <InputLabel id="conditionLabel">Condicion del producto *</InputLabel>
                         <Select labelId="conditionLabel" required label="Condicion del producto *" onChange={(event) => setConditions(event.target.value)} >
                             <MenuItem value=""> <em>Seleccione una</em> </MenuItem>
@@ -172,22 +173,21 @@ return (
                         </Select>
                     </FormControl>
                 </Col>
-                <Col>
-                    <FormControl sx={{ m: 1, minWidth: 150 }}>
+                <Col xs={12} sm={4}>
+                    <FormControl className='w-100 my-2'>
                         <TextField required id="outlined-number" label="Precio inicial" type="number" step=".01" min="0" onChange={(event) => setInitialPrice(event.target.value)}/>
                     </FormControl>
                 </Col>
-                <Col>
-                    <FormControl sx={{ m: 1, minWidth: 250 }}>
+                <Col xs={12} sm={4}>
+                    <FormControl className='w-100 my-2'>
                         <TextField required id="outlined-number" label="Precio comprar ahora" type="number" step=".01" min="0" onChange={(event) => setBuyNow(event.target.value)}/>
                     </FormControl>
                 </Col>
             </Row>
 
-            <Row className='mt-3'>
-                <Col>
-                    
-                    <FormControl sx={{ m: 1,width: 730, maxWidth: '100%' }}>
+            <Row>
+                <Col xs={12}>
+                    <FormControl className='w-100 my-2'>
                         <TextField required id="outlined-multiline-flexible" label="Observaciones del producto" multiline maxRows={4} onChange={(event) => setObservations(event.target.value)} onKeyUp={(event) => setcaracRestantes(event.target.value.length)}/>
                     </FormControl>
                     <p className='text-danger fs-7 fw-light'>{caracRestantes} de 200 caracteres permitidos</p>
@@ -196,21 +196,21 @@ return (
 
 
             <Row>
-                <Col>
-                    <FormControl sx={{ m: 1,width: 730, maxWidth: '100%' }}>
+                <Col xs={12}>
+                    <FormControl className='w-100 my-2'>
                         <TextField required label="Fecha de finalizacion de subasta" data-date-inline-picker="true" type="datetime-local" onChange={(event) => setCloseDate(event.target.value)} InputLabelProps={{shrink: true}}/>
                     </FormControl>
                 </Col>
             </Row>
 
-            <Row className='mt-3'>
-                <Col>
+            <Row>
+                <Col xs={12} className='w-100 my-2'>
                     <h4>Imagenes del articulo<strong className='text-danger'>*</strong> (Max 6)</h4>
                 </Col>
             </Row>
             <Row>
                 <Col>
-                    <Form.Control type="file" accept="image/png,image/jpeg" className="form-control" ref={imgRef} multiple onChange= {(e) => imageValidator(e.target.files, imgRef)}/>
+                    <Form.Control  type="file" accept="image/png,image/jpeg" className="form-control" ref={imgRef} multiple onChange= {(e) => imageValidator(e.target.files, imgRef)}/>
                 </Col>
             </Row>
 
