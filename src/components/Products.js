@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Container, Modal, Row } from 'react-bootstrap';
+import { Col, Container, Modal, Row, Button } from 'react-bootstrap';
 import { Card, CardContent, CardMedia, Typography, CardActionArea, ListItem, CardHeader } from '@mui/material'
 import 'react-slideshow-image/dist/styles.css'
 import { Zoom } from 'react-slideshow-image';
 import NavBarMenu from './NavBarMenu';
+import CreateProduct from './CreateProduct'
 
 function Productos() {
 
   const [show, setShow] = useState(false);
   const [apis, setApis] = useState([]);
+  const [showProductAdd, setShowProductAdd] = useState(false);
 
   const [detalle, setDetalles] = useState({
 
@@ -200,6 +202,34 @@ function Productos() {
           </Col>
           <Col xs={9 }>
             <Container>
+              <Row>
+                <Col>
+                  <Card className='mt-5'>
+                    <Card.Body>
+                        <Card.Title>¿Quieres tambien subastar?</Card.Title>
+                        <Card.Text>
+                            No pierdas tiempo y realiza una subasta tu tambien que esperas!
+                        </Card.Text>
+                        <Button variant="primary" onClick={() => setShowProductAdd(true)}>
+                            Solicitar subasta
+                        </Button>
+                    </Card.Body>
+                  </Card>
+
+                  <Modal size="lg" show={showProductAdd} onHide={() => setShowProductAdd(false)}
+                    aria-labelledby="example-modal-sizes-title-lg">
+                    <Modal.Header closeButton>
+                    <Modal.Title id="example-modal-sizes-title-lg">
+                        Solicitar subasta
+                        <h6 className='mandatories'>Los campos con <strong className='text-danger'>*</strong> son obligatorios</h6>
+                    </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <CreateProduct modal={setShowProductAdd}/>
+                    </Modal.Body>
+                  </Modal>
+                </Col>
+                </Row>
               <Row md="auto" className='d-flex justify-content-around mt-5'>
                 <>
                   {
