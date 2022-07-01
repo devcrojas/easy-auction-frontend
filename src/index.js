@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
-import NavBarMenu from './components/NavBarMenu';
 import Home from './components/Home';
 import Welcome from './components/Welcome';
 import Products from './components/Products';
@@ -33,7 +32,7 @@ root.render(
       <Route exact path="/" element={ <ProtectedRouteLogin >  <Welcome /> </ProtectedRouteLogin>}></Route>
       <Route exact path='/home' element={ <ProtectedRoute >  <Home /> </ProtectedRoute> }></Route>
       <Route exact path="/register" element={<Register />}></Route>
-      <Route exact path="/productos" element={<Products />}></Route>
+      <Route exact path="/productos" element={<ProtectedRoute > <Products /></ProtectedRoute> }></Route>
       <Route exact path="/resenas" element={<Resenas />}></Route>
     </Routes>
   </Router>

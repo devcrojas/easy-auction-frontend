@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Container, Modal, Row } from 'react-bootstrap';
-import { Card, CardContent, CardMedia, Typography, CardActionArea, List, ListItem, ListItemAvatar, Avatar, ListItemText } from '@mui/material'
-import MonetizationOnRoundedIcon from '@mui/icons-material/MonetizationOnRounded';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import { Card, CardContent, CardMedia, Typography, CardActionArea, ListItem, CardHeader } from '@mui/material'
 import 'react-slideshow-image/dist/styles.css'
 import { Zoom } from 'react-slideshow-image';
+import NavBarMenu from './NavBarMenu';
 
 function Productos() {
 
@@ -39,6 +38,7 @@ function Productos() {
     getProductos()
   }, [])
 
+
   var getProductos = async function () {
     let produc = await fetch("http://localhost:8080/products",
       {
@@ -53,68 +53,75 @@ function Productos() {
   const handleShow = () => setShow(true);
   const handleClose = () => setShow(false);
 
+
   const cards = () => {
     let card = apis.map((producto) => {
       let imag = showPrincipalImage(producto.files)
-
+      let initialDate = new Date(producto.auctionDate.initialD).toLocaleDateString();
+      let finalDate = new Date(producto.auctionDate.final).toLocaleDateString() + ' ' + new Date(producto.auctionDate.final).toLocaleTimeString();
       return (
-
-        <Card sx={{ minWidth: 345, maxWidth: 345, margin: 1 }} key={producto._id}>
-          <CardActionArea onClick={() => {
+        <Card sx={{ minWidth: 450, maxWidth: 450, margin: 1, borderRadius: 5, marginTop: 3, marginBottom: 3 }} elevation={10} key={producto._id}>
+          <CardActionArea onClick={async () => {
+            await setDetalles(apis.find(product => product._id === producto._id))
             handleShow();
-            setDetalles(apis.find(product => product._id === producto._id))
           }
           }>
 
-            <CardMedia
-              id={producto._id}
-              component="img"
-              height="400"
-              width="250"
-              image={`http://localhost:8080\\${imag}`}
-              alt={producto.nameProduct}
+            <CardHeader
+              sx={{ text: 'center' }}
+              title={producto.nameProduct}
+              subheader={producto.category}
             />
+            <Row className="justify-content-center">
+              <CardMedia
+                md={6}
+
+                id={producto._id}
+                component="img"
+                image={`http://localhost:8080\\${imag}`}
+                alt={producto.nameProduct}
+                sx={{ width: 250 }
+                }
+              />
+            </Row>
             <CardContent>
-              <Typography gutterBottom variant="h5" component="div" sx={{ height: 50, width: 'auto' }}>
-                {producto.nameProduct}
-              </Typography>
-              <Typography variant="subtitle1" color="text.secondary" component="span">
-                {producto.category}
-              </Typography>
-              <Typography variant="body2" color="text.secondary" component="div">
-                <List sx={{ width: '100%', height: 'auto' }}>
+              <Row className='my-2'>
+                <Col>
+                  <div className='w-100'>
+                    <div><Typography component="div" >Precio inicial: </Typography></div>
+                    <div><Typography component="div" ><em><b>$</b></em> {producto.price.initialP} </Typography></div>
+                  </div>
+                </Col>
+                <Col>
+                  <div className='w-100'>
+                    <div><Typography component="div" >Fecha inicio: </Typography></div>
+                    <div><Typography component="div" >{initialDate} </Typography></div>
+                  </div>
+                </Col>
+              </Row>
+              <Row className='my-2'>
+                <Col>
+                  <div className='w-100'>
+                    <div><Typography component="div" >Comprar ahora: </Typography></div>
+                    <div><Typography component="div" ><em><b>$</b></em>  {producto.price.buyNow} </Typography></div>
+                  </div>
+                </Col>
+                <Col>
+                  <div className='w-100'>
+                    <div><Typography component="div" >Fecha fin: </Typography></div>
+                    <div><Typography component="div" >{finalDate} </Typography></div>
+                  </div>
+                </Col>
+              </Row>
+              <Row className='my-5'>
+                <Col></Col>
+                <Col>
                   <ListItem>
-                    <ListItemAvatar>
-                      <Avatar sx={{ width: '1.5rem', height: '1.5rem' }}>
-                        <MonetizationOnRoundedIcon />
-                      </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText primary="Inicial" secondary={producto.price.initialP} />
+                    <Typography component="div" variant='h5' color='success' >Ofertado:<em><b>$</b></em></Typography>
+                    <Typography component="div" variant='h5' className="text-success">{producto.price.offered} </Typography>
                   </ListItem>
-                  <ListItem>
-                    <ListItemAvatar>
-                      <Avatar sx={{ width: '1.5rem', height: '1.5rem' }}>
-                        <MonetizationOnRoundedIcon />
-                      </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText primary="Comprar Ahora" secondary={producto.price.buyNow} />
-                  </ListItem>
-                  <ListItem>
-                    <ListItemAvatar>
-                      <Avatar sx={{ width: '1.5rem', height: '1.5rem' }}>
-                        <MonetizationOnRoundedIcon />
-                      </Avatar>
-                    </ListItemAvatar>
-                    <ListItemText primary="Ofertado" secondary={producto.price.offered} />
-                  </ListItem>
-                </List>
-                <Typography component="span" display="flex" variant="overline">
-                  <CalendarMonthIcon sx={{ width: '1.5rem', height: '1.5rem' }} />
-                  <ListItemText primary="Inicio de Subasta: " secondary={producto.auctionDate.initialD} sx={{ marginRight: 5 }} />
-                  <CalendarMonthIcon sx={{ width: '1.5rem', height: '1.5rem' }} />
-                  <ListItemText primary="Fin de Subasta: " secondary={producto.auctionDate.final} />
-                </Typography>
-              </Typography>
+                </Col>
+              </Row>
             </CardContent>
           </CardActionArea>
         </Card>
@@ -133,8 +140,10 @@ function Productos() {
   }
 
   function verModal(detalle) {
+
     let imagenArreglo = detalle.files !== undefined ? detalle.files : [{ filePath: "uploads\\sin.jpg" }]
-    
+    let initialDate = new Date(detalle.auctionDate.initialD).toLocaleDateString();
+    let finalDate = new Date(detalle.auctionDate.final).toLocaleDateString() + ' ' + new Date(detalle.auctionDate.final).toLocaleTimeString();
     return (
       <Modal show={show} size="xl" onHide={handleClose} >
         <Modal.Header closeButton>
@@ -145,28 +154,26 @@ function Productos() {
         <Modal.Body>
           <Row>
             <Col md={6}>
-              <div className="slide-container">
+              <div className="slide-container" sx={{ width: '75%', height: 'auto', }}>
                 <Zoom scale={0.4}>
                   {
                     showSlider(imagenArreglo)
                   }
                 </Zoom>
               </div>
-
             </Col>
             <Col md={6} className="fuente">
-
               <p>Categoria: {detalle.category}</p>
-              <div>Material: {detalle.description.material}</div>
-              <div>Marca: {detalle.description.marca}</div>
-              <div>Dimensiones: {detalle.description.dimensions}</div>
-              <div>Condicion: {detalle.description.actualCondition}</div>
-              <div>Observaciones: {detalle.description.observations}</div>
-              <div>Precio inicial:${detalle.price.initialP}</div>
-              <div>Precio actual:{detalle.price.buyNow}</div>
-              <div>Precio ofertado:{detalle.price.offered}</div>
-              <div>Inicio subasta:{detalle.auctionDate.initialD}</div>
-              <div>Final subasta {detalle.auctionDate.final}</div>
+              <p>Material: {detalle.description.material}</p>
+              <p>Marca: {detalle.description.marca}</p>
+              <p>Dimensiones: {detalle.description.dimensions}</p>
+              <p>Condicion: {detalle.description.actualCondition}</p>
+              <p>Observaciones: {detalle.description.observations}</p>
+              <p>Precio inicial:${detalle.price.initialP}</p>
+              <p>Comprar ahora:${detalle.price.buyNow}</p>
+              <p>Precio ofertado:${detalle.price.offered}</p>
+              <p>Inicio subasta:{initialDate}</p>
+              <p>Fin de la subasta: {finalDate}</p>
             </Col>
           </Row>
         </Modal.Body>
@@ -180,31 +187,36 @@ function Productos() {
         return <img key={index} style={{ width: "100%", height: 350, border: 5 }} src={`http://localhost:8080\\${im.filePath}`} alt={index} />
       }));
       return slider;
-    } 
+    }
   }
 
-
   return (
+    <>
+      <NavBarMenu></NavBarMenu>
+      <Container fluid style={{ background: "#F0F2F5" }}>
+        <Row>
+          <Col xs={3} className="sidebarEasy">
 
-    <Container>
-      <Row md="auto" className='d-flex justify-content-around mt-5'>
-        <>
-          {
-            cards()
-          }
-        </>
-      </Row>
-      <>
-        {
-          verModal(detalle)
-        }
-      </>
-
-    </Container>
-
-
-
-
+          </Col>
+          <Col xs={9 }>
+            <Container>
+              <Row md="auto" className='d-flex justify-content-around mt-5'>
+                <>
+                  {
+                    cards()
+                  }
+                </>
+              </Row>
+              <>
+                {
+                  verModal(detalle)
+                }
+              </>
+            </Container>
+          </Col>
+        </Row>
+      </Container>
+    </>
   )
 }
 
