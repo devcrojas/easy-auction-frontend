@@ -1,14 +1,14 @@
 import React, { useState, useRef } from 'react'
-import { Form, Container, Col, Row } from 'react-bootstrap'
+import { Form, Container, Col, Row, Card, Modal } from 'react-bootstrap'
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import '@sweetalert2/theme-material-ui/material-ui.css'
 import axios from 'axios';
 import { Button, TextField, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import AuthService from '../services/auth.service'
 
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-
-const CreateProduct = (props) => {
-
+const CreateProduct = () => {
+    // Variable para abrir y cerrar el modal
+    const [showModal, setShowModal] = useState(false);
     //Variable para los caracteres restantes en observaciones
     const [caracRestantes, setcaracRestantes] = useState(0);
     //Variables para el formulario
@@ -22,9 +22,13 @@ const CreateProduct = (props) => {
     const [buyNow, setBuyNow] = useState('');
     const [initialPrice, setInitialPrice] = useState('');
     const [closeDate, setCloseDate] = useState('');
+    const [imagePrincipal, setImagePrincipal] = useState('');
     const [images, setImages] = useState('');
     //Referencias de imagenes
-    let imgRef = useRef(null);
+    let imgPrincipalRef = useRef(null);
+    let imagesRef = useRef(null);
+    // Se obtiene el usuario de sesion
+    let user = AuthService.getCurrentUser();
     //Contador para los inputs de tipo file
 
     const prepareData = (e) => {
@@ -35,10 +39,15 @@ const CreateProduct = (props) => {
         const finalDate = new Date(closeDate)
 
         // Se mandan las imagenes
-        for (let i = 0; i < images.length; i++) {
-            formData.append('files', images[i]);                      
+        // Si se puso algo en imagenes se añaden al append
+        if(images){
+            for (let i = 0; i < images.length; i++) {
+                formData.append('files', images[i]);                      
+            }
         }
-        // Se mandan los demas atributos
+        // Se manda la imagen principal
+        formData.append("file", imagePrincipal[0])
+        // Se mandan los demas atributos del producto
         formData.append("nameProduct", productName)
         formData.append("category", category)
         formData.append("material", material)
@@ -50,6 +59,9 @@ const CreateProduct = (props) => {
         formData.append("buyNow", buyNow)
         formData.append("initialD", actualDate)
         formData.append("final", finalDate)
+        // Se mandan los datos del status y usuario
+        formData.append("status", 'Active')
+        formData.append("email", user.id)
         // Se manda a realizar la peticion
         sendData(formData)
     }
@@ -59,7 +71,7 @@ const CreateProduct = (props) => {
         let resp = await axios.post('http://localhost:8080/products', formData);
         // Se obtiene el status de la respuesta
         if(resp.status === 201){
-            props.modal(false);
+            setShowModal(false)
             Swal.fire({
                 icon: 'success',
                 title: '¡Ah empezado una nueva subasta!',
@@ -74,26 +86,30 @@ const CreateProduct = (props) => {
         }
     }
 
-    //Funcion para validar si el boton se lo bloquea o no
+    //Funcion para validar si el boton se bloquea o no
     const validateButton = () => {
-        if(productName === '' || category === '' || material === '' || marca === '' || dimensions === '' || conditions === '' || observations === '' || buyNow === '' || initialPrice === '' || closeDate === '' || images === ''){
+        if(productName  === '' || category   === '' || material === '' || 
+           marca        === '' || dimensions === '' || conditions === '' || 
+           observations === '' || buyNow     === '' || initialPrice === '' || 
+           closeDate    === '' || imagePrincipal === ''){
             return true;
         }else{
             return false;
         }
     }
 
-    const imageValidator = async (file, reference) => {
-        //valida que sean 6 o menos
-        if(file.length <= 6){
+    const imageValidator = async (file, reference, setter) => {
+        console.log('user',user);
+        //valida que sean 5 o menos
+        if(file.length <= 5){
             // Recorre los files
             for (let i = 0; i < file.length; i++) {
                 //Valida que sea una imagen
                 if(file[i].type === 'image/png' || file[i].type === 'image/jpeg'){
                     //Le da su valor
-                    await setImages(file)
+                    await setter(file)
                 }else{
-                    await setImages('')
+                    await setter('')
                     reference.current.value = '';
                     Swal.fire({
                         icon: 'error',
@@ -103,126 +119,167 @@ const CreateProduct = (props) => {
                 }
             }
         } else {
-            await setImages('')
+            await setter('')
             reference.current.value = '';
             Swal.fire({
                 icon: 'error',
-                title: '¡Son mas de 6!',
-                text: 'Por favor suba solo 6 imagenes o menos'
+                title: '¡Son mas de 5!',
+                text: 'Por favor suba solo 5 imagenes o menos'
             });
         }
     }
 
 
 return (
+
     <Container>
-        <Form className="createForm" onSubmit={prepareData} encType='multipart/form-data'>
-            <Row>
-                <Col xs={12} sm={6}>
-                    <FormControl className='w-100 my-2'>
-                        <TextField required id="outlined-required" label="Nombre del producto" onChange={(event) => setProductName(event.target.value)} placeholder="Nombre"/>
-                    </FormControl>
-                </Col>
-                <Col xs={12} sm={6}>
-                    <FormControl className='w-100 my-2'>
-                        <InputLabel id="categoryLabel">Categoria *</InputLabel>
-                        <Select labelId="categoryLabel" required label="Categoria *" onChange={(event) => setCategory(event.target.value)} >
-                            <MenuItem value=""> <em>Seleccione una</em> </MenuItem>
-                            <MenuItem value={'Ropa'}>Ropa</MenuItem>
-                            <MenuItem value={'Tecnologia'}>Tecnologia</MenuItem>
-                            <MenuItem value={'Artes'}>Artes</MenuItem>
-                            <MenuItem value={'Libros'}>Libros</MenuItem>
-                            <MenuItem value={'Joyeria'}>Joyeria</MenuItem>
-                            <MenuItem value={'Instrumentos musicales'}>Instrumentos musicales</MenuItem>
-                            <MenuItem value={'Videojuegos'}>Videojuegos</MenuItem>
-                            <MenuItem value={'Comics'}>Comics</MenuItem>
-                            <MenuItem value={'Juguetes'}>Juguetes</MenuItem>
-                        </Select>
-                    </FormControl>
-                </Col>
-            </Row>
+        <Row>
+            <Col>
+                <Card className='mt-5'>
+                    <Card.Body>
+                        <Card.Title>¿Quieres tambien subastar?</Card.Title>
+                        <Card.Text>
+                            No pierdas tiempo y realiza una subasta tu tambien que esperas!
+                        </Card.Text>
+                        <Button variant="contained" color="primary" onClick={() => setShowModal(true)}>
+                            Solicitar subasta
+                        </Button>
+                    </Card.Body>                            
+                </Card>
 
-            <Row>
-                <Col xs={12} sm={4}>
-                    <FormControl className='w-100 my-2'>
-                        <TextField required id="outlined-required" label="Material" onChange={(event) => setMaterial(event.target.value)} placeholder="Material del producto"/>
-                    </FormControl>
-                </Col>
-                <Col xs={12} sm={4}>
-                    <FormControl className='w-100 my-2'>
-                        <TextField required id="outlined-required" label="Marca" onChange={(event) => setMarca(event.target.value)} placeholder="Marca del producto"/>
-                    </FormControl>
-                </Col>
-                <Col xs={12} sm={4}>
-                    <FormControl className='w-100 my-2'>
-                        <TextField required id="outlined-required" label="Dimensiones" onChange={(event) => setDimensions(event.target.value)} placeholder="Dimensiones del producto"/>
-                    </FormControl>
-                </Col>
-            </Row>
+                <Modal size="lg" show={showModal} onHide={() => setShowModal(false)}
+                    aria-labelledby="example-modal-sizes-title-lg">
+                    <Modal.Header closeButton>
+                    <Modal.Title id="example-modal-sizes-title-lg">
+                        Solicitar subasta
+                        <h6>Los campos con <strong className='text-danger'>*</strong> son obligatorios</h6>
+                    </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
 
-            <Row>
-                <Col xs={12} sm={4}>
-                    <FormControl className='w-100 my-2'>
-                        <InputLabel id="conditionLabel">Condicion del producto *</InputLabel>
-                        <Select labelId="conditionLabel" required label="Condicion del producto *" onChange={(event) => setConditions(event.target.value)} >
-                            <MenuItem value=""> <em>Seleccione una</em> </MenuItem>
-                            <MenuItem value={'Nuevo'}>Nuevo</MenuItem>
-                            <MenuItem value={'Semi nuevo'}>Semi nuevo</MenuItem>
-                            <MenuItem value={'Rehabilitado'}>Rehabilitado</MenuItem>
-                            <MenuItem value={'Usado'}>Usado</MenuItem>
-                        </Select>
-                    </FormControl>
-                </Col>
-                <Col xs={12} sm={4}>
-                    <FormControl className='w-100 my-2'>
-                        <TextField required id="outlined-number" label="Precio inicial" type="number" step=".01" min="0" onChange={(event) => setInitialPrice(event.target.value)}/>
-                    </FormControl>
-                </Col>
-                <Col xs={12} sm={4}>
-                    <FormControl className='w-100 my-2'>
-                        <TextField required id="outlined-number" label="Precio comprar ahora" type="number" step=".01" min="0" onChange={(event) => setBuyNow(event.target.value)}/>
-                    </FormControl>
-                </Col>
-            </Row>
+                        <Container>
+                            <Form className="createForm" onSubmit={prepareData} encType='multipart/form-data'>
+                                <Row>
+                                    <Col xs={12} sm={6}>
+                                        <FormControl className='w-100 my-2'>
+                                            <TextField required id="outlined-required" label="Nombre del producto" onChange={(event) => setProductName(event.target.value)} placeholder="Nombre"/>
+                                        </FormControl>
+                                    </Col>
+                                    <Col xs={12} sm={6}>
+                                        <FormControl className='w-100 my-2'>
+                                            <InputLabel id="categoryLabel">Categoria *</InputLabel>
+                                            <Select labelId="categoryLabel" required label="Categoria *" onChange={(event) => setCategory(event.target.value)} >
+                                                <MenuItem value=""> <em>Seleccione una</em> </MenuItem>
+                                                <MenuItem value={'Ropa'}>Ropa</MenuItem>
+                                                <MenuItem value={'Tecnologia'}>Tecnologia</MenuItem>
+                                                <MenuItem value={'Artes'}>Artes</MenuItem>
+                                                <MenuItem value={'Libros'}>Libros</MenuItem>
+                                                <MenuItem value={'Joyeria'}>Joyeria</MenuItem>
+                                                <MenuItem value={'Instrumentos musicales'}>Instrumentos musicales</MenuItem>
+                                                <MenuItem value={'Videojuegos'}>Videojuegos</MenuItem>
+                                                <MenuItem value={'Comics'}>Comics</MenuItem>
+                                                <MenuItem value={'Juguetes'}>Juguetes</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </Col>
+                                </Row>
 
-            <Row>
-                <Col xs={12}>
-                    <FormControl className='w-100 my-2'>
-                        <TextField required id="outlined-multiline-flexible" label="Observaciones del producto" multiline maxRows={4} onChange={(event) => setObservations(event.target.value)} onKeyUp={(event) => setcaracRestantes(event.target.value.length)}/>
-                    </FormControl>
-                    <p className='text-danger fs-7 fw-light'>{caracRestantes} de 200 caracteres permitidos</p>
-                </Col>
-            </Row>
+                                <Row>
+                                    <Col xs={12} sm={4}>
+                                        <FormControl className='w-100 my-2'>
+                                            <TextField required id="outlined-required" label="Material" onChange={(event) => setMaterial(event.target.value)} placeholder="Material del producto"/>
+                                        </FormControl>
+                                    </Col>
+                                    <Col xs={12} sm={4}>
+                                        <FormControl className='w-100 my-2'>
+                                            <TextField required id="outlined-required" label="Marca" onChange={(event) => setMarca(event.target.value)} placeholder="Marca del producto"/>
+                                        </FormControl>
+                                    </Col>
+                                    <Col xs={12} sm={4}>
+                                        <FormControl className='w-100 my-2'>
+                                            <TextField required id="outlined-required" label="Dimensiones" onChange={(event) => setDimensions(event.target.value)} placeholder="Dimensiones del producto"/>
+                                        </FormControl>
+                                    </Col>
+                                </Row>
 
+                                <Row>
+                                    <Col xs={12} sm={4}>
+                                        <FormControl className='w-100 my-2'>
+                                            <InputLabel id="conditionLabel">Condicion del producto *</InputLabel>
+                                            <Select labelId="conditionLabel" required label="Condicion del producto *" onChange={(event) => setConditions(event.target.value)} >
+                                                <MenuItem value=""> <em>Seleccione una</em> </MenuItem>
+                                                <MenuItem value={'Nuevo'}>Nuevo</MenuItem>
+                                                <MenuItem value={'Semi nuevo'}>Semi nuevo</MenuItem>
+                                                <MenuItem value={'Rehabilitado'}>Rehabilitado</MenuItem>
+                                                <MenuItem value={'Usado'}>Usado</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </Col>
+                                    <Col xs={12} sm={4}>
+                                        <FormControl className='w-100 my-2'>
+                                            <TextField required id="outlined-number" label="Precio inicial" type="number" step=".01" min="0" onChange={(event) => setInitialPrice(event.target.value)}/>
+                                        </FormControl>
+                                    </Col>
+                                    <Col xs={12} sm={4}>
+                                        <FormControl className='w-100 my-2'>
+                                            <TextField required id="outlined-number" label="Precio comprar ahora" type="number" step=".01" min="0" onChange={(event) => setBuyNow(event.target.value)}/>
+                                        </FormControl>
+                                    </Col>
+                                </Row>
 
-            <Row>
-                <Col xs={12}>
-                    <FormControl className='w-100 my-2'>
-                        <TextField required label="Fecha de finalizacion de subasta" data-date-inline-picker="true" type="datetime-local" onChange={(event) => setCloseDate(event.target.value)} InputLabelProps={{shrink: true}}/>
-                    </FormControl>
-                </Col>
-            </Row>
+                                <Row>
+                                    <Col xs={12}>
+                                        <FormControl className='w-100 my-2'>
+                                            <TextField required id="outlined-multiline-flexible" label="Observaciones del producto" multiline maxRows={4} onChange={(event) => setObservations(event.target.value)} onKeyUp={(event) => setcaracRestantes(event.target.value.length)}/>
+                                        </FormControl>
+                                        <p className='text-danger fs-7 fw-light'>{caracRestantes} de 200 caracteres permitidos</p>
+                                    </Col>
+                                </Row>
 
-            <Row>
-                <Col xs={12} className='w-100 my-2'>
-                    <h4>Imagenes del articulo<strong className='text-danger'>*</strong> (Max 6)</h4>
-                </Col>
-            </Row>
-            <Row>
-                <Col>
-                    <Form.Control  type="file" accept="image/png,image/jpeg" className="form-control" ref={imgRef} multiple onChange= {(e) => imageValidator(e.target.files, imgRef)}/>
-                </Col>
-            </Row>
+                                <Row>
+                                    <Col xs={12}>
+                                        <FormControl className='w-100 my-2'>
+                                            <TextField required label="Fecha de finalizacion de subasta" data-date-inline-picker="true" type="datetime-local" onChange={(event) => setCloseDate(event.target.value)} InputLabelProps={{shrink: true}}/>
+                                        </FormControl>
+                                    </Col>
+                                </Row>
 
-            <Row className='mt-3'>
-                <Col className='d-flex justify-content-center'>
-                    <Button disabled={ validateButton() } type='submit' block="true" className='w-50' variant="contained" color="success">
-                        Solicitar Subasta
-                    </Button>
-                </Col>
-            </Row>
-        </Form>
+                                <Row>
+                                    <Col xs={12} lg={6}>
+                                        <div className='w-100 my-2'>
+                                            <h6>Imagen principal del articulo <strong className='text-danger'>*</strong></h6>
+                                            <Form.Control  type="file" accept="image/png,image/jpeg" className="form-control" ref={imgPrincipalRef} onChange= {(e) => imageValidator(e.target.files, imgPrincipalRef, setImagePrincipal)}/>
+                                        </div>
+                                    </Col>
+                                    <Col xs={12} lg={6}>
+                                        <div className='w-100 my-2'>
+                                            <h6>Imagenes secundarias del articulo (Max 5)</h6>
+                                            <Form.Control  type="file" accept="image/png,image/jpeg" className="form-control" ref={imagesRef} multiple onChange= {(e) => imageValidator(e.target.files, imagesRef, setImages)}/>
+                                        </div>
+                                    </Col>
+                                </Row>
+                                <Row>
+                                    <Col>
+                                    </Col>
+                                </Row>
+
+                                <Row className='mt-3'>
+                                    <Col className='d-flex justify-content-center'>
+                                        <Button disabled={ validateButton() } type='submit' block="true" className='w-50' variant="contained" color="success">
+                                            Solicitar Subasta
+                                        </Button>
+                                    </Col>
+                                </Row>
+                            </Form>
+                        </Container>
+
+                    </Modal.Body>
+                </Modal>
+                
+            </Col>
+        </Row>
     </Container>
+
 )
 }
 
