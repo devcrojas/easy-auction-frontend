@@ -4,6 +4,7 @@ import { Button, Row, Col, Card, Form } from "react-bootstrap";
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import '@sweetalert2/theme-material-ui/material-ui.css'
 import { Container } from "@mui/system";
+import AuthService from '../services/auth.service'
 
 const colors = {
     yellow: "#ECFF00",
@@ -25,16 +26,7 @@ function Resenas(){
     const [comentario, setComentario] = useState("");
     const [tipo, setTipo] = useState("");
 
-
-    const [userName, setData] = useState({name:""});
-
-    const handleInputChange = (event) => {
-        setData({
-            ...userName,
-            [event.target.name]: event.target.value
-        })
-    }
-
+    let user = AuthService.getCurrentUser(); 
 
     const handleClick = value => {
         setEstrellas(value)
@@ -56,7 +48,7 @@ function Resenas(){
 
     const sendResena = async()  => {
         const resena = {
-            name: userName.name,
+            user: user.name,
             comment: comentario,
             stars: Estrellas,
             type: tipo
@@ -81,7 +73,7 @@ function Resenas(){
               
               setEstrellas(0);  
               setComentario("");
-              setData({name:""});
+              setTipo("");
             }
         })
     }
@@ -101,7 +93,7 @@ return (
                     <Form className='text-center'>
                         <Form.Group className="mb-3" controlId="user">
                             <Form.Label>Nombre de Usuario</Form.Label>
-                            <Form.Control value={userName.name} name="name" type="text" placeholder="Nombre" onChange={handleInputChange} />
+                            <Form.Control value={user.name} name="user.name"/>
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="stars">
                         <Row>
@@ -128,10 +120,22 @@ return (
                             </Form>
                         </Row>
                         <Row>
+                            <Form>
+                                aqui va el tipo
+                            </Form>
+                        </Row>
+                        <Row>
                             <Form.Group className="mb-3" controlId="comentario">
                                 <Form.Label>¿Qué te parecio la subasta?</Form.Label>
                                 <Form.Control as="textarea" rows="3" value={comentario} onChange={(event) => setComentario(event.target.value)} />
                             </Form.Group>
+                        </Row>
+                        <Row>
+                            <Form>
+                                <div className="anonimo">
+                                    <input type="checkbox" id="anonimo" name="anonimo" value="anonimo" /> Anónimo
+                                </div>
+                            </Form>
                         </Row>
                         </Form.Group>
                         <Button variant="primary" type="button" className='btn btn-success text-center' onClick={sendResena}>
