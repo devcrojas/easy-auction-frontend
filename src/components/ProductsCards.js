@@ -56,17 +56,17 @@ function ProductsCards() {
 
             let initialDate = new Date(producto.auctionDate.initialD).toLocaleDateString();
             let finalDate = new Date(producto.auctionDate.final).toLocaleDateString() + ' ' + new Date(producto.auctionDate.final).toLocaleTimeString();
-            let imag = (producto.file) ? producto.file.filePath : [{ filePath: 'uploads\\sin.jpg' }]
+            let imag = (producto.file) ? producto.file.filePath : 'uploads\\sin.jpg' 
 
             return (
-                <Card sx={{ minWidth: 400, maxWidth: 400, margin: 1, borderRadius: 5, marginTop: 3, marginBottom: 3, marginLeft: 3, marginRight: 3 }} elevation={10} key={producto._id}>
-                    <CardActionArea onClick={async () => {
-                        await setDetalles(apis.find(product => product._id === producto._id));
+                <Col sx={12} lg={6} key={producto._id}>
+                <Card sx={{ width:'100%', borderRadius: 5,  marginBottom: 3 }} elevation={10} key={producto._id}>
+                    <CardActionArea onClick={ () => {
+                        setDetalles(apis.find(product => product._id === producto._id));
                         handleShow();
                     }}>
 
                         <CardHeader
-
                             avatar={
                                 <Avatar src={producto.sellerData.file.filePath} />
                             }
@@ -131,14 +131,13 @@ function ProductsCards() {
                         </CardContent>
                     </CardActionArea>
                 </Card>
+                </Col>
             )
         });
         return card
     }
 
     function verModal(detalle) {
-
-        let imagenArreglo = detalle.files !== undefined ? detalle.files : [{ filePath: "uploads\\sin.jpg" }]
         let initialDate = new Date(detalle.auctionDate.initialD).toLocaleDateString();
         let finalDate = new Date(detalle.auctionDate.final).toLocaleDateString() + ' ' + new Date(detalle.auctionDate.final).toLocaleTimeString();
         return (
@@ -152,7 +151,7 @@ function ProductsCards() {
                             <div className="slide-container" sx={{ width: '75%', height: 'auto' }}>
                                 <>
                                     {
-                                        showSlider(imagenArreglo)
+                                        showSlider(detalle.files,detalle.file)
                                     }
                                 </>
                             </div>
@@ -176,8 +175,9 @@ function ProductsCards() {
         )
     }
 
-    function showSlider(detImages) {
-        if (detImages.length > 0) {
+    function showSlider(detImages,principal) {
+
+        if (detImages.length > 1) {
             return (
                 <Zoom scale={0.4}>
                     {
@@ -187,6 +187,8 @@ function ProductsCards() {
                     }
                 </Zoom>
             );
+        }else{
+            return <img  style={{ width: "100%", height: 350, border: 5 }} src={`http://localhost:8080\\${principal.filePath}`} alt={principal.nameProduct} />
         }
     }
 
