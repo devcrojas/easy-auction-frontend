@@ -17,7 +17,7 @@ function MenuLateral() {
             </Row>
             <Row>
               <Col style={{ paddingRight: "0" }}>
-                <Button variant="link" className='btn-sidebar btn-sidebar-activate'>
+                <Button variant="link" className='btn-sidebar'>
                   <ProductIco className="ico-sidebar"></ProductIco>
                   <label className='m-2'>Mis productos</label>
                 </Button>
@@ -41,7 +41,7 @@ function MenuLateral() {
             </Row>
             <Row>
               <Col style={{ paddingRight: "0" }}>
-                <Button variant="link" className='btn-sidebar'>
+                <Button variant="link" className='btn-sidebar btn-sidebar-activate'>
                   <ResenasIco className="ico-sidebar"></ResenasIco>
                   <label className='m-2'>Mis Reseñas</label>
                 </Button>

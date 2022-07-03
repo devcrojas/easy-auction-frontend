@@ -4,9 +4,9 @@ import './index.css';
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import Home from './components/Home';
 import Welcome from './components/Welcome';
-import Register from './components/Register';
 import serviceAuth from './services/auth.service'
 import Profile from './components/Profile';
+import ResetPassword from './components/ResetPassword';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 const ProtectedRoute = ({ children }) => {
@@ -30,8 +30,8 @@ root.render(
     <Routes>
       <Route exact path="/" element={ <ProtectedRouteLogin >  <Welcome /> </ProtectedRouteLogin>}></Route>
       <Route exact path='/producto' element={ <ProtectedRoute >  <Home /> </ProtectedRoute> }></Route>
-      <Route exact path="/register" element={<Register />}></Route>
-      <Route exact path="/" element={ <ProtectedRouteLogin >  <Profile /> </ProtectedRouteLogin>}></Route>
+      <Route exact path="/profile" element={ <ProtectedRouteLogin >  <Profile /> </ProtectedRouteLogin>}></Route>
+      <Route exact path="/resetPassword/:jwtoken" element={  <ResetPassword /> }></Route>
     </Routes>
   </Router>
 );
