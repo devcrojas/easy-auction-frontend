@@ -147,7 +147,7 @@ function ProductsCards() {
         let initialDate = new Date(detalle.auctionDate.initialD).toLocaleDateString();
         let finalDate = new Date(detalle.auctionDate.final).toLocaleDateString() + ' ' + new Date(detalle.auctionDate.final).toLocaleTimeString();
         return (
-            <Modal show={show} size="xl" onHide={handleClose} >
+            <Modal show={show} size="xl"  centered onHide={handleClose} >
                 <Modal.Header closeButton>
                     <Row className ="align-items-center w-100 ">
                         <Col md={11}><h1> {detalle.nameProduct}</h1></Col>
@@ -186,13 +186,14 @@ function ProductsCards() {
 
 
     function verModalR() {
+        
         return (
-            <Modal show={showR} size="xl" onHide={handleCloseR}>
-                <Modal.Header closeButton>
+            <Modal show={showR} centered onHide={handleCloseR} >
+                <Modal.Header className="d-flex justify-content-end"  closeButton>
 
                 </Modal.Header>
                 <Modal.Body>
-                    <Reviews></Reviews>       
+                    <Reviews productId={detalle._id}></Reviews>       
                 </Modal.Body>
             </Modal >
         )

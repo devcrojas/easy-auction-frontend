@@ -6,7 +6,6 @@ import '@sweetalert2/theme-material-ui/material-ui.css'
 import { Container } from "@mui/system";
 import AuthService from '../services/auth.service'
 
-
 const colors = {
     yellow: "#ECFF00",
     grey: "#a9a9a9"
@@ -91,8 +90,7 @@ function Reviews(){
 }
 
 return (
-    
-    <Container fluid="true">
+    <Container fluid = "true">
         <Row className="justify-content-center align-items-center">
             <Card style={{ width: '50%', padding: "0"}} className="m-3">
                 <Card.Header className='text-center bg-dark text-white' style={{width: "100%"}}>Cuéntanos como te fue</Card.Header>
@@ -100,7 +98,7 @@ return (
                     <Form className='text-center'>
                         <Form.Group className="mb-3" controlId="stars">
                         <Row>
-                            <Form className='text-center'>
+                            <Form.Group className='text-center'>
                                 <div style={styles.stars}>
                                     {stars.map((_, index) => {
                                         return (
@@ -115,19 +113,20 @@ return (
                                             onClick={() => handleClick(index + 1)}
                                             onMouseOver={() => handleMouseOver(index + 1)}
                                             onMouseLeave={handleMouseLeave}
-                                          
+                                            
                                             />   
                                         )
-                                    })}
+                                    }
+                                    )}
                                 </div>
 
-                            </Form>
+                            </Form.Group>
                         </Row>
                         <Row>&nbsp;</Row>
                         <Row>
-                            <Form>
+                            <Form.Group>
                                 <Form.Control className='text-center bg-danger text-white' value={tipo} onChange={(handleClick) => setTipo()} disabled/>
-                            </Form>
+                            </Form.Group>
                         </Row>
                         <Row>&nbsp;</Row>
                         <Row>
