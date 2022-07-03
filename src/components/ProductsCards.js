@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Container, Modal, Row } from 'react-bootstrap';
-import { Card, CardContent, CardMedia, Typography, CardActionArea, ListItem, CardHeader, Avatar } from '@mui/material'
+import { Button, Col, Container, Modal, Row } from 'react-bootstrap';
+import { Card, CardContent, CardMedia, Typography, CardActionArea, ListItem, CardHeader, Avatar, cardClasses } from '@mui/material'
 import 'react-slideshow-image/dist/styles.css'
 import { Zoom } from 'react-slideshow-image';
 
@@ -131,7 +131,7 @@ function ProductsCards() {
                         </CardContent>
                     </CardActionArea>
                 </Card>
-                </Col>
+               </Col>
             )
         });
         return card
@@ -143,7 +143,10 @@ function ProductsCards() {
         return (
             <Modal show={show} size="xl" onHide={handleClose} >
                 <Modal.Header closeButton>
-                    <h1> {detalle.nameProduct}</h1>
+                    <Row className="w-100">
+                        <Col><h1> {detalle.nameProduct}</h1></Col>
+                        <Col className="d-flex flex-row-reverse"><button variant="primary" type="button"    className="btn btn-outline-success text-center ">Reseñar</button></Col>
+                    </Row>
                 </Modal.Header>
                 <Modal.Body>
                     <Row>

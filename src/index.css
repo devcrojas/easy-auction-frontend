@@ -102,3 +102,40 @@ code {
     height: auto;
   }
 }
+/* Quita margen del boton cerrar al modal */
+.btn-close {
+  margin-left: 100px !important;
+}
+
+/* Estilos para motores Webkit y blink (Chrome, Safari, Opera... )*/
+/* Estilo para el scroll con mejor presentacion*/
+.prettyScroll::-webkit-scrollbar {
+    -webkit-appearance: none;
+}
+
+.prettyScroll::-webkit-scrollbar:vertical {
+  width: 10px;
+}
+
+.prettyScroll::-webkit-scrollbar-button:increment,
+.prettyScroll::-webkit-scrollbar-button {
+  display: none;
+}
+
+.prettyScroll::-webkit-scrollbar:horizontal {
+  height: 10px;
+}
+
+.prettyScroll::-webkit-scrollbar-thumb {
+  background-color: #797979;
+  border-radius: 20px;
+  border: 2px solid #f1f2f3;
+}
+
+.prettyScroll::-webkit-scrollbar-track {
+  border-radius: 10px;
+}
+/* Para mostrar el sweet alert siempre enfrente */
+.swal2-container {
+  z-index: 10000 !important;
+}
