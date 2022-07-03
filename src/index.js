@@ -8,6 +8,7 @@ import Welcome from './components/Welcome';
 import Products from './components/Products';
 import Reviews from './components/Reviews';
 import Register from './components/Register';
+import Sellers from './components/Sellers';
 import serviceAuth from './services/auth.service'
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -35,6 +36,7 @@ root.render(
       <Route exact path="/register" element={<Register />}></Route>
       <Route exact path="/productos" element={<Products />}></Route>
       <Route exact path="/reviews" element={<Reviews />}></Route>
+      <Route exact path="/sellers" element={<Sellers />}></Route>
     </Routes>
   </Router>
 );
