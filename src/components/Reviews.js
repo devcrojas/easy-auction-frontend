@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa";
-import { Button, Row, Col, Card, Form } from "react-bootstrap";
+import { Button, Row, Card, Form } from "react-bootstrap";
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import '@sweetalert2/theme-material-ui/material-ui.css'
 import { Container } from "@mui/system";
 import AuthService from '../services/auth.service'
-import {box, Grid} from '@mui/icons-material'
 
 const colors = {
     yellow: "#ECFF00",
@@ -90,19 +89,15 @@ function Reviews(){
 }
 
 return (
-    
-    <Container fluid>
-        <Row className="d-flex justify-content-center align-items-center">
-
-            <Button variant="primary" type="button" className='btn btn-success text-center'>Reseñar</Button>
-
+    <Container fluid = "true">
+        <Row className="justify-content-center align-items-center">
             <Card style={{ width: '50%', padding: "0"}} className="m-3">
                 <Card.Header className='text-center bg-dark text-white' style={{width: "100%"}}>Cuéntanos como te fue</Card.Header>
                 <Card.Body>
                     <Form className='text-center'>
                         <Form.Group className="mb-3" controlId="stars">
                         <Row>
-                            <Form className='text-center'>
+                            <Form.Group className='text-center'>
                                 <div style={styles.stars}>
                                     {stars.map((_, index) => {
                                         return (
@@ -117,19 +112,20 @@ return (
                                             onClick={() => handleClick(index + 1)}
                                             onMouseOver={() => handleMouseOver(index + 1)}
                                             onMouseLeave={handleMouseLeave}
-                                            totalStars={stars}
+                                            
                                             />   
                                         )
-                                    })}
+                                    }
+                                    )}
                                 </div>
 
-                            </Form>
+                            </Form.Group>
                         </Row>
                         <Row>&nbsp;</Row>
                         <Row>
-                            <Form>
+                            <Form.Group>
                                 <Form.Control className='text-center bg-danger text-white' value={tipo} onChange={(handleClick) => setTipo()} disabled/>
-                            </Form>
+                            </Form.Group>
                         </Row>
                         <Row>&nbsp;</Row>
                         <Row>
