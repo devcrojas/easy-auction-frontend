@@ -8,6 +8,6 @@ function Productos() {
             <CreateProduct/>
         </div>
     )
-}
+  }
 
-export default Productos
+export default Productos;
