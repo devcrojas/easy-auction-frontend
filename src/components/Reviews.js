@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa";
 import { Button, Row, Col, Card, Form } from "react-bootstrap";
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import '@sweetalert2/theme-material-ui/material-ui.css'
 import { Container } from "@mui/system";
 import AuthService from '../services/auth.service'
+import {box, Grid} from '@mui/icons-material'
 
 const colors = {
     yellow: "#ECFF00",
@@ -18,15 +19,16 @@ const styles = {
     }
 }
   
-function Resenas(){
+function Reviews(){
     const stars = Array(5).fill(0);
     const [Estrellas, setEstrellas] = useState(0);
     const [hoverValue, setHoverValue] =useState();
     //const [api, setApi] = useState();
     const [comentario, setComentario] = useState("");
     const [tipo, setTipo] = useState("");
+    const [user, setUser] = useState();
 
-    let user = AuthService.getCurrentUser(); 
+    useEffect(() => {setUser(AuthService.getCurrentUser)}, [])
 
     const handleClick = value => {
         setEstrellas(value)
@@ -46,12 +48,14 @@ function Resenas(){
         setHoverValue(undefined)
     }
 
-    const sendResena = async()  => {
+    const sendReview = async()  => {
         const resena = {
-            user: user.name,
+            name: user.name,
             comment: comentario,
             stars: Estrellas,
-            type: tipo
+            type: tipo,
+            seller: "Sarai"
+            
     }
 
     const myHeaders = new Headers();
@@ -84,17 +88,18 @@ function Resenas(){
         })
     }
 }
+
 return (
+    
     <Container fluid>
         <Row className="d-flex justify-content-center align-items-center">
+
+            <Button variant="primary" type="button" className='btn btn-success text-center'>Reseñar</Button>
+
             <Card style={{ width: '50%', padding: "0"}} className="m-3">
-                <Card.Header className='text-center bg-dark text-white' style={{width: "100%"}}>Nos importa tu comentario</Card.Header>
+                <Card.Header className='text-center bg-dark text-white' style={{width: "100%"}}>Cuéntanos como te fue</Card.Header>
                 <Card.Body>
                     <Form className='text-center'>
-                        <Form.Group className="mb-3" controlId="user">
-                            <Form.Label>Nombre de Usuario</Form.Label>
-                            <Form.Control value={user.name} name="user.name"/>
-                        </Form.Group>
                         <Form.Group className="mb-3" controlId="stars">
                         <Row>
                             <Form className='text-center'>
@@ -113,32 +118,29 @@ return (
                                             onMouseOver={() => handleMouseOver(index + 1)}
                                             onMouseLeave={handleMouseLeave}
                                             totalStars={stars}
-                                            />
+                                            />   
                                         )
                                     })}
                                 </div>
+
                             </Form>
                         </Row>
+                        <Row>&nbsp;</Row>
                         <Row>
                             <Form>
-                                aqui va el tipo
+                                <Form.Control className='text-center bg-danger text-white' value={tipo} onChange={(handleClick) => setTipo()} disabled/>
                             </Form>
                         </Row>
+                        <Row>&nbsp;</Row>
                         <Row>
                             <Form.Group className="mb-3" controlId="comentario">
                                 <Form.Label>¿Qué te parecio la subasta?</Form.Label>
                                 <Form.Control as="textarea" rows="3" value={comentario} onChange={(event) => setComentario(event.target.value)} />
                             </Form.Group>
                         </Row>
-                        <Row>
-                            <Form>
-                                <div className="anonimo">
-                                    <input type="checkbox" id="anonimo" name="anonimo" value="anonimo" /> Anónimo
-                                </div>
-                            </Form>
-                        </Row>
+                        <Row>&nbsp;</Row>
                         </Form.Group>
-                        <Button variant="primary" type="button" className='btn btn-success text-center' onClick={sendResena}>
+                        <Button variant="primary" type="button" className='btn btn-success text-center' onClick={() => {sendReview(); console.log(user)}}>
                                     Enviar
                         </Button>
                     </Form>
@@ -146,7 +148,9 @@ return (
             </Card>
         </Row>
     </Container>
-);
-};
 
-export default Resenas;
+)
+
+}
+
+export default Reviews;
