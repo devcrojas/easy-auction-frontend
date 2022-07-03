@@ -50,8 +50,6 @@ function Home() {
         </Row>
       </Container>
     </>
-
-
   )
 }
 

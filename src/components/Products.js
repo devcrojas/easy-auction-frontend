@@ -17,14 +17,14 @@ function Productos() {
     getProductos()
   }, [])
 
-  useEffect(() => {
+  /* useEffect(() => {
     let p = apis.find(product => product._id === id)
     setDetalle(p);
     return () => {
       cleanup
     };
   }, [show]);
-
+ */
   var getProductos = async function () {
     let produc = await fetch("http://localhost:8080/products",
       {
