@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Container, Modal, Row } from 'react-bootstrap';
-import { Card, CardContent, CardMedia, Typography, CardActionArea, ListItem, CardHeader, Avatar, cardClasses } from '@mui/material'
+import { Col, Container, Modal, Row } from 'react-bootstrap';
+import { Card, CardContent, CardMedia, Typography, CardActionArea, ListItem, CardHeader, Avatar } from '@mui/material'
 import 'react-slideshow-image/dist/styles.css'
 import { Zoom } from 'react-slideshow-image';
-import Reviews from './Reviews';
 
 function ProductsCards() {
 
     const [show, setShow] = useState(false);
-    const [showR, setShowR] = useState(false);
 
     const [apis, setApis] = useState([]);
     const [detalle, setDetalles] = useState({
@@ -53,16 +51,12 @@ function ProductsCards() {
     const handleShow = () => setShow(true);
     const handleClose = () => setShow(false);
 
-    const handleShowR = () => setShowR(true);
-    const handleCloseR = () => setShowR(false);
-
     const cards = () => {
         let card = apis.map((producto) => {
 
             let initialDate = new Date(producto.auctionDate.initialD).toLocaleDateString();
             let finalDate = new Date(producto.auctionDate.final).toLocaleDateString() + ' ' + new Date(producto.auctionDate.final).toLocaleTimeString();
             let imag = (producto.file) ? producto.file.filePath : 'uploads\\sin.jpg' 
-
             return (
                 <Col sx={12} lg={6} key={producto._id}>
                 <Card sx={{ width:'100%',minHeight:'50%', borderRadius: 5,  marginBottom: 3 }} elevation={10} key={producto._id}>
@@ -70,14 +64,12 @@ function ProductsCards() {
                         setDetalles(apis.find(product => product._id === producto._id));
                         handleShow();
                     }}>
-
                         <CardHeader
                             avatar={
                                 <Avatar src={producto.sellerData.file.filePath} />
                             }
                             title={producto.sellerData.firstName + " " + producto.sellerData.lastName}
                             subheader={producto.sellerData.email} />
-
                         <Row className="justify-content-center my-2">
                             <CardMedia
                                 id={producto._id}
@@ -149,10 +141,7 @@ function ProductsCards() {
         return (
             <Modal show={show} size="xl"  centered onHide={handleClose} >
                 <Modal.Header closeButton>
-                    <Row className ="align-items-center w-100 ">
-                        <Col md={11}><h1> {detalle.nameProduct}</h1></Col>
-                        <Col md={1} ><button variant="primary" type="button" onClick={handleShowR}   className="btn btn-outline-success text-center ">Reseñar</button></Col>
-                    </Row>
+                 <h1> {detalle.nameProduct}</h1>
                 </Modal.Header>
                 <Modal.Body>
                     <Row>
@@ -183,22 +172,6 @@ function ProductsCards() {
             </Modal >
         )
     }
-
-
-    function verModalR() {
-        
-        return (
-            <Modal show={showR} centered onHide={handleCloseR} >
-                <Modal.Header className="d-flex justify-content-end"  closeButton>
-
-                </Modal.Header>
-                <Modal.Body>
-                    <Reviews productId={detalle._id}></Reviews>       
-                </Modal.Body>
-            </Modal >
-        )
-    }
-
 
     function showSlider(detImages,principal) {
 
@@ -232,11 +205,7 @@ function ProductsCards() {
                         verModal(detalle)
                     }
                 </>
-                <>
-                    {
-                        verModalR()
-                    }
-                </>
+
             </Container>
         </>
     )
