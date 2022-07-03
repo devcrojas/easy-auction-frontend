@@ -5,6 +5,7 @@ import { Container, Row, Col, Card } from 'react-bootstrap';
 //import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 //import 'react-slideshow-image/dist/styles.css';
 //import { Zoom } from 'react-slideshow-image';
+import AuthService from '../services/auth.service'
 
 
 const colors = {
@@ -12,20 +13,13 @@ const colors = {
   grey: "#a9a9a9"
 }
 
-const styles = {
-  container: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center"
-  }
-}
-
-const createArray = length => [...Array(length)];
-
-
-
 function Reviews() {
   const [apis, setApis] = useState([]);
+
+  // Se obtiene el usuario de sesion
+  let user = AuthService.getCurrentUser();
+  let userAuth = user.id;
+  // Prueba con: let userAuth = 't@gmail.com';
 
   useEffect(() => {
     getReviews()
@@ -45,56 +39,63 @@ function Reviews() {
 
   const cards = () => {
     let card = apis.map((review) => {
-      return (
-        
-        <Card sx={{ minWidth: 345, maxWidth: 345, margin: 1 }} key={review._id}>
+      //console.log(review.profileData.email);
 
-          <Card.Body>
-            
-            <Row>
-              <Col><Card.Title>{review.seller}</Card.Title></Col>
+      /* Si se quieren mostrar las reseñas de que hizo el usuario
+      if(review.profileData.email === userAuth) */
+      if(review.seller.email === userAuth){
+        return (
+          
+          <Card sx={{ minWidth: 345, maxWidth: 345, margin: 1 }} key={review._id}>
 
-              <Col>
-              {Array(review.stars).fill(0).map((_, index) => {
-                return (
-                  <FaStar
-                  key={index}
-                  size={30}
-                  style={{
-                      marginRight: 10,
-                      cursor: "pointer"
-                  }}
-                  color={colors.yellow}
-                  />
-                )
-              })}
-              {Array(5 - review.stars).fill(0).map((_, index) => {
-                return (
-                  <FaStar
-                  key={index}
-                  size={30}
-                  style={{
-                      marginRight: 10,
-                      cursor: "pointer"
-                  }}
-                  color={colors.grey}
-                  />
-                )
-              })}
-              </Col>
-
-            </Row>
-            <Row>&nbsp;</Row>
-            <Card.Text>{review.comment}</Card.Text>
-            
-            {/* <Card.Text>{review.type}</Card.Text> */}
-            
-            <Col align="right">Por {review.user}</Col>
+            <Card.Body>
               
-            </Card.Body>
-        </Card>
-        
-      )
+              <Row>
+                <Col align="left">Por:<Card.Title>{review.seller.lastNameSeller + ' ' + review.seller.firstNameSeller}</Card.Title></Col>
+
+                <Col align="right">
+                {Array(review.stars).fill(0).map((_, index) => {
+                  return (
+                    <FaStar
+                    key={index}
+                    size={30}
+                    style={{
+                        marginRight: 10,
+                        cursor: "pointer"
+                    }}
+                    color={colors.yellow}
+                    />
+                  )
+                })}
+                {Array(5 - review.stars).fill(0).map((_, index) => {
+                  return (
+                    <FaStar
+                    key={index}
+                    size={30}
+                    style={{
+                        marginRight: 10,
+                        cursor: "pointer"
+                    }}
+                    color={colors.grey}
+                    />
+                  )
+                })}
+                </Col>
+
+              </Row>
+              <Row>&nbsp;</Row>
+              <Card.Text>{review.comment}</Card.Text>
+              <Row>&nbsp;</Row>
+              
+              {/* <Card.Text>{review.type}</Card.Text> */}
+              
+              <Col align="right">Fecha de publicación:  {review.datePublished}</Col>
+                
+              </Card.Body>
+          </Card>
+          
+        )
+      }
     });
 
     return card;
