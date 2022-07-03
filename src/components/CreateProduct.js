@@ -1,4 +1,3 @@
-/* eslint-disable react/style-prop-object */
 import React, { useState, useRef, useEffect, Fragment } from 'react'
 import { Form, Container, Col, Row, Card } from 'react-bootstrap'
 import Swal from 'sweetalert2/dist/sweetalert2.js'

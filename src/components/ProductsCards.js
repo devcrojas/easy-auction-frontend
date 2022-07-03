@@ -3,11 +3,13 @@ import { Button, Col, Container, Modal, Row } from 'react-bootstrap';
 import { Card, CardContent, CardMedia, Typography, CardActionArea, ListItem, CardHeader, Avatar, cardClasses } from '@mui/material'
 import 'react-slideshow-image/dist/styles.css'
 import { Zoom } from 'react-slideshow-image';
-
+import Reviews from './Reviews';
 
 function ProductsCards() {
 
     const [show, setShow] = useState(false);
+    const [showR, setShowR] = useState(false);
+
     const [apis, setApis] = useState([]);
     const [detalle, setDetalles] = useState({
         "_id": "",
@@ -51,6 +53,9 @@ function ProductsCards() {
     const handleShow = () => setShow(true);
     const handleClose = () => setShow(false);
 
+    const handleShowR = () => setShowR(true);
+    const handleCloseR = () => setShowR(false);
+
     const cards = () => {
         let card = apis.map((producto) => {
 
@@ -60,7 +65,7 @@ function ProductsCards() {
 
             return (
                 <Col sx={12} lg={6} key={producto._id}>
-                <Card sx={{ width:'100%', borderRadius: 5,  marginBottom: 3 }} elevation={10} key={producto._id}>
+                <Card sx={{ width:'100%',minHeight:'50%', borderRadius: 5,  marginBottom: 3 }} elevation={10} key={producto._id}>
                     <CardActionArea onClick={ () => {
                         setDetalles(apis.find(product => product._id === producto._id));
                         handleShow();
@@ -79,7 +84,8 @@ function ProductsCards() {
                                 component="img"
                                 image={`http://localhost:8080\\${imag}`}
                                 alt={producto.nameProduct}
-                                sx={{ width: 250 }} />
+                                sx={{ width: 400,height: 250 }}
+                                />
                         </Row>
                         <CardContent>
                             <Row className='my-2'>
@@ -143,9 +149,9 @@ function ProductsCards() {
         return (
             <Modal show={show} size="xl" onHide={handleClose} >
                 <Modal.Header closeButton>
-                    <Row className="w-100">
-                        <Col><h1> {detalle.nameProduct}</h1></Col>
-                        <Col className="d-flex flex-row-reverse"><button variant="primary" type="button"    className="btn btn-outline-success text-center ">Reseñar</button></Col>
+                    <Row className ="align-items-center w-100 ">
+                        <Col md={11}><h1> {detalle.nameProduct}</h1></Col>
+                        <Col md={1} ><button variant="primary" type="button" onClick={handleShowR}   className="btn btn-outline-success text-center ">Reseñar</button></Col>
                     </Row>
                 </Modal.Header>
                 <Modal.Body>
@@ -178,6 +184,21 @@ function ProductsCards() {
         )
     }
 
+
+    function verModalR() {
+        return (
+            <Modal show={showR} size="xl" onHide={handleCloseR}>
+                <Modal.Header closeButton>
+
+                </Modal.Header>
+                <Modal.Body>
+                    <Reviews></Reviews>       
+                </Modal.Body>
+            </Modal >
+        )
+    }
+
+
     function showSlider(detImages,principal) {
 
         if (detImages.length > 1) {
@@ -208,6 +229,11 @@ function ProductsCards() {
                 <>
                     {
                         verModal(detalle)
+                    }
+                </>
+                <>
+                    {
+                        verModalR()
                     }
                 </>
             </Container>
