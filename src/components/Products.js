@@ -13,8 +13,7 @@ function Productos() {
         <Row>
           <Col xs={3} className="sidebarEasy">
           </Col>
-          <Col xs={9}>
-            
+          <Col xs={9}> 
             <ProductsCards></ProductsCards>
           </Col>
         </Row>
