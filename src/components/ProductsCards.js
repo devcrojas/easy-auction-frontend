@@ -37,7 +37,7 @@ function ProductsCards() {
     }, [])
 
     let getProductos = async function () {
-        let produc = await fetch("http://localhost:8080/api/products",
+        let produc = await fetch("/api/products",
             {
                 method: "GET"
             }
@@ -72,7 +72,7 @@ function ProductsCards() {
                             <CardMedia
                                 id={producto._id}
                                 component="img"
-                                image={`http://localhost:8080\\${imag}`}
+                                image={`\\${imag}`}
                                 alt={producto.nameProduct}
                                 sx={{ width: 350,height: 350 }}
                                 />
@@ -178,13 +178,13 @@ function ProductsCards() {
                 <Zoom scale={0.4}>
                     {
                         detImages.map(((im, index) => {
-                            return <img key={index} style={{ width: "100%", height: 350, border: 5 }} src={`http://localhost:8080\\${im.filePath}`} alt={index} />
+                            return <img key={index} style={{ width: "100%", height: 350, border: 5 }} src={`\\${im.filePath}`} alt={index} />
                         }))
                     }
                 </Zoom>
             );
         }else{
-            return <img  style={{ width: "100%", height: 350, border: 5 }} src={`http://localhost:8080\\${principal.filePath}`} alt={principal.nameProduct} />
+            return <img  style={{ width: "100%", height: 350, border: 5 }} src={`\\${principal.filePath}`} alt={principal.nameProduct} />
         }
     }
 

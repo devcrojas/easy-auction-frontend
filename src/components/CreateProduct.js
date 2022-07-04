@@ -140,7 +140,7 @@ const CreateProduct = () => {
     // Funcion para enviar los datos del form
     const sendData = async (formData) => {
         // Se realiza la peticion al back
-        let resp = await axios.post('http://localhost:8080/api/products', formData);
+        let resp = await axios.post('/api/products', formData);
         // Se obtiene el status de la respuesta
         if(resp.status === 201){
             handleClose()
