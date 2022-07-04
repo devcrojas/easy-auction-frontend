@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FaStar } from "react-icons/fa";
-import { Container, Row, Col, Card } from 'react-bootstrap';
+import { Container, Row, Col, Card, CardMedia } from 'react-bootstrap';
 //import { Card, CardContent, CardMedia, Typography, CardActionArea, List, ListItem, ListItemAvatar, Avatar, ListItemText } from '@mui/material'
 //import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 //import 'react-slideshow-image/dist/styles.css';
@@ -19,14 +19,15 @@ function Reviews() {
   // Se obtiene el usuario de sesion
   let user = AuthService.getCurrentUser();
   let userAuth = user.id;
-  // Prueba con: let userAuth = 't@gmail.com';
+/*   // Prueba con:
+  let userAuth = 't@gmail.com'; */
 
   useEffect(() => {
     getReviews()
   }, [])
 
-  var getReviews = async function () {
-    let review = await fetch("http://localhost:8080/reviews",
+  let getReviews = async function () {
+    let review = await fetch("http://localhost:8080/api/reviews",
       {
         method: "GET"
       }
@@ -43,7 +44,7 @@ function Reviews() {
 
       /* Si se quieren mostrar las reseñas de que hizo el usuario
       if(review.profileData.email === userAuth) */
-      if(review.seller.email === userAuth){
+      if(review.userData.email === userAuth){
         return (
           
           <Card sx={{ minWidth: 345, maxWidth: 345, margin: 1 }} key={review._id}>
@@ -51,7 +52,7 @@ function Reviews() {
             <Card.Body>
               
               <Row>
-                <Col align="left">Por:<Card.Title>{review.seller.lastNameSeller + ' ' + review.seller.firstNameSeller}</Card.Title></Col>
+                <Col align="left">Por:<Card.Title>{review.profileData.lastName + ' ' + review.profileData.firstName}</Card.Title></Col>
 
                 <Col align="right">
                 {Array(review.stars).fill(0).map((_, index) => {
@@ -84,7 +85,11 @@ function Reviews() {
 
               </Row>
               <Row>&nbsp;</Row>
-              <Card.Text>{review.comment}</Card.Text>
+              <Col>Producto: {review.productData.nameProduct}</Col>
+              <Row>&nbsp;</Row>
+              <Col>
+                <Card.Text>{review.comment}</Card.Text>
+              </Col>
               <Row>&nbsp;</Row>
               
               {/* <Card.Text>{review.type}</Card.Text> */}
