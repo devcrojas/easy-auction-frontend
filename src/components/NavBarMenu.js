@@ -46,7 +46,7 @@ function NavBarMenu(params) {
                             <Nav.Link href="#pricing" className={(view==="Vendors")?'nav-activate':''}>Vendedores</Nav.Link>
                         </Nav>
                         <Nav>
-                            <NavDropdown title="Arthur Barker" id="collasible-nav-dropdown">
+                            <NavDropdown title={params.user.firstName + " " + params.user.lastName} id="collasible-nav-dropdown">
                                 <NavDropdown.Item href="#action/3.1">Reiniciar Password</NavDropdown.Item>
                                 <NavDropdown.Divider />
                                 <NavDropdown.Item onClick={event => authService.logout(navigate)}>
