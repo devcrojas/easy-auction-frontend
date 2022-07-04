@@ -1,5 +1,4 @@
-/* eslint-disable react/style-prop-object */
-import React, { useState, useRef, useEffect, Fragment } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { Form, Container, Col, Row, Card } from 'react-bootstrap'
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import '@sweetalert2/theme-material-ui/material-ui.css'
@@ -141,7 +140,7 @@ const CreateProduct = () => {
     // Funcion para enviar los datos del form
     const sendData = async (formData) => {
         // Se realiza la peticion al back
-        let resp = await axios.post('http://localhost:8080/products', formData);
+        let resp = await axios.post('/api/products', formData);
         // Se obtiene el status de la respuesta
         if(resp.status === 201){
             handleClose()

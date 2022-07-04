@@ -18,6 +18,12 @@
   background-color: darkgray;
 }
 
+.nav-activate{
+  background-color:darkturquoise;
+  border-radius: 2rem;
+  color: black;
+}
+
 .profilePicture-sidebar{
   height: 36px;
   width: 36px;

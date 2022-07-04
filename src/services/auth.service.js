@@ -6,14 +6,14 @@ const login = (body) => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(body)
             };
-            var loginCheck = await fetch("/login", requestOptions);
+            var loginCheck = await fetch("/api/login", requestOptions);
             resolve(loginCheck);
     });
 };
 
 const logout = (navigate) => {
     localStorage.removeItem("token");
-    navigate("/producto");
+    navigate("/");
 };
 
 const getCurrentUser = () => {
@@ -22,10 +22,23 @@ const getCurrentUser = () => {
     return decoded;
 };
 
+const getUserByEmail = async (body) => {
+    return new Promise(async (resolve, reject) => {
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+        };
+        var getUser = await fetch("/api/auth/resetPassword/getUserById", requestOptions);
+        resolve(await getUser.json());
+    });
+}
+
 const AuthService = {
     login,
     logout,
-    getCurrentUser
+    getCurrentUser,
+    getUserByEmail
 }
 
 export default AuthService;
