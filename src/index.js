@@ -30,7 +30,7 @@ root.render(
   <Router>
     <Routes>
       <Route exact path="/" element={ <ProtectedRouteLogin >  <Welcome /> </ProtectedRouteLogin>}></Route>
-      <Route exact path='/producto' element={ <ProtectedRoute >  <Home /> </ProtectedRoute> }></Route>
+      <Route exact path='/productos' element={ <ProtectedRoute >  <Home /> </ProtectedRoute> }></Route>
       <Route exact path="/register" element={<Register />}></Route>
       <Route exact path="/perfil" element={ <ProtectedRoute >  <Profile  /> </ProtectedRoute>}></Route>
     </Routes>
