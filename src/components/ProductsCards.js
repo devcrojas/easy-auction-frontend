@@ -7,7 +7,6 @@ import { Zoom } from 'react-slideshow-image';
 function ProductsCards() {
 
     const [show, setShow] = useState(false);
-
     const [apis, setApis] = useState([]);
     const [detalle, setDetalles] = useState({
         "_id": "",
@@ -37,8 +36,8 @@ function ProductsCards() {
         getProductos()
     }, [])
 
-    var getProductos = async function () {
-        let produc = await fetch("http://localhost:8080/products",
+    let getProductos = async function () {
+        let produc = await fetch("http://localhost:8080/api/products",
             {
                 method: "GET"
             }
@@ -53,13 +52,12 @@ function ProductsCards() {
 
     const cards = () => {
         let card = apis.map((producto) => {
-
             let initialDate = new Date(producto.auctionDate.initialD).toLocaleDateString();
             let finalDate = new Date(producto.auctionDate.final).toLocaleDateString() + ' ' + new Date(producto.auctionDate.final).toLocaleTimeString();
             let imag = (producto.file) ? producto.file.filePath : 'uploads\\sin.jpg' 
             return (
-                <Col sx={12} lg={6} key={producto._id}>
-                <Card sx={{ width:'100%',minHeight:'50%', borderRadius: 5,  marginBottom: 3 }} elevation={10} key={producto._id}>
+                <Col sx={12} lg={6} key={producto._id} className='mb-5'>
+                <Card sx={{ width:'100%',height:'100%', borderRadius: 5,  marginBottom: 10 }} elevation={10} key={producto._id}>
                     <CardActionArea onClick={ () => {
                         setDetalles(apis.find(product => product._id === producto._id));
                         handleShow();
@@ -76,7 +74,7 @@ function ProductsCards() {
                                 component="img"
                                 image={`http://localhost:8080\\${imag}`}
                                 alt={producto.nameProduct}
-                                sx={{ width: 400,height: 250 }}
+                                sx={{ width: 350,height: 350 }}
                                 />
                         </Row>
                         <CardContent>
