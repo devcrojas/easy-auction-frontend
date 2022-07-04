@@ -22,7 +22,7 @@ function Register() {
         })
     }
     useEffect(() => {
-        if(data.name !== '' && data.firstName !== '' && data.email !== '' && data.password !== ''){
+        if (data.name !== '' && data.firstName !== '' && data.email !== '' && data.password !== '') {
             setDis(false);
         } else {
             setDis(true);
@@ -34,10 +34,11 @@ function Register() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         };
-        fetch("/user/register", requestOptions)
+        fetch("/api/user/register", requestOptions)
             .then((res) => res.json())
             .then((data) => {
                 if (data._id !== '') {
+                    sendProfile();
                     Swal.fire({
                         icon: 'success',
                         title: "Usuario registrado",
@@ -53,6 +54,39 @@ function Register() {
                 }
             })
             .catch(error => { console.error("Error", error.message) });
+
+    }
+    function sendProfile() {
+        let profile = {
+            "_id": data.email,
+            "firstName": data.name,
+            "lastName": data.firstName,
+            "birthday": "",
+            "address": {
+                "cpp": "",
+                "street": "",
+                "suburb": "",
+                "municipaly": "",
+                "state": "",
+            },
+            "phone": "",
+            "email": data.email,
+            "password": "",
+            "status": "true"
+        }
+        const requestOptions = {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(profile)
+        };
+        fetch("/api/profiles/", requestOptions)
+            .then((res) => res.json())
+            .then((data) => {
+                if (data._id !== '') {
+                    console.log("se creo el perfil")
+                }
+            })
+            .catch(error => { console.error("Error in Profile", error.message) });
 
     }
     return (

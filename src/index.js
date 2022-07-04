@@ -7,6 +7,7 @@ import Products from './components/Products';
 import serviceAuth from './services/auth.service'
 import Profile from './components/Profile';
 import ResetPassword from './components/ResetPassword';
+import { Home } from '@mui/icons-material';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 const ProtectedRoute = ({ children }) => {
@@ -30,7 +31,7 @@ root.render(
     <Routes>
       <Route exact path="/" element={ <ProtectedRouteLogin >  <Welcome /> </ProtectedRouteLogin>}></Route>
       <Route exact path='/ejemploDeIntegracion' element={ <ProtectedRoute >  <Home /> </ProtectedRoute> }></Route>
-      <Route exact path="/profile" element={ <ProtectedRouteLogin >  <Profile /> </ProtectedRouteLogin>}></Route>
+      <Route exact path="/profile" element={ <ProtectedRoute >  <Profile /> </ProtectedRoute>}></Route>
       <Route exact path="/resetPassword/:jwtoken" element={  <ResetPassword /> }></Route>
       <Route exact path="/producto" element={ <ProtectedRoute > <Products /> </ProtectedRoute>}></Route>
     </Routes>

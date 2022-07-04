@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     Button, Card, CardContent,
     Fade, Divider, FormGroup,
@@ -22,7 +22,10 @@ function Profile() {
     const [user, setUser] = useState(AuthService.getCurrentUser());
     const [expanded, setExpanded] = useState(false);
     const [profile, setProfile] = useState(AuthService.getCurrentUser().profile);
-
+    useEffect(() => {
+        changeImgProf();
+    }, [])
+    
     const handleInputChange = (event) => {
         setProfile({
             ...profile,
@@ -57,7 +60,7 @@ function Profile() {
             method: "PUT",
             body: formData
         }
-        let resp = await fetch(`http://localhost:8080/profiles/image/${user.id}`, options)
+        let resp = await fetch(`/api/profiles/image/${user.id}`, options)
         if (resp.status === 201) {
             changeImgProf();
             Swal.fire(
@@ -84,7 +87,7 @@ function Profile() {
             },
             body: JSON.stringify(profile)
         }
-        let resp = await fetch(`http://localhost:8080/profiles/${user.id}`, options)
+        let resp = await fetch(`/api/profiles/${user.id}`, options)
         if (resp.status === 201) {
             Swal.fire(
                 'Perfil Actualizado!',
@@ -103,19 +106,18 @@ function Profile() {
         let options = {
             method: "GET"
         }
-        let resp = await fetch(`http://localhost:8080/profiles/${user.id}`, options);
+        let resp = await fetch(`/api/profiles/${user.id}`, options);
         let response = await resp.json();
-        console.log(response.file.filePath)
         setProfile(response)
     }
     let imageProfile = profile.file;
     return (
         <>
-            <NavBarMenu></NavBarMenu>
+            <NavBarMenu view={""}></NavBarMenu>
             <Container fluid style={{ background: "#F0F2F5" }}>
                 <Row>
                     <Col xs={3} className="sidebarEasy">
-                        <MenuLateral></MenuLateral>
+                        <MenuLateral view={"MyProfile"} imgProfile={profile.file}></MenuLateral>
                     </Col>
                     <Col xs={9} className="p-2">
                         <Container fluid>
