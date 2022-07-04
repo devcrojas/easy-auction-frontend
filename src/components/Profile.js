@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import {
     Button, Card, CardContent,
     Fade, Divider, FormGroup,
@@ -18,17 +18,36 @@ import ModeEditIcon from '@mui/icons-material/ModeEdit';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import Swal from 'sweetalert2';
 
-//import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 function Profile() {
     const [user, setUser] = useState(AuthService.getCurrentUser());
     const [expanded, setExpanded] = useState(false);
     const [profile, setProfile] = useState(AuthService.getCurrentUser().profile);
-    const [upProfile, setUpProfile] = useState({})
     const handleInputChange = (event) => {
-        setUpProfile({
-            ...upProfile,
+        setProfile({
+            ...profile,
             [event.target.name]: event.target.value
         })
+    }
+    const handleInputChangeAddress = (event) => {
+        switch (event.target.name) {
+            case "cpp":
+                profile.address.cpp = event.target.value
+                break;
+            case "street":
+                profile.address.street = event.target.value
+                break;
+            case "suburb":
+                profile.address.suburb = event.target.value
+                break;
+            case "municipaly":
+                profile.address.municipaly = event.target.value
+                break;
+            case "state":
+                profile.address.state = event.target.value
+                break;
+            default:
+                break;
+        }
     }
     const handleInputImage = async (event) => {
         let formData = new FormData();
@@ -39,12 +58,12 @@ function Profile() {
         }
         let resp = await fetch(`http://localhost:8080/profiles/${user.id}`, options)
         if (resp.status === 201) {
+            changeImgProf();
             Swal.fire(
                 'Fotografia Actualizado!',
                 'Seguir navegando',
                 'success'
             );
-            refreshUser();
         } else {
             Swal.fire(
                 'Error al actualizar perfil!',
@@ -62,7 +81,7 @@ function Profile() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(upProfile)
+            body: JSON.stringify(profile)
         }
         let resp = await fetch(`http://localhost:8080/profiles/${user.id}`, options)
         if (resp.status === 201) {
@@ -71,7 +90,6 @@ function Profile() {
                 'Seguir navegando',
                 'success'
             );
-            refreshUser();
         } else {
             Swal.fire(
                 'Error al actualizar perfil!',
@@ -80,12 +98,14 @@ function Profile() {
             );
         }
     }
-    function refreshUser() {
-        /* var data = await authService.login(user);
-        data = await data.json(); */
+    async function changeImgProf() {
+        let options = {
+            method: "GET"
+        }
+        let resp = await fetch(`http://localhost:8080/profiles/${user.id}`, options);
+        console.log(resp)
     }
-
-    let fotoProfile = (typeof profile.files.filePath !== undefined) ? profile.files.filePath : "upluads\\sin-imagen.jpg"
+    let imageProfile = profile.file;
     return (
         <>
             <NavBarMenu></NavBarMenu>
@@ -115,7 +135,7 @@ function Profile() {
                                                                         </IconButton>
                                                                     </label>
                                                                 }>
-                                                                <Image roundedCircle src={}  style={{ width: '8rem' }}></Image>
+                                                                <Image roundedCircle src={imageProfile.filePath} style={{ width: '8rem' }}></Image>
                                                             </Badge>
                                                         </Col>
                                                         <Rating name="disabled" value={4} disabled sx={{ justifyContent: "center" }} />
@@ -173,15 +193,15 @@ function Profile() {
                                                                     </Row>
                                                                     <Row>
                                                                         <Col xs={6} className="justify-content-center">
-                                                                            <TextField type="text" name="cpp" label="CPP" variant="outlined" defaultValue={profile.address.cpp} onChange={handleInputChange} margin="normal" size="small" max={5} required />
-                                                                            <TextField type="text" name="municipaly" label="Delegación/Municipio" variant="outlined" defaultValue={profile.address.municipaly} onChange={handleInputChange} margin="normal" size="small" required />
+                                                                            <TextField type="text" name="cpp" label="CPP" variant="outlined" defaultValue={profile.address.cpp} onChange={handleInputChangeAddress} margin="normal" size="small" max={5} required />
+                                                                            <TextField type="text" name="municipaly" label="Delegación/Municipio" variant="outlined" defaultValue={profile.address.municipaly} onChange={handleInputChangeAddress} margin="normal" size="small" required />
                                                                         </Col>
                                                                         <Col xs={6} className="justify-content-center">
-                                                                            <TextField type="text" name="state" label="Estado" variant="outlined" defaultValue={profile.address.state} onChange={handleInputChange} margin="normal" size="small" required />
-                                                                            <TextField type="text" name="suburb" label="Colonia/Barrio" variant="outlined" defaultValue={profile.address.suburb} onChange={handleInputChange} margin="normal" size="small" required />
+                                                                            <TextField type="text" name="state" label="Estado" variant="outlined" defaultValue={profile.address.state} onChange={handleInputChangeAddress} margin="normal" size="small" required />
+                                                                            <TextField type="text" name="suburb" label="Colonia/Barrio" variant="outlined" defaultValue={profile.address.suburb} onChange={handleInputChangeAddress} margin="normal" size="small" required />
                                                                         </Col>
                                                                         <Col xs={12}>
-                                                                            <TextField type="text" name="street" label="Calle y numero" variant="outlined" defaultValue={profile.address.street} onChange={handleInputChange} margin="normal" size="small" sx={{ width: "100%" }} required />
+                                                                            <TextField type="text" name="street" label="Calle y numero" variant="outlined" defaultValue={profile.address.street} onChange={handleInputChangeAddress} margin="normal" size="small" sx={{ width: "100%" }} required />
                                                                         </Col>
                                                                     </Row>
                                                                     <Row>
