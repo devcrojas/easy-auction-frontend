@@ -6,6 +6,7 @@ import authService from '../services/auth.service'
 function NavBarMenu(params) {
     const navigate = useNavigate();
     const [view, setView] = useState(params.view);
+    const [user, setUser] = useState();
     useEffect(() => {
         console.log(params);
         let x = async function () {
@@ -30,7 +31,6 @@ function NavBarMenu(params) {
                 }
             });
             let resp = await getF;
-            console.log(resp);
         }
         x();
     });

@@ -108,12 +108,13 @@ function Profile() {
         }
         let resp = await fetch(`/api/profiles/${user.id}`, options);
         let response = await resp.json();
+        console.log(response);
         setProfile(response)
     }
     let imageProfile = profile.file;
     return (
         <>
-            <NavBarMenu view={""}></NavBarMenu>
+            <NavBarMenu view={""} user={user.profile}></NavBarMenu>
             <Container fluid style={{ background: "#F0F2F5" }}>
                 <Row>
                     <Col xs={3} className="sidebarEasy">
@@ -140,7 +141,7 @@ function Profile() {
                                                                         </IconButton>
                                                                     </label>
                                                                 }>
-                                                                <Image roundedCircle src={imageProfile.filePath} style={{ width: '8rem' }}></Image>
+                                                                <Image roundedCircle src={`\\${imageProfile.filePath}`} style={{ width: '8rem' }}></Image>
                                                             </Badge>
                                                         </Col>
                                                         <Rating name="disabled" value={4} disabled sx={{ justifyContent: "center" }} />

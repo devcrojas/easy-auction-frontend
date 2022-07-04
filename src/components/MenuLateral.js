@@ -1,4 +1,4 @@
-import React, {useState } from 'react'
+import React from 'react'
 import { Button, Col, Container, Image, Row } from 'react-bootstrap'
 import { ReactComponent as ProductIco } from "../images/products_nav.svg"
 import { ReactComponent as ComprasIco } from "../images/compras_nav.svg"
@@ -10,8 +10,9 @@ import AuthService from '../services/auth.service'
 
 function MenuLateral(params) {
   const [view, setView] = useState(params.view);
-  const [user, setUser] = useState(AuthService.getCurrentUser())
-  let imgProfile = user.profile.file;
+  const [imgProf, setImgProf] = useState(params.imgProfile)
+  const [user, setUser] = useState(AuthService.getCurrentUser());
+  let imgProfile = imgProf;
   return (
     <Container>
       <Row className='p-2 d-flex align-items-center justify-content-center'>
@@ -54,7 +55,7 @@ function MenuLateral(params) {
       </Row>
       <Row>
         <Col style={{ paddingRight: "0" }}>
-          <Button variant="link" className={(view === "MyProfile") ? "btn-sidebar nav-activate" : "btn-sidebar"}>
+          <Button variant="link"  onClick={() => {window.location.href = "/profile"}} className={(view === "MyProfile") ? "btn-sidebar nav-activate" : "btn-sidebar"}>
             <ProfileIco className="ico-sidebar"></ProfileIco>
             <label className='m-2'>Mi perfil</label>
           </Button>
