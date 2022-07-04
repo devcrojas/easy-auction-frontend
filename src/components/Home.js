@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-import { useNavigate } from "react-router-dom";
 import { Container, Row, Col } from 'react-bootstrap'
 import "../nav.css"
 import NavBarMenu from './NavBarMenu'
@@ -7,7 +6,6 @@ import MenuLateral from './MenuLateral';
 import AuthService from '../services/auth.service';
 
 function Home() {
-  const navigate = useNavigate();
 
   useEffect(() => {
     let user = AuthService.getCurrentUser();
@@ -28,6 +26,8 @@ function Home() {
         </Row>
       </Container>
     </>
+
+
   )
 }
 

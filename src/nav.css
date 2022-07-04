@@ -21,6 +21,7 @@
 .nav-activate{
   background-color:darkturquoise;
   border-radius: 2rem;
+  color: black;
 }
 
 .profilePicture-sidebar{

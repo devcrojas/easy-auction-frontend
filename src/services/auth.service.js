@@ -6,7 +6,7 @@ const login = (body) => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(body)
             };
-            var loginCheck = await fetch("/login", requestOptions);
+            var loginCheck = await fetch("/api/login", requestOptions);
             resolve(loginCheck);
     });
 };
@@ -29,7 +29,7 @@ const getUserByEmail = async (body) => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(body)
         };
-        var getUser = await fetch("/auth/resetPassword/getUserById", requestOptions);
+        var getUser = await fetch("/api/auth/resetPassword/getUserById", requestOptions);
         resolve(await getUser.json());
     });
 }
