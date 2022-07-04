@@ -5,7 +5,6 @@ import { ReactComponent as ComprasIco } from "../images/compras_nav.svg"
 import { ReactComponent as OfertasIco } from "../images/ofertas_nav.svg"
 import { ReactComponent as ResenasIco } from "../images/resenas_nav.svg"
 import { ReactComponent as ProfileIco } from "../images/profile_nav.svg"
-import { Link } from 'react-router-dom'
 
 function MenuLateral() {
     return (
