@@ -84,6 +84,8 @@ function Profile() {
         /* var data = await authService.login(user);
         data = await data.json(); */
     }
+
+    let fotoProfile = (typeof profile.files.filePath !== undefined) ? profile.files.filePath : "upluads\\sin-imagen.jpg"
     return (
         <>
             <NavBarMenu></NavBarMenu>
@@ -113,7 +115,7 @@ function Profile() {
                                                                         </IconButton>
                                                                     </label>
                                                                 }>
-                                                                <Image roundedCircle src={profile.files}  style={{ width: '8rem' }}></Image>
+                                                                <Image roundedCircle src={}  style={{ width: '8rem' }}></Image>
                                                             </Badge>
                                                         </Col>
                                                         <Rating name="disabled" value={4} disabled sx={{ justifyContent: "center" }} />
