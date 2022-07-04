@@ -22,6 +22,7 @@ function Profile() {
     const [user, setUser] = useState(AuthService.getCurrentUser());
     const [expanded, setExpanded] = useState(false);
     const [profile, setProfile] = useState(AuthService.getCurrentUser().profile);
+
     const handleInputChange = (event) => {
         setProfile({
             ...profile,
@@ -56,7 +57,7 @@ function Profile() {
             method: "PUT",
             body: formData
         }
-        let resp = await fetch(`http://localhost:8080/profiles/${user.id}`, options)
+        let resp = await fetch(`http://localhost:8080/profiles/image/${user.id}`, options)
         if (resp.status === 201) {
             changeImgProf();
             Swal.fire(
@@ -103,7 +104,9 @@ function Profile() {
             method: "GET"
         }
         let resp = await fetch(`http://localhost:8080/profiles/${user.id}`, options);
-        console.log(resp)
+        let response = await resp.json();
+        console.log(response.file.filePath)
+        setProfile(response)
     }
     let imageProfile = profile.file;
     return (

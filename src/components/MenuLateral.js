@@ -12,14 +12,14 @@ function MenuLateral() {
     <Container>
       <Row className='p-2 d-flex align-items-center justify-content-center'>
         <Col>
-          <Image className='profilePicture-sidebar' src="uploads\\2022-07-04T03-31-02.972Z-perfil1.jpg"></Image>
-          <label className='m-2'>Juan CArlos</label>
+          <Image className='profilePicture-sidebar' src="profile_cr.jpeg"></Image>
+          <label className='m-2'>Arthur Barker</label>
         </Col>
       </Row>
       <Row>
         <Col style={{ paddingRight: "0" }}>
           <Link to="/producto">
-            <Button variant="link" className='btn-sidebar'>
+            <Button variant="link" className='btn-sidebar btn-sidebar-activate'>
               <ProductIco className="ico-sidebar"></ProductIco>
               <label className='m-2'>Mis productos</label>
             </Button>
@@ -59,7 +59,7 @@ function MenuLateral() {
       <Row>
         <Col style={{ paddingRight: "0" }}>
           <Link to="/perfil">
-            <Button variant="link" className='btn-sidebar btn-sidebar-activate'>
+            <Button variant="link" className='btn-sidebar'>
               <ProfileIco className="ico-sidebar"></ProfileIco>
               <label className='m-2'>Mi perfil</label>
             </Button>
