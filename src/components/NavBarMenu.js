@@ -42,7 +42,7 @@ function NavBarMenu(params) {
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                     <Navbar.Collapse id="responsive-navbar-nav">
                         <Nav className="me-auto">
-                            <Nav.Link href="/home" className={(view==="Products")?'nav-activate':''}>Productos</Nav.Link>
+                            <Nav.Link href="/producto" className={(view==="Products")?'nav-activate':''}>Productos</Nav.Link>
                             <Nav.Link href="#pricing" className={(view==="Vendors")?'nav-activate':''}>Vendedores</Nav.Link>
                         </Nav>
                         <Nav>
