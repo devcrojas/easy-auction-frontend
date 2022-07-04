@@ -15,7 +15,7 @@ function NavBarMenu(params) {
                         method: 'GET',
                         headers: { 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem("token") }
                     };
-                    var loginCheck = await fetch("/books", requestOptions);
+                    var loginCheck = await fetch("/api/books", requestOptions);
                     if (loginCheck.ok) {
                         resolve(loginCheck.json());
                     } else {
