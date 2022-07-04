@@ -14,11 +14,12 @@ function MenuLateral(params) {
   const [view, setView] = useState(params.view);
   const [imgProf, setImgProf] = useState(params.imgProfile)
   const [user, setUser] = useState(AuthService.getCurrentUser())
+  let imgProfile = user.profile.file;
   return (
     <Container>
       <Row className='p-2 d-flex align-items-center justify-content-center'>
         <Col>
-          <Image className='profilePicture-sidebar' src={imgProf.filePath}></Image>
+          <Image className='profilePicture-sidebar' src={imgProfile.filePath}></Image>
           <label className='m-2'>{user.profile.firstName}</label>
         </Col>
       </Row>
