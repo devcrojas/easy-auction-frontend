@@ -117,7 +117,7 @@ function Profile() {
             <Container fluid style={{ background: "#F0F2F5" }}>
                 <Row>
                     <Col xs={3} className="sidebarEasy">
-                        <MenuLateral view={"MyProfile"} imgProfile={profile.file}></MenuLateral>
+                        <MenuLateral view={"MyProfile"}></MenuLateral>
                     </Col>
                     <Col xs={9} className="p-2">
                         <Container fluid>

@@ -1,18 +1,15 @@
-import React, { useEffect } from 'react'
+import React, {useState } from 'react'
 import { Button, Col, Container, Image, Row } from 'react-bootstrap'
 import { ReactComponent as ProductIco } from "../images/products_nav.svg"
 import { ReactComponent as ComprasIco } from "../images/compras_nav.svg"
 import { ReactComponent as OfertasIco } from "../images/ofertas_nav.svg"
 import { ReactComponent as ResenasIco } from "../images/resenas_nav.svg"
 import { ReactComponent as ProfileIco } from "../images/profile_nav.svg"
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
 import AuthService from '../services/auth.service'
 
 
 function MenuLateral(params) {
   const [view, setView] = useState(params.view);
-  const [imgProf, setImgProf] = useState(params.imgProfile)
   const [user, setUser] = useState(AuthService.getCurrentUser())
   let imgProfile = user.profile.file;
   return (
