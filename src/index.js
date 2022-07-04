@@ -7,6 +7,7 @@ import Welcome from './components/Welcome';
 import serviceAuth from './services/auth.service'
 import Profile from './components/Profile';
 import ResetPassword from './components/ResetPassword';
+import Register from './components/Register';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
