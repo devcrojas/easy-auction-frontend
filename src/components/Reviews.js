@@ -4,6 +4,7 @@ import { Button, Row, Card, Form } from "react-bootstrap";
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import '@sweetalert2/theme-material-ui/material-ui.css'
 import { Container } from "@mui/system";
+import { Select, MenuItem, FormControl, InputLabel} from '@mui/material';
 import AuthService from '../services/auth.service'
 
 const colors = {
@@ -22,14 +23,36 @@ function Reviews(){
     const stars = Array(5).fill(0);
     const [Estrellas, setEstrellas] = useState(0);
     const [hoverValue, setHoverValue] =useState();
-    //const [api, setApi] = useState();
+    const [product, setProduct] = useState([]);
     const [comentario, setComentario] = useState("");
     const [tipo, setTipo] = useState("");
     const [user, setUser] = useState();
+    const [selectProducts, setSelectProducts] = useState([]);
+    
 
-    useEffect(() => {setUser(AuthService.getCurrentUser)}, [])
+    useEffect(() => {
+        setUser(AuthService.getCurrentUser())
+        getProducts()
+    }, [])
+
+    let getProducts = async function(){
+        let prod = await fetch('http://localhost:8080/products',
+        {
+            method: 'GET'
+        });
+        let awProduc = await prod.json();
+        console.log(awProduc)
+        const listItems = awProduc.map((product) =>
+            <Form.Select>{product._id}</Form.Select>
+        );
+        setSelectProducts(listItems)
+
+        setProduct(awProduc);
+        return awProduc;
+    }
 
     const handleClick = value => {
+        console.log(product)
         setEstrellas(value)
         if(value <= 2){
             setTipo("Pésimo Servicio")
@@ -38,6 +61,8 @@ function Reviews(){
             setTipo("Excelente servicio")
         }
     };
+
+    
 
     const handleMouseOver = value => {
         setHoverValue(value)
@@ -86,6 +111,7 @@ function Reviews(){
             title: '¡Ah ocurrido un error inesperado!',
         })
     }
+    
 }
 
 return (
