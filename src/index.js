@@ -4,6 +4,7 @@ import './index.css';
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 import Home from './components/Home';
 import Welcome from './components/Welcome';
+import Products from './components/Products';
 import serviceAuth from './services/auth.service'
 import Profile from './components/Profile';
 import ResetPassword from './components/ResetPassword';
@@ -29,9 +30,10 @@ root.render(
   <Router>
     <Routes>
       <Route exact path="/" element={ <ProtectedRouteLogin >  <Welcome /> </ProtectedRouteLogin>}></Route>
-      <Route exact path='/producto' element={ <ProtectedRoute >  <Home /> </ProtectedRoute> }></Route>
+      <Route exact path='/ejemploDeIntegracion' element={ <ProtectedRoute >  <Home /> </ProtectedRoute> }></Route>
       <Route exact path="/profile" element={ <ProtectedRouteLogin >  <Profile /> </ProtectedRouteLogin>}></Route>
       <Route exact path="/resetPassword/:jwtoken" element={  <ResetPassword /> }></Route>
+      <Route exact path="/producto" element={ <ProtectedRoute > <Products /> </ProtectedRoute>}></Route>
     </Routes>
   </Router>
 );
