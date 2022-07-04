@@ -72,7 +72,7 @@ function ProductsCards() {
                             <CardMedia
                                 id={producto._id}
                                 component="img"
-                                image={`\\${imag}`}
+                                image={`http://localhost:8080\\${imag}`}
                                 alt={producto.nameProduct}
                                 sx={{ width: 350,height: 350 }}
                                 />
@@ -173,18 +173,19 @@ function ProductsCards() {
 
     function showSlider(detImages,principal) {
 
-        if (detImages.length > 1) {
+        if (detImages.length >= 1) {
             return (
                 <Zoom scale={0.4}>
+                    <img  style={{ width: "100%", height: 350, border: 5 }} src={`http://localhost:8080\\${principal.filePath}`} alt={principal.nameProduct} />
                     {
                         detImages.map(((im, index) => {
-                            return <img key={index} style={{ width: "100%", height: 350, border: 5 }} src={`\\${im.filePath}`} alt={index} />
+                            return <img key={index} style={{ width: "100%", height: 350, border: 5 }} src={`http://localhost:8080\\${im.filePath}`} alt={index} />
                         }))
                     }
                 </Zoom>
             );
         }else{
-            return <img  style={{ width: "100%", height: 350, border: 5 }} src={`\\${principal.filePath}`} alt={principal.nameProduct} />
+            return <img  style={{ width: "100%", height: 350, border: 5 }} src={`http://localhost:8080\\${principal.filePath}`} alt={principal.nameProduct} />
         }
     }
 
