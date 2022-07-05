@@ -21,13 +21,13 @@ const styles = {
   
 function Reviews(){
     const stars = Array(5).fill(0);
-    const [Estrellas, setEstrellas] = useState(0);
+    const [estrellas, setEstrellas] = useState(0);
     const [hoverValue, setHoverValue] =useState();
     const [product, setProduct] = useState([]);
     const [comentario, setComentario] = useState("");
     const [tipo, setTipo] = useState("");
     const [user, setUser] = useState();
-    const [selectProducts, setSelectProducts] = useState([]);
+    const [selectProducts, setSelectProducts] = useState('');
     
 
     useEffect(() => {
@@ -41,14 +41,9 @@ function Reviews(){
             method: 'GET'
         });
         let awProduc = await prod.json();
-        console.log(awProduc)
-        const listItems = awProduc.map((product) =>
-            <Form.Select>{product._id}</Form.Select>
-        );
-        setSelectProducts(listItems)
 
         setProduct(awProduc);
-        return awProduc;
+        
     }
 
     const handleClick = value => {
@@ -62,7 +57,10 @@ function Reviews(){
         }
     };
 
-    
+    const handleChange = (event) => {
+        console.log(event)
+        setSelectProducts(event.target.value)
+    }
 
     const handleMouseOver = value => {
         setHoverValue(value)
@@ -75,8 +73,9 @@ function Reviews(){
     const sendReview = async()  => {
         const resena = {
             name: user.name,
+            product: selectProducts,
             comment: comentario,
-            stars: Estrellas,
+            stars: estrellas,
             type: tipo,
             seller: "Sarai"
             
@@ -98,10 +97,12 @@ function Reviews(){
         .then((result) => {
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
+                
+                setEstrellas(0);  
+                setComentario("");
+                setTipo("");
+                setSelectProducts("");
               
-              setEstrellas(0);  
-              setComentario("");
-              setTipo("");
             }
         })
     }
@@ -134,7 +135,7 @@ return (
                                                 marginRight: 10,
                                                 cursor: "pointer"
                                             }}
-                                            color={(hoverValue || Estrellas) > index ? colors.yellow : colors.grey}
+                                            color={(hoverValue || estrellas) > index ? colors.yellow : colors.grey}
                                             onClick={() => handleClick(index + 1)}
                                             onMouseOver={() => handleMouseOver(index + 1)}
                                             onMouseLeave={handleMouseLeave}
@@ -154,6 +155,22 @@ return (
                             </Form.Group>
                         </Row>
                         <Row>&nbsp;</Row>
+                        <Row>
+                            <FormControl className='w-100 my-2'>
+                                <InputLabel>Productos</InputLabel>
+                                <Select onChange={handleChange} displayEmpty={(estrellas === 0) ? false : true}>
+                                
+                                {
+                                    product.map((product) => 
+                                    {
+                                        return <MenuItem value={product._id} key={product._id}>{product.nameProduct}</MenuItem>
+                                    }
+                                    )
+                                }
+                                
+                                </Select>
+                            </FormControl>
+                        </Row>
                         <Row>
                             <Form.Group className="mb-3" controlId="comentario">
                                 <Form.Label>¿Qué te parecio la subasta?</Form.Label>
