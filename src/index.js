@@ -2,13 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
-import NavBarMenu from './components/NavBarMenu';
-import Home from './components/Home';
 import Welcome from './components/Welcome';
 import Products from './components/Products';
-import Reviews from './components/Reviews';
-import Register from './components/Register';
 import serviceAuth from './services/auth.service'
+import Profile from './components/Profile';
+import ResetPassword from './components/ResetPassword';
+import { Home } from '@mui/icons-material';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 const ProtectedRoute = ({ children }) => {
@@ -22,7 +21,7 @@ const ProtectedRoute = ({ children }) => {
 const ProtectedRouteLogin = ({ children }) => {
   var user = serviceAuth.getCurrentUser();
   if (user) {
-    return <Navigate to="/home" replace />;
+    return <Navigate to="/producto" replace />;
   }
   return children;
 };
@@ -31,10 +30,10 @@ root.render(
   <Router>
     <Routes>
       <Route exact path="/" element={ <ProtectedRouteLogin >  <Welcome /> </ProtectedRouteLogin>}></Route>
-      <Route exact path='/home' element={ <ProtectedRoute >  <Home /> </ProtectedRoute> }></Route>
-      <Route exact path="/register" element={<Register />}></Route>
-      <Route exact path="/productos" element={<Products />}></Route>
-      <Route exact path="/reviews" element={<ProtectedRoute >  <Reviews /> </ProtectedRoute>}></Route>
+      <Route exact path='/ejemploDeIntegracion' element={ <ProtectedRoute >  <Home /> </ProtectedRoute> }></Route>
+      <Route exact path="/profile" element={ <ProtectedRoute >  <Profile /> </ProtectedRoute>}></Route>
+      <Route exact path="/resetPassword/:jwtoken" element={  <ResetPassword /> }></Route>
+      <Route exact path="/producto" element={ <ProtectedRoute > <Products /> </ProtectedRoute>}></Route>
     </Routes>
   </Router>
 );

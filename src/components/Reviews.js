@@ -83,7 +83,8 @@ function Reviews(){
 
     const myHeaders = new Headers();
     myHeaders.append('Content-Type', 'application/json');
-    let resp = await fetch('http://localhost:8080/reviews',
+    console.log(resena);
+    let resp = await fetch('http://localhost:8080/reviews/',
     {
         method: 'POST',
         headers: myHeaders,

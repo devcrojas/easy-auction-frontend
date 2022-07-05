@@ -1,44 +1,64 @@
-import React from 'react'
-import { Button, Container, Image, Nav, Navbar } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
-import Logo from '../images/logoSub.svg'
-function NavBarMenu() {
+import React, { useEffect, useState } from 'react'
+import {Container, Nav, Navbar, NavDropdown } from 'react-bootstrap'
+import { useNavigate } from 'react-router';
+import { ReactComponent as EasyicoNavBar } from "../images/ico-navbar.svg"
+import authService from '../services/auth.service'
+function NavBarMenu(params) {
+    const navigate = useNavigate();
+    const [view, setView] = useState(params.view);
+    const [user, setUser] = useState(authService.getCurrentUser());
+    useEffect(() => {
+        let x = async function () {
+            let getF = new Promise(async (resolve, reject) => {
+                try {
+                    const requestOptions = {
+                        method: 'GET',
+                        headers: { 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem("token") }
+                    };
+                    var loginCheck = await fetch("/api/books", requestOptions);
+                    if (loginCheck.ok) {
+                        resolve(loginCheck.json());
+                    } else {
+                        if (loginCheck.status === 403) {
+                            localStorage.removeItem("token");
+                            navigate("/")
+                        }
+                        resolve({ status: loginCheck.status });
+                    }
+                } catch (e) {
+                    reject({ status: -1 })
+                }
+            });
+            let resp = await getF;
+        }
+        x();
+    });
     return (
         <>
-            <Navbar bg="dark" variant="dark" hidden>
-                <Container>
-                    <Navbar.Brand href="#home">
-                        <img
-                            alt=""
-                            src={Logo}
-                            width="30"
-                            height="30"
-                            className="d-inline-block align-top"
-                        />{' '}
-                        React Bootstrap
-                    </Navbar.Brand>
-                </Container>
-            </Navbar>
-            <Navbar collapseOnSelect expand="lg" bg="dark" style={{display: "none"}}>
-                <Container>
-                    <Navbar.Brand className='text-white'>
-                        <Image src={Logo} className="imageLogo"></Image>
-                        Easy Auction
-                    </Navbar.Brand>
+            <Navbar collapseOnSelect expand="lg" >
+                <Container fluid>
+                    <Navbar.Brand href="#home"><EasyicoNavBar className="profilePicture-sidebar"></EasyicoNavBar></Navbar.Brand>
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                     <Navbar.Collapse id="responsive-navbar-nav">
                         <Nav className="me-auto">
-                            <Link className='linkPages' to={{ pathname: "/" }}><Button variant="light" size="sm" className="m-1">Home</Button></Link>
-                            <Link className='linkPages' to={{ pathname: "/productos" }}><Button variant="light" size="sm" className="m-1">Productos</Button></Link>
-                            <Link className='linkPages' to={{ pathname: "/resenas" }}><Button variant="light" size="sm" className="m-1">Reseñas</Button></Link>
+                            <Nav.Link href="/producto" className={(view==="Products")?'nav-activate':''}>Productos</Nav.Link>
+                            <Nav.Link href="#pricing" className={(view==="Vendors")?'nav-activate':''}>Vendedores</Nav.Link>
                         </Nav>
                         <Nav>
-                            <Link className='link' to={{ pathname: "/register" }}><Button type="button" variant="success" size="sm" className="m-1">Registrate</Button></Link>
-                            <Link className='link' to={{ pathname: "/auth" }}><Button type="button" variant="primary" size="sm" className="m-1">Inicia sesión</Button></Link>
+                            <NavDropdown title={user.profile.firstName +" "+ user.profile.lastName} id="collasible-nav-dropdown">
+                                <NavDropdown.Item href="#action/3.1">Reiniciar Password</NavDropdown.Item>
+                                <NavDropdown.Divider />
+                                <NavDropdown.Item onClick={event => authService.logout(navigate)}>
+                                    Cerrar Sesión
+                                </NavDropdown.Item>
+                            </NavDropdown>
+                            <Nav.Link eventKey={2} href="#memes" className={(view==="Admin")?'nav-activate':''}>
+                                Administrador
+                            </Nav.Link>
                         </Nav>
                     </Navbar.Collapse>
                 </Container>
-            </Navbar >
+            </Navbar>
         </>
 
     )
