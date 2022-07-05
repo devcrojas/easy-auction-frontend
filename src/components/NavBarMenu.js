@@ -6,9 +6,8 @@ import authService from '../services/auth.service'
 function NavBarMenu(params) {
     const navigate = useNavigate();
     const [view, setView] = useState(params.view);
-    const [user, setUser] = useState();
+    const [user, setUser] = useState(authService.getCurrentUser());
     useEffect(() => {
-        console.log(params);
         let x = async function () {
             let getF = new Promise(async (resolve, reject) => {
                 try {
@@ -46,7 +45,7 @@ function NavBarMenu(params) {
                             <Nav.Link href="#pricing" className={(view==="Vendors")?'nav-activate':''}>Vendedores</Nav.Link>
                         </Nav>
                         <Nav>
-                            <NavDropdown title="Arthur Barker" id="collasible-nav-dropdown">
+                            <NavDropdown title={user.profile.firstName +" "+ user.profile.lastName} id="collasible-nav-dropdown">
                                 <NavDropdown.Item href="#action/3.1">Reiniciar Password</NavDropdown.Item>
                                 <NavDropdown.Divider />
                                 <NavDropdown.Item onClick={event => authService.logout(navigate)}>

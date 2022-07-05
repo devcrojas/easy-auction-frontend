@@ -19,12 +19,12 @@ import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import Swal from 'sweetalert2';
 
 function Profile() {
-    const [user, setUser] = useState(AuthService.getCurrentUser());
+    const [user] = useState(AuthService.getCurrentUser())
     const [expanded, setExpanded] = useState(false);
     const [profile, setProfile] = useState(AuthService.getCurrentUser().profile);
     useEffect(() => {
         changeImgProf();
-    }, [])
+    },[user]) // eslint-disable-line react-hooks/exhaustive-deps
     
     const handleInputChange = (event) => {
         setProfile({
@@ -89,6 +89,8 @@ function Profile() {
         }
         let resp = await fetch(`/api/profiles/${user.id}`, options)
         if (resp.status === 201) {
+            changeImgProf();
+            handleExpandClick()
             Swal.fire(
                 'Perfil Actualizado!',
                 'Seguir navegando',
@@ -108,7 +110,6 @@ function Profile() {
         }
         let resp = await fetch(`/api/profiles/${user.id}`, options);
         let response = await resp.json();
-        console.log(response);
         setProfile(response)
     }
     let imageProfile = profile.file;
@@ -118,7 +119,7 @@ function Profile() {
             <Container fluid style={{ background: "#F0F2F5" }}>
                 <Row>
                     <Col xs={3} className="sidebarEasy">
-                        <MenuLateral view={"MyProfile"}></MenuLateral>
+                        <MenuLateral view={"MyProfile"} profileImg={imageProfile}></MenuLateral>
                     </Col>
                     <Col xs={9} className="p-2">
                         <Container fluid>
@@ -151,13 +152,13 @@ function Profile() {
                                                             <Typography variant="body2" component="div">
                                                                 <List dense={true} sx={{ marginTop: 2 }}>
                                                                     <ListItem sx={{ justifyContent: "center" }}>
-                                                                        {user.name}
+                                                                        {profile.firstName}
                                                                     </ListItem>
                                                                     <ListItem sx={{ justifyContent: "center" }}>
                                                                         {profile.lastName}
                                                                     </ListItem>
                                                                     <ListItem sx={{ justifyContent: "center" }}>
-                                                                        {user.id}
+                                                                        {profile.email}
                                                                     </ListItem>
                                                                 </List>
                                                             </Typography>
