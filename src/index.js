@@ -35,7 +35,7 @@ root.render(
       <Route exact path="/profile" element={ <ProtectedRoute >  <Profile /> </ProtectedRoute>}></Route>
       <Route exact path="/resetPassword/:jwtoken" element={  <ResetPassword /> }></Route>
       <Route exact path="/producto" element={ <ProtectedRoute > <Products /> </ProtectedRoute>}></Route>
-      <Route exact path="/reviews" element={<ProtectedRoute> <Reviews /> </ProtectedRoute>}></Route>
+      <Route exact path="/resenas" element={<ProtectedRoute> <Reviews /> </ProtectedRoute>}></Route>
     </Routes>
   </Router>
 );
