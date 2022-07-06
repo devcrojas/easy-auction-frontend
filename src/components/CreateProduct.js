@@ -112,7 +112,7 @@ const CreateProduct = () => {
         // Se mandan las imagenes
         // Si se puso algo en imagenes se añaden al append
         if(images !== ''){
-            if(images.length == 1){
+            if(images.length === 1){
                 formData.append('files', images[0]);                      
             }else {
                 for (let i = 0; i < images.length; i++) {
