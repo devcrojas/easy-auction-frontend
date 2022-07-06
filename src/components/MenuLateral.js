@@ -22,7 +22,7 @@ function MenuLateral(params) {
       </Row>
       <Row>
         <Col style={{ paddingRight: "0" }}>
-          <Button variant="link" className={(view === "MyProducts") ? "nav-activate btn-sidebar" : "btn-sidebar"}>
+          <Button variant="link" onClick={() => {window.location.href = "/misproductos"}} className={(view === "MyProducts") ? "nav-activate btn-sidebar" : "btn-sidebar"}>
             <ProductIco className="ico-sidebar"></ProductIco>
             <label className='m-2'>Mis productos</label>
           </Button>
@@ -30,7 +30,7 @@ function MenuLateral(params) {
       </Row>
       <Row>
         <Col style={{ paddingRight: "0" }}>
-          <Button variant="link" className={(view === "MyShops") ? "btn-sidebar nav-activate" : "btn-sidebar"}>
+          <Button variant="link" onClick={() => {window.location.href = "/compras"}} className={(view === "MyShops") ? "btn-sidebar nav-activate" : "btn-sidebar"}>
             <ComprasIco className="ico-sidebar"></ComprasIco>
             <label className='m-2'>Mis compras</label>
           </Button>
@@ -38,7 +38,7 @@ function MenuLateral(params) {
       </Row>
       <Row>
         <Col style={{ paddingRight: "0" }}>
-          <Button variant="link" className={(view === "MyOff") ? "btn-sidebar nav-activate" : "btn-sidebar"}>
+          <Button variant="link" onClick={() => {window.location.href = "/ofertas"}} className={(view === "MyOff") ? "btn-sidebar nav-activate" : "btn-sidebar"}>
             <OfertasIco className="ico-sidebar"></OfertasIco>
             <label className='m-2'>Mis ofertas</label>
           </Button>
@@ -46,7 +46,7 @@ function MenuLateral(params) {
       </Row>
       <Row>
         <Col style={{ paddingRight: "0" }}>
-          <Button variant="link" className={(view === "MyReviews") ? "btn-sidebar nav-activate" : "btn-sidebar"}>
+          <Button variant="link" onClick={() => {window.location.href = "/resenas"}} className={(view === "MyReviews") ? "btn-sidebar nav-activate" : "btn-sidebar"}>
             <ResenasIco className="ico-sidebar"></ResenasIco>
             <label className='m-2'>Mis Reseñas</label>
           </Button>
