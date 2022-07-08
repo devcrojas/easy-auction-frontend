@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Container, Modal, Row } from 'react-bootstrap';
-import { Card, CardContent, CardMedia, Typography, CardActionArea, ListItem, CardHeader, Avatar } from '@mui/material'
+import { Card, CardContent, CardMedia, Typography, CardActionArea, ListItem, CardHeader, Avatar, Button } from '@mui/material'
 import 'react-slideshow-image/dist/styles.css'
 import { Zoom } from 'react-slideshow-image';
 
@@ -192,6 +192,17 @@ function ProductsCards() {
     return (
         <>
             <Container>
+                <Row>
+                    <Card sx={{ width:'100%', borderRadius: 5, marginTop: 5 }} elevation={10}>
+                        <CardContent className='text-center'>
+                            <h1>¿Quieres tambien subastar?</h1>
+                            <p>No pierdas tiempo y realiza una subasta tu tambien que esperas!</p>
+                            <Button variant="contained" color="primary" onClick={() => {window.location.href = "/createProducts"}}>
+                                Solicitar subasta
+                            </Button>
+                        </CardContent>
+                    </Card>
+                </Row>
                 <Row md="auto" className='d-flex justify-content-around mt-5'>
                     <>
                         {
