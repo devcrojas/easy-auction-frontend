@@ -2,7 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
-import Home from './components/Home';
 import Welcome from './components/Welcome';
 import Products from './components/Products';
 import Reviews from './components/Reviews';

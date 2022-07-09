@@ -34,7 +34,7 @@ function Register() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
         };
-        fetch("/user/register", requestOptions)
+        fetch("/api/user/register", requestOptions)
             .then((res) => res.json())
             .then((data) => {
                 if (data._id !== '') {
@@ -79,7 +79,7 @@ function Register() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(profile)
         };
-        fetch("/profiles/", requestOptions)
+        fetch("/api/profiles/", requestOptions)
             .then((res) => res.json())
             .then((data) => {
                 if (data._id !== '') {

@@ -1,12 +1,13 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import {Container, Nav, Navbar, NavDropdown } from 'react-bootstrap'
 import { useNavigate } from 'react-router';
 import { ReactComponent as EasyicoNavBar } from "../images/ico-navbar.svg"
 import authService from '../services/auth.service'
-function NavBarMenu() {
+function NavBarMenu(params) {
     const navigate = useNavigate();
+    const [view, setView] = useState(params.view);
+    const [user, setUser] = useState(authService.getCurrentUser());
     useEffect(() => {
-        //console.log("Hola");
         let x = async function () {
             let getF = new Promise(async (resolve, reject) => {
                 try {
@@ -14,7 +15,7 @@ function NavBarMenu() {
                         method: 'GET',
                         headers: { 'Content-Type': 'application/json', "Authorization": "Bearer " + localStorage.getItem("token") }
                     };
-                    var loginCheck = await fetch("/books", requestOptions);
+                    var loginCheck = await fetch("/api/books", requestOptions);
                     if (loginCheck.ok) {
                         resolve(loginCheck.json());
                     } else {
@@ -29,7 +30,10 @@ function NavBarMenu() {
                 }
             });
             let resp = await getF;
+<<<<<<< HEAD
             //console.log(resp);
+=======
+>>>>>>> remotes/origin/staging
         }
         x();
     });
@@ -41,18 +45,18 @@ function NavBarMenu() {
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                     <Navbar.Collapse id="responsive-navbar-nav">
                         <Nav className="me-auto">
-                            <Nav.Link href="/home">Productos</Nav.Link>
-                            <Nav.Link href="#pricing">Vendedores</Nav.Link>
+                            <Nav.Link href="/producto" className={(view==="Products")?'nav-activate':''}>Productos</Nav.Link>
+                            <Nav.Link href="#pricing" className={(view==="Vendors")?'nav-activate':''}>Vendedores</Nav.Link>
                         </Nav>
                         <Nav>
-                            <NavDropdown title="Arthur Barker" id="collasible-nav-dropdown">
+                            <NavDropdown title={user.profile.firstName +" "+ user.profile.lastName} id="collasible-nav-dropdown">
                                 <NavDropdown.Item href="#action/3.1">Reiniciar Password</NavDropdown.Item>
                                 <NavDropdown.Divider />
                                 <NavDropdown.Item onClick={event => authService.logout(navigate)}>
                                     Cerrar Sesión
                                 </NavDropdown.Item>
                             </NavDropdown>
-                            <Nav.Link eventKey={2} href="#memes">
+                            <Nav.Link eventKey={2} href="#memes" className={(view==="Admin")?'nav-activate':''}>
                                 Administrador
                             </Nav.Link>
                         </Nav>
