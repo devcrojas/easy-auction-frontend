@@ -8,6 +8,9 @@ import serviceAuth from './services/auth.service'
 import Profile from './components/Profile';
 import ResetPassword from './components/ResetPassword';
 import Reviews from './components/Reviews';
+
+import Views from './components/Views';
+
 import { Home } from '@mui/icons-material';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -36,6 +39,9 @@ root.render(
       <Route exact path="/resetPassword/:jwtoken" element={  <ResetPassword /> }></Route>
       <Route exact path="/producto" element={ <ProtectedRoute > <Products /> </ProtectedRoute>}></Route>
       <Route exact path="/resenas" element={<ProtectedRoute> <Reviews /> </ProtectedRoute>}></Route>
+
+      <Route exact path="/vistas" element={<ProtectedRoute> <Views /> </ProtectedRoute>}></Route>
+
     </Routes>
   </Router>
 );
