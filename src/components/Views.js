@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { FaStar } from "react-icons/fa";
-import { Container, Row, Col, Card, CardMedia, Button } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Form} from 'react-bootstrap';
 //import { Card, CardContent, CardMedia, Typography, CardActionArea, List, ListItem, ListItemAvatar, Avatar, ListItemText } from '@mui/material'
 //import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 //import 'react-slideshow-image/dist/styles.css';
@@ -39,92 +39,98 @@ function Views() {
     };
 
     const cards = () => {
-        let card = apis.map((review) => {
+        let card = apis.map ((review) => {
         //console.log(review.profileData.email);
-
-        /* Si se quieren mostrar las reseñas de que hizo el usuario
-        if(review.profileData.email === userAuth) */
-        if(review.userData.email === userAuth){
-            return (
-                <Card sx={{ minWidth: 345, maxWidth: 345, margin: 1 }} key={review._id}>
-                    <Card.Body>
-                        <Row>
-                            <Col align="left">Para el vendedor:<Card.Title>{review.profileData.lastName + ' ' + review.profileData.firstName}</Card.Title></Col>
-                            <Col align="right">
-                                {Array(review.stars).fill(0).map((_, index) => {
-                                    return (
-                                    <FaStar
-                                    key={index}
-                                    size={30}
-                                    style={{
-                                        marginRight: 10,
-                                        cursor: "pointer"
-                                    }}
-                                    color={colors.yellow}
-                                    />
-                                    )
-                                })}
-                                {Array(5 - review.stars).fill(0).map((_, index) => {
-                                    return (
-                                    <FaStar
-                                    key={index}
-                                    size={30}
-                                    style={{
-                                        marginRight: 10,
-                                        cursor: "pointer"
-                                    }}
-                                    color={colors.grey}
-                                    />
-                                    )
-                                })}
-                            </Col>
-                        </Row>
-                        <Row>&nbsp;</Row>
-                            <Col>Producto: {review.productData.nameProduct}</Col>
-                        <Row>&nbsp;</Row>
-                        <Col>
-                            <Card.Text>{review.comment}</Card.Text>
-                        </Col>
-                        <Row>&nbsp;</Row>
-              
-                        {/* <Card.Text>{review.type}</Card.Text> */}
-              
-                        <Col align="right">Fecha de publicación:  {review.datePublished}</Col>
-                        <Row>&nbsp;</Row>
-                        <Col align="right">
-                            <Button variant="success" type="button" className='btn btn-success text-center' /*onClick={sendReview}*/>
-                                Modificar
-                            </Button>
-                        </Col>
-                        <Row>&nbsp;</Row>
-                        <Col align="right">
-                            <Button variant="danger" type="button" className='btn btn-danger text-center' /*onClick={sendReview}*/>
+            /* Si se quieren mostrar las reseñas de que hizo el usuario
+            if(review.profileData.email === userAuth) */
+            if(review.userData.email === userAuth){
+                return (
+                    <Col sx={12} lg={9} key={review._id} className='mb-4'>
+                    <Card sx={{ minWidth: 345, maxWidth: 345, margin: 1 }} key={review._id}>
+                        <Card.Header>
+                            <Row>
+                                <Col align="left">Para el vendedor:<Card.Title>{review.profileData.lastName + ' ' + review.profileData.firstName}</Card.Title></Col>
+                                <Col align="right">
+                                    {Array(review.stars).fill(0).map((_, index) => {
+                                        return (
+                                        <FaStar
+                                        key={index}
+                                        size={30}
+                                        style={{
+                                            marginRight: 10,
+                                            cursor: "pointer"
+                                        }}
+                                        color={colors.yellow}
+                                        />
+                                        )
+                                    })}
+                                    {Array(5 - review.stars).fill(0).map((_, index) => {
+                                        return (
+                                        <FaStar
+                                        key={index}
+                                        size={30}
+                                        style={{
+                                            marginRight: 10,
+                                            cursor: "pointer"
+                                        }}
+                                        color={colors.grey}
+                                        />
+                                        )
+                                    })}
+                                    <Row>&nbsp;</Row>
+                                    {<Card.Text>{review.type}</Card.Text>}
+                                </Col>
+                            </Row>
+                        </Card.Header>
+                        <Card.Body>
+                            <Row>
+                                <Col>Producto comprado:</Col>
+                                <Form.Group>
+                                    <Form.Control className='text-center' value={review.productData.nameProduct} disabled />
+                                </Form.Group>
+                            </Row>
+                            <Row>&nbsp;</Row>
+                            <Row>
+                                <Col>Mi comentario:</Col>
+                                <Form.Group>
+                                    <Form.Control className='text-center' value={review.comment} disabled />
+                                </Form.Group>
+                            </Row>
+                            <Row>&nbsp;</Row>
+                            <Col align="right">Fecha de publicación:  {review.datePublished}</Col>
+                        </Card.Body>
+                        <Card.Footer>
+                            <Row>
+                            <Col align="center">
+                                <Button variant="danger" type="button" className='btn btn-danger text-center' /*onClick={sendReview}*/>
                                 Eliminar
-                            </Button>
-                        </Col>
-                
-                    </Card.Body>
-                </Card>
-            )
-        }
-    });
-
-    return card;
-}
-
-return (
-    <Container>
-        <Row>
-            <Col></Col>
-            <Col md='8'>
-            {
-              cards()
+                                </Button>
+                            </Col>
+                            <Col align="center">
+                                <Button variant="success" type="button" className='btn btn-success text-center' /*onClick={sendReview}*/>
+                                Modificar
+                                </Button>
+                            </Col>
+                            </Row>
+                        </Card.Footer>              
+                    </Card>
+                    </Col>
+                )
             }
+        });
+        return card;
+    }
+
+    return (
+        <Container>
+            <Row>&nbsp;</Row>
+            <Col md='8'>
+                {
+                    cards()
+                }
             </Col>
-            <Col></Col>
-        </Row>
-    </Container>
-)
+        </Container>
+    )
 }
 
 export default Views
