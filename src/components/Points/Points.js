@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Container, Row, Col } from 'react-bootstrap'
 import "../../nav.css"
 import NavBarMenu from '../NavBarMenu'
@@ -15,19 +15,43 @@ import Paper from '@mui/material/Paper';
 import {
     PayPalScriptProvider,
     PayPalButtons,
-    BraintreePayPalButtons
 } from "@paypal/react-paypal-js";
+import Swal from 'sweetalert2/dist/sweetalert2.js'
+import '@sweetalert2/theme-material-ui/material-ui.css'
+import AuthService from '../../services/auth.service'
+import PointsService from '../../services/points.service'
 
 
-const paypalScriptOptions = {
-    "client-id": "AZXrjdT9OpCmjWo-0NPJkcsUHUlOS6-cK9HcDzXee0qHuIqNMf8D9xgwJ2G-tbnrenjaHgAyBTz6zamX",
-    currency: "USD"
-};
-function Home() {
+function Points() {
 
+    const [user, setUser] = useState(AuthService.getCurrentUser());
+    const [pts, setPts] = useState();
 
+    useEffect(()=>{
+        //console.log(user);
+        getPoints();
+        //updatePts(50);
+    },[]);
 
+    const getPoints = async function(){
+        let pointsCurrent = await PointsService.getPointsByUserId(user.id);
+        //console.log(pointsCurrent[0]);
+        setPts(pointsCurrent[0].pts);
+    }
 
+    const updatePts = async function(pts){
+        let pointsUpdate = await PointsService.updatePointsByUserId({userId: user.id, pts: parseInt(pts)});
+        setPts(parseInt(pointsUpdate.pts))
+        //console.log(pointsUpdate);
+    }
+
+    const message = () => {
+        Swal.fire(
+            'Transacción Exitosa!',
+            'Se abonarán los puntos a tu cuenta.',
+            'success'
+        );
+    };
 
     const StyledTableCell = styled(TableCell)(({ theme }) => ({
         [`&.${tableCellClasses.head}`]: {
@@ -52,17 +76,17 @@ function Home() {
     function createData(
         name,
         calories,
-   
+
     ) {
         return { name, calories };
     }
 
     const rows = [
-        createData('50 Pts', 159),
-        createData('100 Pts', 237),
-        createData('300 Pts', 262),
-        createData('500 Pts', 305),
-        createData('1000 Pts', 356),
+        createData(50, 50),
+        createData(100, 100),
+        createData(300, 300),
+        createData(500, 500),
+        createData(1000, 1000),
     ];
 
     return (
@@ -79,10 +103,10 @@ function Home() {
                             <Col xs={12} sm={6} md={8} className="mt-2">
                                 <h2>Mis puntos Easy</h2>
                                 <hr></hr>
-                                <h5>Bienvenido Cesar Rojas</h5>
+                                <h5>Bienvenido {user.profile.firstName + " " + user.profile.lastName}</h5>
                             </Col>
                             <Col className='border d-flex align-items-center justify-content-center' xs={12} sm={6} md={4} >
-                                <label>Puntos Easy: 0 pts</label>
+                                <label>Puntos Easy: {pts} pts</label>
                             </Col>
                             <Col xs={12}>
                                 <h6 className='mt-2'>Tabla de precios</h6>
@@ -100,7 +124,7 @@ function Home() {
                                             {rows.map((row) => (
                                                 <StyledTableRow key={row.name}>
                                                     <StyledTableCell component="th" scope="row">
-                                                        {row.name}
+                                                        {String(row.name) + " Pts"}
                                                     </StyledTableCell>
                                                     <StyledTableCell align="center">${row.calories}</StyledTableCell>
                                                     <StyledTableCell align="center">
@@ -123,9 +147,11 @@ function Home() {
                                                                     //console.log(data);
                                                                     //console.log(actions);
                                                                     actions.order.capture().then((details) => {
+                                                                        updatePts(row.calories);
                                                                         const name = details.payer.name.given_name;
-                                                                        console.log(`Transaction completed by ${name}`);
-                                                                        console.log(details);
+                                                                        //console.log(`Transaction completed by ${name}`);
+                                                                        //console.log(details);
+                                                                        message();                                                                        
                                                                     })
                                                                     /*/return actions.order.capture().then((details) => {
                                                                         const name = details.payer.name.given_name;
@@ -160,4 +186,4 @@ function Home() {
     )
 }
 
-export default Home
+export default Points
