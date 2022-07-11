@@ -109,13 +109,11 @@ function Profile() {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({"token": token,"profile": profile})
+                body: JSON.stringify({ "profile": profile })
             }
             let resp = await fetch(`/api/profiles/${user.id}`, options)
-            let response = await resp.json();
-            if (response.status === 201) {
-                
-                console.log(response)
+            console.log(resp)
+            if (resp.status === 201) {
                 changeImgProf();
                 handleExpandClick()
                 Swal.fire(
