@@ -52,7 +52,7 @@ function NavBarMenu(params) {
                                     Cerrar Sesión
                                 </NavDropdown.Item>
                             </NavDropdown>
-                            <Nav.Link eventKey={2} href="#memes" className={(view==="Admin")?'nav-activate':''}>
+                            <Nav.Link eventKey={2} href="/admin" className={(view==="Admin")?'nav-activate':''}>
                                 Administrador
                             </Nav.Link>
                         </Nav>

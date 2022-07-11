@@ -1,13 +1,11 @@
 import React, { useState } from 'react'
 import { Button, Col, Container, Image, Row } from 'react-bootstrap'
-import { ReactComponent as ProductIco } from "../images/products_nav.svg"
-import { ReactComponent as ComprasIco } from "../images/compras_nav.svg"
-import { ReactComponent as OfertasIco } from "../images/ofertas_nav.svg"
-import { ReactComponent as ResenasIco } from "../images/resenas_nav.svg"
-import { ReactComponent as ProfileIco } from "../images/profile_nav.svg"
-import { ReactComponent as BuysIco } from "../images/buysMenu.svg"
-
-import AuthService from '../services/auth.service'
+import { ReactComponent as ProductIco } from "../../images/products_nav.svg"
+import { ReactComponent as ComprasIco } from "../../images/compras_nav.svg"
+import { ReactComponent as OfertasIco } from "../../images/ofertas_nav.svg"
+import { ReactComponent as ResenasIco } from "../../images/resenas_nav.svg"
+import { ReactComponent as BuysIco } from "../../images/buysMenu.svg"
+import AuthService from '../../services/auth.service'
 
 
 function MenuLateral(params) {
@@ -26,7 +24,7 @@ function MenuLateral(params) {
         <Col style={{ paddingRight: "0" }}>
           <Button variant="link" onClick={() => {window.location.href = "/misproductos"}} className={(view === "MyProducts") ? "nav-activate btn-sidebar" : "btn-sidebar"}>
             <ProductIco className="ico-sidebar"></ProductIco>
-            <label className='m-2'>Mis productos</label>
+            <label className='m-2'>Productos</label>
           </Button>
         </Col>
       </Row>
@@ -34,7 +32,7 @@ function MenuLateral(params) {
         <Col style={{ paddingRight: "0" }}>
           <Button variant="link" onClick={() => {window.location.href = "/compras"}} className={(view === "MyShops") ? "btn-sidebar nav-activate" : "btn-sidebar"}>
             <ComprasIco className="ico-sidebar"></ComprasIco>
-            <label className='m-2'>Mis compras</label>
+            <label className='m-2'>Compras</label>
           </Button>
         </Col>
       </Row>
@@ -42,7 +40,7 @@ function MenuLateral(params) {
         <Col style={{ paddingRight: "0" }}>
           <Button variant="link" onClick={() => {window.location.href = "/ofertas"}} className={(view === "MyOff") ? "btn-sidebar nav-activate" : "btn-sidebar"}>
             <OfertasIco className="ico-sidebar"></OfertasIco>
-            <label className='m-2'>Mis ofertas</label>
+            <label className='m-2'>Ofertas</label>
           </Button>
         </Col>
       </Row>
@@ -50,21 +48,13 @@ function MenuLateral(params) {
         <Col style={{ paddingRight: "0" }}>
           <Button variant="link" onClick={() => {window.location.href = "/resenas"}} className={(view === "MyReviews") ? "btn-sidebar nav-activate" : "btn-sidebar"}>
             <ResenasIco className="ico-sidebar"></ResenasIco>
-            <label className='m-2'>Mis Reseñas</label>
+            <label className='m-2'>Vendedores</label>
           </Button>
         </Col>
       </Row>
       <Row>
         <Col style={{ paddingRight: "0" }}>
-          <Button variant="link"  onClick={() => {window.location.href = "/profile"}} className={(view === "MyProfile") ? "btn-sidebar nav-activate" : "btn-sidebar"}>
-            <ProfileIco className="ico-sidebar"></ProfileIco>
-            <label className='m-2'>Mi perfil</label>
-          </Button>
-        </Col>
-      </Row>
-      <Row>
-        <Col style={{ paddingRight: "0" }}>
-          <Button variant="link" onClick={() => {window.location.href = "/buys/points"}} className={(view === "Points") ? "btn-sidebar nav-activate" : "btn-sidebar"}>
+          <Button variant="link" onClick={() => {window.location.href = "/buys/points"}} className={(view === "MyReviews") ? "btn-sidebar nav-activate" : "btn-sidebar"}>
             <BuysIco className="ico-sidebar"></BuysIco>
             <label className='m-2'>Puntos Easy</label>
           </Button>
