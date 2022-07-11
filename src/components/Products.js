@@ -7,8 +7,8 @@ import MenuLateral from './MenuLateral';
 import AuthService from '../services/auth.service';
 import { useState } from 'react';
 function Productos() {
-  const [profile, setProfile] = useState(AuthService.getCurrentUser().profile);
-  const [user, setUser] = useState(AuthService.getCurrentUser());
+  const [profile] = useState(AuthService.getCurrentUser().profile);
+  const [user] = useState(AuthService.getCurrentUser());
 
   return (
     <>

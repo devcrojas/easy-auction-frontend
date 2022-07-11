@@ -5,8 +5,8 @@ import { ReactComponent as EasyicoNavBar } from "../images/ico-navbar.svg"
 import authService from '../services/auth.service'
 function NavBarMenu(params) {
     const navigate = useNavigate();
-    const [view, setView] = useState(params.view);
-    const [user, setUser] = useState(authService.getCurrentUser());
+    const [view] = useState(params.view);
+    const [user] = useState(authService.getCurrentUser());
     useEffect(() => {
         let x = async function () {
             let getF = new Promise(async (resolve, reject) => {
@@ -28,11 +28,11 @@ function NavBarMenu(params) {
                 } catch (e) {
                     reject({ status: -1 })
                 }
-            });
-            let resp = await getF;
+            }); 
+            await getF;
         }
         x();
-    });
+    },[]); // eslint-disable-line react-hooks/exhaustive-deps
     return (
         <>
             <Navbar collapseOnSelect expand="lg" >

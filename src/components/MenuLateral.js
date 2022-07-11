@@ -9,8 +9,8 @@ import AuthService from '../services/auth.service'
 
 
 function MenuLateral(params) {
-  const [view, setView] = useState(params.view);
-  const [user, setUser] = useState(AuthService.getCurrentUser());
+  const [view ] = useState(params.view);
+  const [user] = useState(AuthService.getCurrentUser());
   let imgProfile = user.profile.file;
   return (
     <Container>
