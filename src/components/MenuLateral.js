@@ -11,8 +11,8 @@ import AuthService from '../services/auth.service'
 
 
 function MenuLateral(params) {
-  const [view, setView] = useState(params.view);
-  const [user, setUser] = useState(AuthService.getCurrentUser());
+  const [view ] = useState(params.view);
+  const [user] = useState(AuthService.getCurrentUser());
   let imgProfile = user.profile.file;
   return (
     <Container>
@@ -32,7 +32,7 @@ function MenuLateral(params) {
       </Row>
       <Row>
         <Col style={{ paddingRight: "0" }}>
-          <Button variant="link" onClick={() => {window.location.href = "/compras"}} className={(view === "MyShops") ? "btn-sidebar nav-activate" : "btn-sidebar"}>
+          <Button variant="link" onClick={() => {window.location.href = "/miscompras"}} className={(view === "MyShops") ? "btn-sidebar nav-activate" : "btn-sidebar"}>
             <ComprasIco className="ico-sidebar"></ComprasIco>
             <label className='m-2'>Mis compras</label>
           </Button>
@@ -40,7 +40,7 @@ function MenuLateral(params) {
       </Row>
       <Row>
         <Col style={{ paddingRight: "0" }}>
-          <Button variant="link" onClick={() => {window.location.href = "/ofertas"}} className={(view === "MyOff") ? "btn-sidebar nav-activate" : "btn-sidebar"}>
+          <Button variant="link" onClick={() => {window.location.href = "/misofertas"}} className={(view === "MyOff") ? "btn-sidebar nav-activate" : "btn-sidebar"}>
             <OfertasIco className="ico-sidebar"></OfertasIco>
             <label className='m-2'>Mis ofertas</label>
           </Button>

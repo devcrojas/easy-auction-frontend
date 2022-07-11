@@ -5,8 +5,8 @@ import { ReactComponent as EasyicoNavBar } from "../images/ico-navbar.svg"
 import authService from '../services/auth.service'
 function NavBarMenu(params) {
     const navigate = useNavigate();
-    const [view, setView] = useState(params.view);
-    const [user, setUser] = useState(authService.getCurrentUser());
+    const [view] = useState(params.view);
+    const [user] = useState(authService.getCurrentUser());
     useEffect(() => {
         let x = async function () {
             let getF = new Promise(async (resolve, reject) => {
@@ -28,11 +28,11 @@ function NavBarMenu(params) {
                 } catch (e) {
                     reject({ status: -1 })
                 }
-            });
-            let resp = await getF;
+            }); 
+            await getF;
         }
         x();
-    });
+    },[]); // eslint-disable-line react-hooks/exhaustive-deps
     return (
         <>
             <Navbar collapseOnSelect expand="lg" >
@@ -41,7 +41,7 @@ function NavBarMenu(params) {
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                     <Navbar.Collapse id="responsive-navbar-nav">
                         <Nav className="me-auto">
-                            <Nav.Link href="/producto" className={(view==="Products")?'nav-activate':''}>Productos</Nav.Link>
+                            <Nav.Link href="/productos" className={(view==="Products")?'nav-activate':''}>Productos</Nav.Link>
                             <Nav.Link href="#pricing" className={(view==="Vendors")?'nav-activate':''}>Vendedores</Nav.Link>
                         </Nav>
                         <Nav>
@@ -52,7 +52,7 @@ function NavBarMenu(params) {
                                     Cerrar Sesión
                                 </NavDropdown.Item>
                             </NavDropdown>
-                            <Nav.Link eventKey={2} href="/admin" className={(view==="Admin")?'nav-activate':''}>
+                            <Nav.Link eventKey={2} href="/productosAdm" className={(view==="Admin")?'nav-activate':''}>
                                 Administrador
                             </Nav.Link>
                         </Nav>

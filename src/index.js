@@ -10,7 +10,10 @@ import Admin from './components/Admin/Home';
 import ResetPassword from './components/ResetPassword';
 import Points from './components/Points/Points';
 import Reviews from './components/Reviews';
+import CreateProduct from './components/CreateProduct';
 import { Home } from '@mui/icons-material';
+import ProductsAdmin from './components/Admin/ProductsAdmin';
+import MyProducts from './components/MyProducts';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 const ProtectedRoute = ({ children }) => {
@@ -24,7 +27,7 @@ const ProtectedRoute = ({ children }) => {
 const ProtectedRouteLogin = ({ children }) => {
   var user = serviceAuth.getCurrentUser();
   if (user) {
-    return <Navigate to="/producto" replace />;
+    return <Navigate to="/productos" replace />;
   }
   return children;
 };
@@ -36,10 +39,13 @@ root.render(
       <Route exact path='/ejemploDeIntegracion' element={ <ProtectedRoute >  <Home /> </ProtectedRoute> }></Route>
       <Route exact path="/profile" element={ <ProtectedRoute >  <Profile /> </ProtectedRoute>}></Route>
       <Route exact path="/resetPassword/:jwtoken" element={  <ResetPassword /> }></Route>
-      <Route exact path="/producto" element={ <ProtectedRoute > <Products /> </ProtectedRoute>}></Route>
+      <Route exact path="/productos" element={ <ProtectedRoute > <Products /> </ProtectedRoute>}></Route>
       <Route exact path="/resenas" element={<ProtectedRoute> <Reviews /> </ProtectedRoute>}></Route>
       <Route exact path="/admin" element={<ProtectedRoute> <Admin /> </ProtectedRoute>}></Route>
       <Route exact path="/buys/points" element={<ProtectedRoute> <Points /> </ProtectedRoute>}></Route>
+      <Route exact path="/productosAdm" element={ <ProtectedRoute > <ProductsAdmin /> </ProtectedRoute>}></Route>
+      <Route exact path="/createProducts" element={<ProtectedRoute> <CreateProduct /> </ProtectedRoute>}></Route>
+      <Route exact path="/misproductos" element={<ProtectedRoute> <MyProducts /> </ProtectedRoute>}></Route>
     </Routes>
   </Router>
 );

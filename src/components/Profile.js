@@ -19,19 +19,41 @@ import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import Swal from 'sweetalert2';
 
 function Profile() {
-    const [user] = useState(AuthService.getCurrentUser())
-    const [expanded, setExpanded] = useState(false);
+    const [user] = useState(AuthService.getCurrentUser());
     const [profile, setProfile] = useState(AuthService.getCurrentUser().profile);
+    const [expanded, setExpanded] = useState(false);
+    const [errorEmail, setErrorEmail] = useState(false);
+    const [errorEmailText, setErrorEmailText] = useState("");
     useEffect(() => {
         changeImgProf();
-    },[user]) // eslint-disable-line react-hooks/exhaustive-deps
-    
+    }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
     const handleInputChange = (event) => {
         setProfile({
             ...profile,
             [event.target.name]: event.target.value
-        })
+        });
+        if (event.target.name === 'email' && event.target.value !== '') {
+            if (validateEmail(event.target.value) === null) {
+                setErrorEmail(true);
+                setErrorEmailText("introduce un correo valido como: \n easyauction@gmail.com");
+            } else {
+                setErrorEmail(false);
+                setErrorEmailText("");
+            }
+
+        } else {
+            setErrorEmail(false);
+            setErrorEmailText("");
+        }
     }
+    const validateEmail = (email) => {
+        return String(email)
+            .toLowerCase()
+            .match(
+                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            );
+    };
     const handleInputChangeAddress = (event) => {
         switch (event.target.name) {
             case "cpp":
@@ -80,29 +102,42 @@ function Profile() {
         setExpanded(!expanded);
     };
     async function sendUpProfile() {
-        let options = {
-            method: "PUT",
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(profile)
-        }
-        let resp = await fetch(`/api/profiles/${user.id}`, options)
-        if (resp.status === 201) {
-            changeImgProf();
-            handleExpandClick()
-            Swal.fire(
-                'Perfil Actualizado!',
-                'Seguir navegando',
-                'success'
-            );
+        if (!errorEmail) {
+            let token = localStorage.getItem('token');
+            let options = {
+                method: "PUT",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({"token": token,"profile": profile})
+            }
+            let resp = await fetch(`/api/profiles/${user.id}`, options)
+            let response = await resp.json();
+            if (response.status === 201) {
+                
+                console.log(response)
+                changeImgProf();
+                handleExpandClick()
+                Swal.fire(
+                    'Perfil Actualizado!',
+                    'Seguir navegando',
+                    'success'
+                );
+            } else {
+                Swal.fire(
+                    'Error al actualizar perfil!',
+                    `${resp.error.message}`,
+                    'error'
+                );
+            }
         } else {
-            Swal.fire(
-                'Error al actualizar perfil!',
-                `${resp.error.message}`,
-                'error'
-            );
+            Swal.fire({
+                icon: 'error',
+                title: "Revisa tu correo electronico",
+                text: 'El correo debe tener un formato valido'
+            });
         }
+
     }
     async function changeImgProf() {
         let options = {
@@ -158,7 +193,7 @@ function Profile() {
                                                                         {profile.lastName}
                                                                     </ListItem>
                                                                     <ListItem sx={{ justifyContent: "center" }}>
-                                                                        {profile.email}
+                                                                        {(profile.email !== "") ? profile.email : user.id}
                                                                     </ListItem>
                                                                 </List>
                                                             </Typography>
@@ -188,19 +223,19 @@ function Profile() {
                                                         <Fade in={expanded} hidden={!expanded}>
                                                             <Form encType="multipart/form-data">
                                                                 <FormGroup>
-                                                                    <TextField name="firstName" label="Nombre" variant="outlined" defaultValue={profile.firstName} onChange={handleInputChange} margin="normal" size="small" required />
-                                                                    <TextField name="lastName" label="Apellidos" variant="outlined" defaultValue={profile.lastName} onChange={handleInputChange} margin="normal" size="small" required />
+                                                                    <TextField name="firstName" label="Nombre" variant="outlined" defaultValue={profile.firstName} onChange={handleInputChange} inputProps={{ maxLength: "30" }} margin="normal" size="small" required />
+                                                                    <TextField name="lastName" label="Apellidos" variant="outlined" defaultValue={profile.lastName} onChange={handleInputChange} inputProps={{ maxLength: "30" }} margin="normal" size="small" required />
                                                                     <Row>
                                                                         <Col xs={6} className="justify-content-center">
-                                                                            <TextField name="phone" label="Telefono" variant="outlined" defaultValue={profile.phone} onChange={handleInputChange} margin="normal" size="small" required />
+                                                                            <TextField name="phone" label="Telefono" variant="outlined" defaultValue={profile.phone} onChange={handleInputChange} inputProps={{ maxLength: "12" }} margin="normal" size="small" required />
                                                                         </Col>
                                                                         <Col xs={6} className="justify-content-center">
-                                                                            <TextField name="birthday" type="date" id="edad" variant="outlined" defaultValue={profile.birthday} onChange={handleInputChange} margin="normal" size="small" required />
+                                                                            <TextField name="birthday" type="date" id="edad" variant="outlined" defaultValue={(profile.birthday) ? profile.birthday.split('T')[0] : ""} onChange={handleInputChange} margin="normal" size="small" required />
                                                                         </Col>
                                                                     </Row>
                                                                     <Row>
                                                                         <Col xs={6} className="justify-content-center">
-                                                                            <TextField type="text" name="cpp" label="CPP" variant="outlined" defaultValue={profile.address.cpp} onChange={handleInputChangeAddress} margin="normal" size="small" max={5} required />
+                                                                            <TextField type="text" name="cpp" label="CPP" variant="outlined" defaultValue={profile.address.cpp} onChange={handleInputChangeAddress} margin="normal" size="small" inputProps={{ maxLength: "5" }} required />
                                                                             <TextField type="text" name="municipaly" label="Delegación/Municipio" variant="outlined" defaultValue={profile.address.municipaly} onChange={handleInputChangeAddress} margin="normal" size="small" required />
                                                                         </Col>
                                                                         <Col xs={6} className="justify-content-center">
@@ -213,7 +248,11 @@ function Profile() {
                                                                     </Row>
                                                                     <Row>
                                                                         <Col xs={12}>
-                                                                            <TextField type="email" name="email" label="Email" variant="outlined" value={user.email} onChange={handleInputChange} margin="normal" sx={{ width: "100%" }} size="small" required />
+                                                                            <TextField type="email" name="email" label="Email"
+                                                                                variant="outlined" value={user.email} onChange={handleInputChange}
+                                                                                margin="normal" sx={{ width: "100%" }} size="small" required
+                                                                                error={errorEmail}
+                                                                                helperText={errorEmailText} />
                                                                         </Col>
                                                                     </Row>
                                                                     <Row>
