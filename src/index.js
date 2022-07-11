@@ -10,8 +10,10 @@ import Admin from './components/Admin/Home';
 import ResetPassword from './components/ResetPassword';
 import Points from './components/Points/Points';
 import Reviews from './components/Reviews';
+import CreateProduct from './components/CreateProduct';
 import { Home } from '@mui/icons-material';
 import ProductsAdmin from './components/Admin/ProductsAdmin';
+import MyProducts from './components/MyProducts';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 const ProtectedRoute = ({ children }) => {
@@ -42,6 +44,8 @@ root.render(
       <Route exact path="/admin" element={<ProtectedRoute> <Admin /> </ProtectedRoute>}></Route>
       <Route exact path="/buys/points" element={<ProtectedRoute> <Points /> </ProtectedRoute>}></Route>
       <Route exact path="/productosAdm" element={ <ProtectedRoute > <ProductsAdmin /> </ProtectedRoute>}></Route>
+      <Route exact path="/createProducts" element={<ProtectedRoute> <CreateProduct /> </ProtectedRoute>}></Route>
+      <Route exact path="/misproductos" element={<ProtectedRoute> <MyProducts /> </ProtectedRoute>}></Route>
     </Routes>
   </Router>
 );
