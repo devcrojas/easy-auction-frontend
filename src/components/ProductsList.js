@@ -27,15 +27,28 @@ function ProductsList(props) {
         let card = apis.map((producto) => {
             // Pregunta si existe algun filtro, de lo contrario mostrara todas
             if(props.filter){
-                // Para filtrar sobre datos del vendedor
-                if(props.filterValue === producto.sellerData[props.filterField]){
-                    return (
-                        <Col sx={12} lg={6} key={producto._id} className='mb-5'>
-                            <ProductCard product={producto}></ProductCard>
-                        </Col>
-                    )
+                // Pregunta si el campo a filtrar esta en un sub objeto
+                if(props.isSubObject){
+                    // Realiza la comparacion para buscar el valor en el sub objeto
+                    if(props.filterValue === producto[props.subObject][props.filterField]){
+                        return (
+                            <Col sx={12} lg={6} key={producto._id} className='mb-5'>
+                                <ProductCard product={producto}></ProductCard>
+                            </Col>
+                        )
+                    }
+                }else{
+                    // Si no se esta buscando sobre un sub objeto buscar por arriba del objeto principal
+                    if(props.filterValue === producto[props.filterField]){
+                        return (
+                            <Col sx={12} lg={6} key={producto._id} className='mb-5'>
+                                <ProductCard product={producto}></ProductCard>
+                            </Col>
+                        )
+                    }
                 }
             }else{
+                // Si no se esta filtrando que traiga todas las cards
                 return (
                     <Col sx={12} lg={6} key={producto._id} className='mb-5'>
                         <ProductCard product={producto}></ProductCard>

@@ -31,7 +31,11 @@ return (
                     </Card>
                 </Row>
                 <Row>
-                    <ProductsList filter={true} filterField={'_id'} filterValue={user.id}></ProductsList>
+                    <ProductsList filter={true} 
+                                  filterField={'_id'} 
+                                  filterValue={user.id}
+                                  isSubObject={true}
+                                  subObject={'sellerData'}/>
                 </Row>
             </Col>
         </Row>

@@ -18,7 +18,7 @@ function Productos() {
             <MenuLateral view={""} imgProfile={profile.file}></MenuLateral>
           </Col>
           <Col xs={9}>    
-            <ProductsList></ProductsList>
+            <ProductsList filter={true} filterField={'status'} filterValue={'Active'} ></ProductsList>
           </Col>
         </Row>
       </Container>
