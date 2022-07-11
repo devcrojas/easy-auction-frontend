@@ -1,16 +1,10 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Container, Row, Col } from 'react-bootstrap'
 import "../nav.css"
 import NavBarMenu from './NavBarMenu'
 import MenuLateral from './MenuLateral';
-import AuthService from '../services/auth.service';
 
 function Home() {
-
-  useEffect(() => {
-    let user = AuthService.getCurrentUser();
-    console.log(user);
-  });
 
   return (
     <>

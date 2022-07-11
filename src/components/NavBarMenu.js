@@ -41,7 +41,7 @@ function NavBarMenu(params) {
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                     <Navbar.Collapse id="responsive-navbar-nav">
                         <Nav className="me-auto">
-                            <Nav.Link href="/producto" className={(view==="Products")?'nav-activate':''}>Productos</Nav.Link>
+                            <Nav.Link href="/productos" className={(view==="Products")?'nav-activate':''}>Productos</Nav.Link>
                             <Nav.Link href="#pricing" className={(view==="Vendors")?'nav-activate':''}>Vendedores</Nav.Link>
                         </Nav>
                         <Nav>
@@ -52,7 +52,7 @@ function NavBarMenu(params) {
                                     Cerrar Sesión
                                 </NavDropdown.Item>
                             </NavDropdown>
-                            <Nav.Link eventKey={2} href="#memes" className={(view==="Admin")?'nav-activate':''}>
+                            <Nav.Link eventKey={2} href="/productosAdm" className={(view==="Admin")?'nav-activate':''}>
                                 Administrador
                             </Nav.Link>
                         </Nav>

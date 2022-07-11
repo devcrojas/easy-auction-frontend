@@ -19,11 +19,11 @@ import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import Swal from 'sweetalert2';
 
 function Profile() {
-    const [user] = useState(AuthService.getCurrentUser())
-    const [expanded, setExpanded] = useState(false);
-    const [errorEmail, setErrorEmail] = useState(false)
-    const [errorEmailText, setErrorEmailText] = useState("")
+    const [user] = useState(AuthService.getCurrentUser());
     const [profile, setProfile] = useState(AuthService.getCurrentUser().profile);
+    const [expanded, setExpanded] = useState(false);
+    const [errorEmail, setErrorEmail] = useState(false);
+    const [errorEmailText, setErrorEmailText] = useState("");
     useEffect(() => {
         changeImgProf();
     }, []) // eslint-disable-line react-hooks/exhaustive-deps
@@ -230,7 +230,7 @@ function Profile() {
                                                                             <TextField name="phone" label="Telefono" variant="outlined" defaultValue={profile.phone} onChange={handleInputChange} inputProps={{ maxLength: "12" }} margin="normal" size="small" required />
                                                                         </Col>
                                                                         <Col xs={6} className="justify-content-center">
-                                                                            <TextField name="birthday" type="date" id="edad" variant="outlined" defaultValue={profile.birthday.split('T')[0]} onChange={handleInputChange} margin="normal" size="small" required />
+                                                                            <TextField name="birthday" type="date" id="edad" variant="outlined" defaultValue={(profile.birthday) ? profile.birthday.split('T')[0] : ""} onChange={handleInputChange} margin="normal" size="small" required />
                                                                         </Col>
                                                                     </Row>
                                                                     <Row>

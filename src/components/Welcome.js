@@ -21,7 +21,7 @@ function Welcome() {
             <Image className='logo-welcome' src={Logo}></Image>
           </div>
           <div className="p-2">
-            <Button variant="outline-dark" style={{borderRadius: "300rem", fontSize: "1.1rem"}}><strong>Ingresar como invitado</strong></Button>&nbsp;&nbsp;&nbsp;
+            {/* <Button variant="outline-dark" style={{borderRadius: "300rem", fontSize: "1.1rem"}}><strong>Ingresar como invitado</strong></Button> */}&nbsp;&nbsp;&nbsp;
             <Button variant="outline-success" onClick={handleShow} style={{borderRadius: "300rem", fontSize: "1.1rem"}}><strong>Iniciar sesión</strong></Button>
             <Offcanvas placement='end' show={show} onHide={handleClose}>
               <Offcanvas.Header className='text-light' style={{ backgroundImage: "linear-gradient(#000046, #053884)" }}>
