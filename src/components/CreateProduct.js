@@ -112,7 +112,7 @@ const CreateProduct = () => {
         formData.append("initialD", actualDate)
         formData.append("final", finalDate)
         // Se mandan los datos del status y usuario
-        formData.append("status", 'Active')
+        formData.append("status", 'Inactive')
         formData.append("email", user.id)
         // Se manda a realizar la peticion
         sendData(formData)

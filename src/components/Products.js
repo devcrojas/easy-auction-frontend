@@ -1,6 +1,6 @@
 import React from 'react';
 import NavBarMenu from './NavBarMenu';
-import ProductsCards from './ProductsCards';
+import ProductsList from './ProductsList';
 import { Col, Container, Row } from 'react-bootstrap';
 import MenuLateral from './MenuLateral';
 import AuthService from '../services/auth.service';
@@ -18,7 +18,7 @@ function Productos() {
             <MenuLateral view={""} imgProfile={profile.file}></MenuLateral>
           </Col>
           <Col xs={9}>    
-            <ProductsCards></ProductsCards>
+            <ProductsList></ProductsList>
           </Col>
         </Row>
       </Container>

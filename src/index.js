@@ -10,6 +10,7 @@ import ResetPassword from './components/ResetPassword';
 import Reviews from './components/Reviews';
 import CreateProduct from './components/CreateProduct';
 import { Home } from '@mui/icons-material';
+import MyProducts from './components/MyProducts';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 const ProtectedRoute = ({ children }) => {
@@ -38,6 +39,7 @@ root.render(
       <Route exact path="/producto" element={ <ProtectedRoute > <Products /> </ProtectedRoute>}></Route>
       <Route exact path="/resenas" element={<ProtectedRoute> <Reviews /> </ProtectedRoute>}></Route>
       <Route exact path="/createProducts" element={<ProtectedRoute> <CreateProduct /> </ProtectedRoute>}></Route>
+      <Route exact path="/misproductos" element={<ProtectedRoute> <MyProducts /> </ProtectedRoute>}></Route>
     </Routes>
   </Router>
 );
