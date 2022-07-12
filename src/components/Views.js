@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FaStar } from "react-icons/fa";
 import { Container, Row, Col, Card, Button, Form} from 'react-bootstrap';
-//import Swal from 'sweetalert2/dist/sweetalert2.js'
+import Swal from 'sweetalert2/dist/sweetalert2.js'
 import '@sweetalert2/theme-material-ui/material-ui.css'
 import AuthService from '../services/auth.service'
 
@@ -35,7 +35,54 @@ function Views() {
         //console.log(awReview);
         return;
     };
+
+
+    //Eliminar reseña
+    const deleteReview = async function () {
+        let resp = await fetch('/api/reviews/',
+            {
+                method: 'DELETE'
+            })
+            if (resp.status === 201) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Reseña eliminada con ¡ÉXITO!',
+                })
+            }
+            else {
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡Oh oh, Hubo un error!',
+                    text: 'No se pudo eliminar',
+                })
+            }
+
+    }
+
+
+    //Modificar reseña
+    const modifyReview = async function () {
+        let resp = await fetch('/api/reviews/',
+    {
+        method: "PUT",
+    })
+    if (resp.status === 201) {
+        Swal.fire({
+            icon: 'success',
+            title: '¡LISTO!',
+            text: 'Reseña modificada'
+        })
+    }
+    else {
+        Swal.fire({
+            icon: 'error',
+            title: '¡Oh oh, Hubo un error!',
+            text: 'No se puede modificar',
+        })
+    }
+    }  
    
+
     const cards = () => {
         let card = apis.map ((review) => {
         //console.log(review.profileData.email);
@@ -100,14 +147,10 @@ function Views() {
                         <Card.Footer>
                             <Row>
                             <Col align="center">
-                                <Button variant="danger" type="button" className='btn btn-danger text-center' /*onClick={sendReview}*/>
-                                Eliminar
-                                </Button>
+                                <Button variant="danger" type="button" className='btn btn-danger text-center' onClick={deleteReview}>Eliminar</Button>
                             </Col>
                             <Col align="center">
-                                <Button variant="success" type="button" className='btn btn-success text-center' /*onClick={sendReview}*/>
-                                Modificar
-                                </Button>
+                                <Button variant="success" type="button" className='btn btn-success text-center' onClick={modifyReview}>Modificar</Button>
                             </Col>
                             </Row>
                         </Card.Footer>              
