@@ -62,7 +62,7 @@ function Auth() {
         }
     }
     async function sendUser() {
-        console.log(user);
+        //console.log(user);
         //Valida si los inputs vienen vacios, muestra dos errores
         if (user.email === "" && user.pass === "") {
             setErrorEmail(true);

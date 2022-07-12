@@ -24,6 +24,17 @@ const ProtectedRoute = ({ children }) => {
   return children;
 };
 
+const ProtectedRouteAdmin = ({ children }) => {
+  var user = serviceAuth.getCurrentUser();
+  if (!user) {
+    return <Navigate to="/" replace />;
+  }else if(user.isAdmin){
+    return children;
+  }else{
+    return <Navigate to="/productos" replace/>;
+  }
+};
+
 const ProtectedRouteLogin = ({ children }) => {
   var user = serviceAuth.getCurrentUser();
   if (user) {
@@ -41,11 +52,11 @@ root.render(
       <Route exact path="/resetPassword/:jwtoken" element={  <ResetPassword /> }></Route>
       <Route exact path="/productos" element={ <ProtectedRoute > <Products /> </ProtectedRoute>}></Route>
       <Route exact path="/resenas" element={<ProtectedRoute> <Reviews /> </ProtectedRoute>}></Route>
-      <Route exact path="/admin" element={<ProtectedRoute> <Admin /> </ProtectedRoute>}></Route>
       <Route exact path="/buys/points" element={<ProtectedRoute> <Points /> </ProtectedRoute>}></Route>
-      <Route exact path="/productosAdm" element={ <ProtectedRoute > <ProductsAdmin /> </ProtectedRoute>}></Route>
       <Route exact path="/createProducts" element={<ProtectedRoute> <CreateProduct /> </ProtectedRoute>}></Route>
       <Route exact path="/misproductos" element={<ProtectedRoute> <MyProducts /> </ProtectedRoute>}></Route>
+      <Route exact path="/admin" element={<ProtectedRouteAdmin> <Admin /> </ProtectedRouteAdmin>}></Route>
+      <Route exact path="/admin/productos" element={ <ProtectedRouteAdmin > <ProductsAdmin /> </ProtectedRouteAdmin>}></Route>
     </Routes>
   </Router>
 );
