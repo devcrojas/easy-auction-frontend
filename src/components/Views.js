@@ -13,8 +13,7 @@ const colors = {
 
 function Views() {
     const [apis, setApis] = useState([]);
-    const [expanded, setExpanded] = useState(false);
-
+    
     // Se obtiene el usuario de sesion
     let user = AuthService.getCurrentUser();
     let userAuth = user.id;
@@ -42,13 +41,13 @@ function Views() {
         //console.log(review.profileData.email);
             /* Si se quieren mostrar las reseñas de que hizo el usuario
             if(review.profileData.email === userAuth) */
-            if(review.userData.email === userAuth){
+            if(review.emailU.email === userAuth){
                 return (
                     <Col sx={12} lg={9} key={review._id} className='mb-4'>
                     <Card sx={{ minWidth: 345, maxWidth: 345, margin: 1 }} key={review._id}>
                         <Card.Header>
                             <Row>
-                                <Col align="left">Para el vendedor:<Card.Title>{review.profileData.lastName + ' ' + review.profileData.firstName}</Card.Title></Col>
+                                <Col align="left">Para el vendedor:<Card.Title>{review.emailP.lastName + ' ' + review.emailP.firstName}</Card.Title></Col>
                                 <Col align="right">
                                     {Array(review.stars).fill(0).map((_, index) => {
                                         return (
@@ -85,7 +84,7 @@ function Views() {
                             <Row>
                                 <Col align="center">Producto comprado:</Col>
                                 <Form.Group>
-                                    <Form.Control className='text-center' value={review.productData.nameProduct} disabled />
+                                    <Form.Control className='text-center' value={review.productId.nameProduct} disabled />
                                 </Form.Group>
                             </Row>
                             <Row>&nbsp;</Row>
