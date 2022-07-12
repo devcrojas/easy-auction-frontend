@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Container, Row, Col } from 'react-bootstrap'
+import { Container, Row, Col, Badge } from 'react-bootstrap'
 import "../../nav.css"
 import NavBarMenu from '../NavBarMenu'
 import MenuLateral from '../MenuLateral';
@@ -99,16 +99,16 @@ function Points() {
                         <MenuLateral view={"Points"} profileImg={"imageProfile"}></MenuLateral>
                     </Col>
                     <Col xs={9}>
-                        <Row className='mt-2' style={{ background: "white", boxShadow: "2px 2px 2px 1px rgba(0, 0, 0, 0.2)" }}>
+                        <Row className='mt-3' style={{ background: "white", boxShadow: "2px 2px 2px 1px rgba(0, 0, 0, 0.2)" }}>
                             <Col xs={12} sm={6} md={8} className="mt-2">
-                                <h2>Mis puntos Easy</h2>
+                                <h2>Zona de compra</h2>
                                 <hr></hr>
                                 <h5>Bienvenido {user.profile.firstName + " " + user.profile.lastName}</h5>
                             </Col>
-                            <Col className='border d-flex align-items-center justify-content-center' xs={12} sm={6} md={4} >
-                                <label>Puntos Easy: {pts} pts</label>
+                            <Col className='border d-flex align-items-center justify-content-center' xs={12} sm={6} md={4} style={{boxShadow: "rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset"}}>
+                                <label>Puntos Easy: <Badge bg="info">{pts} pts</Badge></label>
                             </Col>
-                            <Col xs={12}>
+                            <Col xs={12} className="mt-2">
                                 <h6 className='mt-2'>Tabla de precios</h6>
 
                                 <TableContainer component={Paper}>
