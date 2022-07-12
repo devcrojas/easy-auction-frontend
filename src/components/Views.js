@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { FaStar } from "react-icons/fa";
 import { Container, Row, Col, Card, Button, Form} from 'react-bootstrap';
-//import { Card, CardContent, CardMedia, Typography, CardActionArea, List, ListItem, ListItemAvatar, Avatar, ListItemText } from '@mui/material'
-//import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-//import 'react-slideshow-image/dist/styles.css';
-//import { Zoom } from 'react-slideshow-image';
+//import Swal from 'sweetalert2/dist/sweetalert2.js'
+import '@sweetalert2/theme-material-ui/material-ui.css'
 import AuthService from '../services/auth.service'
 
 
@@ -15,6 +13,7 @@ const colors = {
 
 function Views() {
     const [apis, setApis] = useState([]);
+    const [expanded, setExpanded] = useState(false);
 
     // Se obtiene el usuario de sesion
     let user = AuthService.getCurrentUser();
@@ -37,7 +36,7 @@ function Views() {
         //console.log(awReview);
         return;
     };
-
+   
     const cards = () => {
         let card = apis.map ((review) => {
         //console.log(review.profileData.email);
@@ -84,14 +83,14 @@ function Views() {
                         </Card.Header>
                         <Card.Body>
                             <Row>
-                                <Col>Producto comprado:</Col>
+                                <Col align="center">Producto comprado:</Col>
                                 <Form.Group>
                                     <Form.Control className='text-center' value={review.productData.nameProduct} disabled />
                                 </Form.Group>
                             </Row>
                             <Row>&nbsp;</Row>
                             <Row>
-                                <Col>Mi comentario:</Col>
+                                <Col align="center">Mi comentario:</Col>
                                 <Form.Group>
                                     <Form.Control className='text-center' value={review.comment} disabled />
                                 </Form.Group>

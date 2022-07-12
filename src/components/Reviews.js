@@ -33,7 +33,7 @@ function Reviews() {
     const [user, setUser] = useState(AuthService.getCurrentUser());
     const [selectProducts, setSelectProducts] = useState('');
 
-    //useEffect para mostrar los productos
+    //useEffect para traer los productos
     useEffect(() => {
         getProducts()
     }, [])
@@ -151,11 +151,10 @@ function Reviews() {
                                                     <Form.Control className='text-center bg-danger text-white' value={tipo} onChange={(handleClick) => setTipo()} disabled />
                                                 </Form.Group>
                                             </Row>
-                                            <Row>&nbsp;</Row>
                                             <Row>
-                                                <FormControl className='w-100 my-2'>
+                                                <FormControl className='w-100 my-5'>
                                                     <InputLabel id="productos">Productos</InputLabel>
-                                                    <Select onChange={handleChange} displayEmpty labelId="productos" value={selectProducts}>
+                                                    <Select onChange={handleChange} displayEmpty labelId="productos" label="Productos" value={selectProducts}>
 
                                                         {
                                                             product.map((product) => {
