@@ -18,7 +18,7 @@ const validateToken = async (body) => {
       body: JSON.stringify(body)
     };
     var getUser = await fetch("/api//auth/resetPassword/validateJWToken", requestOptions);
-    resolve(await getUser.json());
+    resolve(await getUser.json())
   });
 }
 
@@ -30,7 +30,7 @@ const applyResetPassword = async (body) => {
       body: JSON.stringify(body)
     };
     var result = await fetch("/api//auth/resetPassword/Apply", requestOptions);
-    resolve(await result.json());
+    resolve(await result.json())
   });
 };
 
