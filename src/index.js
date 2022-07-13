@@ -39,6 +39,7 @@ root.render(
       <Route exact path="/producto" element={ <ProtectedRoute > <Products /> </ProtectedRoute>}></Route>
       <Route exact path="/resenas" element={<ProtectedRoute> <Reviews /> </ProtectedRoute>}></Route>
       <Route exact path="/createProducts" element={<ProtectedRoute> <CreateProduct /> </ProtectedRoute>}></Route>
+      <Route exact path="/updateProduct/:productId" element={<ProtectedRoute> <CreateProduct /> </ProtectedRoute>}></Route>
       <Route exact path="/misproductos" element={<ProtectedRoute> <MyProducts /> </ProtectedRoute>}></Route>
     </Routes>
   </Router>

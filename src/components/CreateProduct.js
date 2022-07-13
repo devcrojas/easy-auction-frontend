@@ -7,6 +7,7 @@ import { Button, TextField, Select, MenuItem, FormControl, InputLabel, Card, Ima
 import AuthService from '../services/auth.service'
 import MenuLateral from './MenuLateral';
 import NavBarMenu from './NavBarMenu';
+import { useParams } from "react-router-dom";
 
 const CreateProduct = () => {
     //Variable para los caracteres restantes en observaciones
@@ -23,34 +24,45 @@ const CreateProduct = () => {
     const [initialPrice, setInitialPrice] = useState('');
     const [closeDate, setCloseDate] = useState(new Date());
     const [closeDateVisual, setCloseDateVisual] = useState();
-    // Variables para las imagenes
+    // Variables para las imagenes(Creacion)
     const [imagePrincipal, setImagePrincipal] = useState('');
     const [images, setImages] = useState('');
-
     const [preview, setPreview] = useState('');
     const [secondaryPreview, setSecondaryPreview] = useState('');
-
+    // Variables para las imagenes(Actualizacion)
+    const [imagePrincipalRoute, setImagePrincipalRoute] = useState('');
+    const [imagesRoutes, setImagesRoutes] = useState('');
+    
     //Referencias de los campos
     let imgPrincipalRef = useRef(null);
     let imagesRef = useRef(null);
-
+    // Obtiene el product id del parametro
+    let { productId } = useParams();
+    // Variable para obtener el producto si se esta actualizando
+    const [product, setProduct] = useState();
     // Se obtiene el usuario de sesion
     const [user, setUser] = useState(AuthService.getCurrentUser());
-    
+    // Se obtiene la fecha actual
     const actualDate = new Date();
+    // Obtiene el detalle del producto si esta actualizando
 
 
 
+
+
+    useEffect(() => {
+        if(productId){
+            getProductDetail(productId);
+        }
+    }, [])
     // UseEffect de la imagen principal para previsualizarla
     useEffect(() => {
         if (!imagePrincipal) {
             setPreview(undefined)
             return
         }
-
         const objectUrl = URL.createObjectURL(imagePrincipal[0])
         setPreview(objectUrl)
-
         // free memory when ever this component is unmounted
         return () => URL.revokeObjectURL(objectUrl)
     }, [imagePrincipal])
@@ -72,6 +84,22 @@ const CreateProduct = () => {
         // free memory when ever this component is unmounted
         return () => URL.revokeObjectURL(objectUrl)
     }, [images])
+
+    // Funcion para obtener el detalle del producto si esta actualizando
+    const getProductDetail = async (id) => {
+        let resp = await axios.get('/api/products/'+id);
+        // Se obtiene el status de la respuesta
+        if(resp.status === 200){
+            await setProduct(resp.data)
+            await fillForm(resp.data);
+        }else{
+            Swal.fire({
+                icon: 'error',
+                title: 'Error: '+resp.status,
+                text: resp.statusText,
+            })
+        }
+    }
 
     // Funcion para preparar los datos a enviar
     const prepareData = (e) => {
@@ -161,6 +189,35 @@ const CreateProduct = () => {
         imagesRef.current.value = '';
     }
 
+    // Funcion para inicializar el formulario
+    const fillForm = (producto) => {
+        let finalDate = new Date(producto.auctionDate.final).toLocaleDateString() + ' ' + new Date(producto.auctionDate.final).toLocaleTimeString();
+
+        // Inicializa los caracteres restantes
+        setcaracRestantes(producto.description.observations.length);
+        // Inicializa las variables para el formulario
+        setProductName(producto.nameProduct);
+        setCategory(producto.category);
+        setMaterial(producto.description.material);
+        setMarca(producto.description.marca);
+        setDimensions(producto.description.dimensions);
+        setConditions(producto.description.actualCondition);
+        setObservations(producto.description.observations);
+        setBuyNow(producto.price.buyNow);
+        setInitialPrice(producto.price.initialP);
+        settingCloseDates(finalDate);
+        // Inicializa las Variables para las imagenes
+
+        // \\${principal.filePath}
+
+        const file= new File('\\'+producto.file.filePath)
+        console.log('file',file);
+        // setImagePrincipal('\\'+producto.file.filePath);
+        // imgPrincipalRef.current.value = '\\'+producto.file.filePath;
+        // setImages('');
+        // imagesRef.current.value = '';
+    }
+
     //Funcion para validar si el boton se bloquea o no
     const validateButton = () => {
         // Valida que ningun campo este vacio
@@ -210,11 +267,13 @@ const CreateProduct = () => {
             });
         }
     }
-
+    // Funcion para validar fechas
     const settingCloseDates = (value) => {
         setCloseDateVisual(value);
         setCloseDate(new Date(value));
     }
+
+    console.log('product',product);
 
 
 return (
