@@ -61,25 +61,33 @@ function Views() {
 
 
     //Modificar reseña
-    const modifyReview = async function () {
-        let resp = await fetch('/api/reviews/',
-    {
-        method: "PUT",
-    })
-    if (resp.status === 201) {
-        Swal.fire({
-            icon: 'success',
-            title: '¡LISTO!',
-            text: 'Reseña modificada'
-        })
-    }
-    else {
-        Swal.fire({
-            icon: 'error',
-            title: '¡Oh oh, Hubo un error!',
-            text: 'No se puede modificar',
-        })
-    }
+    const modifyReview = async () => {
+        const resenaM = {
+            comment: comentario,
+            stars: estrellas,
+            type: tipo
+        }
+        let resp = await fetch(`/api/reviews${_id}`,
+            {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(resenaM)
+            })
+        if (resp.status === 201) {
+        //console.log(resena),
+            Swal.fire({
+                icon: 'success',
+                title: '¡LISTO!',
+                text: 'Reseña modificada'
+            })
+        }
+        else {
+            Swal.fire({
+                icon: 'error',
+                title: '¡Oh oh, Hubo un error!',
+                text: 'No se puede modificar',
+            })
+        }
     }  
    
 
