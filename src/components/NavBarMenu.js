@@ -7,6 +7,7 @@ function NavBarMenu(params) {
     const navigate = useNavigate();
     const [view] = useState(params.view);
     const [user] = useState(authService.getCurrentUser());
+    const [isAdmin] = useState(user.isAdmin);
     useEffect(() => {
         let x = async function () {
             let getF = new Promise(async (resolve, reject) => {
@@ -52,9 +53,12 @@ function NavBarMenu(params) {
                                     Cerrar Sesión
                                 </NavDropdown.Item>
                             </NavDropdown>
-                            <Nav.Link eventKey={2} href="/productosAdm" className={(view==="Admin")?'nav-activate':''}>
+                            {
+                            (isAdmin) ? <Nav.Link eventKey={2} href="/admin" className={(view==="Admin")?'nav-activate':''}>
                                 Administrador
                             </Nav.Link>
+                            : ""
+                            }
                         </Nav>
                     </Navbar.Collapse>
                 </Container>

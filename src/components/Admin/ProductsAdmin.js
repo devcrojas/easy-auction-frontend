@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Container, Row, Col } from 'react-bootstrap'
-import { ButtonGroup, Table, TableCell, TableContainer, TableHead, TableRow, Button } from '@mui/material';
+import { ButtonGroup, Table, TableCell, TableContainer, TableHead, TableRow, Button, TableBody } from '@mui/material';
 
 import "../../nav.css"
 import NavBarMenu from '../NavBarMenu'
@@ -8,6 +8,8 @@ import MenuLateral from './MenuLateralAdmin';
 
 import AuthService from '../../services/auth.service';
 import Swal from 'sweetalert2';
+import '@sweetalert2/theme-material-ui/material-ui.css'
+
 
 
 function ProductsAdmin() {
@@ -40,23 +42,23 @@ function ProductsAdmin() {
         if (inactiveProds !== []) {
             return inactiveProds.map(((pro, index) => {
                 return (
-                    <React.Fragment key={index}>
-                        <TableCell align={"right"} style={{ minWidth: 170 }}>{pro.nameProduct}</TableCell>
-                        <TableCell align={"right"} style={{ minWidth: 170 }}>{pro.category}</TableCell>
-                        <TableCell align={"right"} style={{ minWidth: 170 }}>{pro.price.initialP}</TableCell>
-                        <TableCell align={"right"} style={{ minWidth: 170 }}>{pro.price.buyNow}</TableCell>
-                        <TableCell align={"right"} style={{ minWidth: 170 }}>{buttons(pro._id)}</TableCell>
-                    </React.Fragment>
+                    <TableRow key={index} id={pro._id}>
+                            <TableCell align={"right"} style={{ minWidth: 170 }}>{pro.nameProduct}</TableCell>
+                            <TableCell align={"right"} style={{ minWidth: 170 }}>{pro.category}</TableCell>
+                            <TableCell align={"right"} style={{ minWidth: 170 }}>{pro.price.initialP}</TableCell>
+                            <TableCell align={"right"} style={{ minWidth: 170 }}>{pro.price.buyNow}</TableCell>
+                            <TableCell align={"right"} style={{ minWidth: 170 }}>{buttons(pro._id)}</TableCell>
+                    </TableRow>
                 )
             }));
 
         } else {
-            return <TableCell align={"right"} style={{ minWidth: 170 }}>Cargando datos...</TableCell>
+            return <TableRow><TableCell align={"right"} style={{ minWidth: 170 }}>Cargando datos...</TableCell></TableRow>
         }
     }
     async function autorizarSubasta(id) {
-        console.log(id);
-        /* let options = {
+        //console.log(id);
+        let options = {
             method: "PUT",
             headers: {
                 'Content-Type': 'application/json'
@@ -65,24 +67,27 @@ function ProductsAdmin() {
         }
         let resp = await fetch(`/api/products/status/${id}`, options)
         let response = await resp.json();
-        
-        if (response.status === 201) {
-            console.log(response)
+        console.log(response);
+        if (response.status === 1) {
+            console.log(response);
             Swal.fire(
                 'Subasta Autorizada con exito!',
+                'Ahora la subasta esta publicada!',
                 'success'
             );
+            let row = document.getElementById(id);
+            row.style.display = "none";
         } else {
-            Swal.fire(
-                'Error al autorizar subasta!',
-                `${resp.error.message}`,
-                'error'
-            );
-        } */
+            Swal.fire({
+                icon: 'error',
+                title: 'Error al autorizar subasta!',
+                text: `${resp.mssg}`
+            });
+        }
     }
     return (
         <>
-            <NavBarMenu view={"Admin"} user={"Perfil Facke"}></NavBarMenu>
+            <NavBarMenu view={"Admin"}></NavBarMenu>
             <Container fluid style={{ background: "#F0F2F5" }}>
                 <Row>
                     <Col xs={3} className="sidebarEasy">
@@ -101,11 +106,13 @@ function ProductsAdmin() {
                                             <TableCell align={"center"} style={{ minWidth: 170 }}>Autorizar</TableCell>
                                         </TableRow>
                                     </TableHead>
-                                    <>
+                                    <TableBody>
+
                                         {
                                             generateTable()
                                         }
-                                    </>
+
+                                    </TableBody>
                                 </Table>
                             </TableContainer>
 

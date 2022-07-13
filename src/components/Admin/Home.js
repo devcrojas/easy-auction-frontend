@@ -1,15 +1,15 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Container, Row, Col } from 'react-bootstrap'
 import "../../nav.css"
 import NavBarMenu from '../NavBarMenu'
 import MenuLateral from './MenuLateralAdmin';
+import AuthService from '../../services/auth.service';
 
 function Home() {
 
-
     return (
         <>
-            <NavBarMenu view={"Admin"} user={"Perfil Facke"}></NavBarMenu>
+            <NavBarMenu view={"Admin"} ></NavBarMenu>
 
             <Container fluid style={{ background: "#F0F2F5" }}>
                 <Row>

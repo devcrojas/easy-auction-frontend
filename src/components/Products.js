@@ -8,10 +8,9 @@ import { useState } from 'react';
 function Productos() {
   const [profile] = useState(AuthService.getCurrentUser().profile);
   const [user] = useState(AuthService.getCurrentUser());
-
   return (
     <>
-      <NavBarMenu view={"Products"} user={user.profile}></NavBarMenu>
+      <NavBarMenu view={"Products"} user={user.profile} ></NavBarMenu>
       <Container fluid style={{ background: "#F0F2F5" }}>
         <Row>
           <Col xs={3} className="sidebarEasy">

@@ -22,7 +22,7 @@ function MenuLateral(params) {
       </Row>
       <Row>
         <Col style={{ paddingRight: "0" }}>
-          <Button variant="link" onClick={() => {window.location.href = "/productosAdm"}} className={(view === "productsAdmin") ? "nav-activate btn-sidebar" : "btn-sidebar"}>
+          <Button variant="link" onClick={() => {window.location.href = "/admin/productos"}} className={(view === "productsAdmin") ? "nav-activate btn-sidebar" : "btn-sidebar"}>
             <ProductIco className="ico-sidebar"></ProductIco>
             <label className='m-2'>Productos</label>
           </Button>
@@ -30,7 +30,7 @@ function MenuLateral(params) {
       </Row>
       <Row>
         <Col style={{ paddingRight: "0" }}>
-          <Button variant="link" onClick={() => {window.location.href = "/compras"}} className={(view === "MyShops") ? "btn-sidebar nav-activate" : "btn-sidebar"}>
+          <Button variant="link" onClick={() => {window.location.href = "#/comprasAdmin"}} className={(view === "MyShops") ? "btn-sidebar nav-activate" : "btn-sidebar"}>
             <ComprasIco className="ico-sidebar"></ComprasIco>
             <label className='m-2'>Compras</label>
           </Button>
@@ -38,7 +38,7 @@ function MenuLateral(params) {
       </Row>
       <Row>
         <Col style={{ paddingRight: "0" }}>
-          <Button variant="link" onClick={() => {window.location.href = "/ofertas"}} className={(view === "MyOff") ? "btn-sidebar nav-activate" : "btn-sidebar"}>
+          <Button variant="link" onClick={() => {window.location.href = "#/ofertasAdmin"}} className={(view === "MyOff") ? "btn-sidebar nav-activate" : "btn-sidebar"}>
             <OfertasIco className="ico-sidebar"></OfertasIco>
             <label className='m-2'>Ofertas</label>
           </Button>
@@ -46,17 +46,9 @@ function MenuLateral(params) {
       </Row>
       <Row>
         <Col style={{ paddingRight: "0" }}>
-          <Button variant="link" onClick={() => {window.location.href = "/vendedores"}} className={(view === "MyReviews") ? "btn-sidebar nav-activate" : "btn-sidebar"}>
+          <Button variant="link" onClick={() => {window.location.href = "#/vendedoresAdmin"}} className={(view === "MyReviews") ? "btn-sidebar nav-activate" : "btn-sidebar"}>
             <ResenasIco className="ico-sidebar"></ResenasIco>
             <label className='m-2'>Vendedores</label>
-          </Button>
-        </Col>
-      </Row>
-      <Row>
-        <Col style={{ paddingRight: "0" }}>
-          <Button variant="link" onClick={() => {window.location.href = "/buys/points"}} className={(view === "MyReviews") ? "btn-sidebar nav-activate" : "btn-sidebar"}>
-            <BuysIco className="ico-sidebar"></BuysIco>
-            <label className='m-2'>Puntos Easy</label>
           </Button>
         </Col>
       </Row>

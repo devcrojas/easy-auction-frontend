@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Container, Row, Col } from 'react-bootstrap'
+import { Container, Row, Col, Badge } from 'react-bootstrap'
 import "../../nav.css"
 import NavBarMenu from '../NavBarMenu'
 import MenuLateral from '../MenuLateral';
@@ -39,8 +39,8 @@ function Points() {
         setPts(pointsCurrent[0].pts);
     }
 
-    const updatePts = async function(pts){
-        let pointsUpdate = await PointsService.updatePointsByUserId({userId: user.id, pts: parseInt(pts)});
+    const updatePts = async function(pts, details){
+        let pointsUpdate = await PointsService.updatePointsByUserId({userId: user.id, pts: parseInt(pts), details: details});
         setPts(parseInt(pointsUpdate.pts))
         //console.log(pointsUpdate);
     }
@@ -99,16 +99,16 @@ function Points() {
                         <MenuLateral view={"Points"} profileImg={"imageProfile"}></MenuLateral>
                     </Col>
                     <Col xs={9}>
-                        <Row className='mt-2' style={{ background: "white", boxShadow: "2px 2px 2px 1px rgba(0, 0, 0, 0.2)" }}>
+                        <Row className='mt-3' style={{ background: "white", boxShadow: "2px 2px 2px 1px rgba(0, 0, 0, 0.2)" }}>
                             <Col xs={12} sm={6} md={8} className="mt-2">
-                                <h2>Mis puntos Easy</h2>
+                                <h2>Zona de compra</h2>
                                 <hr></hr>
                                 <h5>Bienvenido {user.profile.firstName + " " + user.profile.lastName}</h5>
                             </Col>
-                            <Col className='border d-flex align-items-center justify-content-center' xs={12} sm={6} md={4} >
-                                <label>Puntos Easy: {pts} pts</label>
+                            <Col className='border d-flex align-items-center justify-content-center' xs={12} sm={6} md={4} style={{boxShadow: "rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset"}}>
+                                <label>Puntos Easy: <Badge bg="info">{pts} pts</Badge></label>
                             </Col>
-                            <Col xs={12}>
+                            <Col xs={12} className="mt-2">
                                 <h6 className='mt-2'>Tabla de precios</h6>
 
                                 <TableContainer component={Paper}>
@@ -130,8 +130,7 @@ function Points() {
                                                     <StyledTableCell align="center">
                                                         <PayPalScriptProvider options={{ "client-id": "AZXrjdT9OpCmjWo-0NPJkcsUHUlOS6-cK9HcDzXee0qHuIqNMf8D9xgwJ2G-tbnrenjaHgAyBTz6zamX", currency: "MXN" }}>
                                                             <PayPalButtons
-
-                                                                style={{ layout: "horizontal", tagline: false, width: "50%" }}
+                                                                style={{ layout: "horizontal", tagline: false }}
                                                                 createOrder={(data, actions) => {
                                                                     return actions.order.create({
                                                                         purchase_units: [
@@ -147,10 +146,9 @@ function Points() {
                                                                     //console.log(data);
                                                                     //console.log(actions);
                                                                     actions.order.capture().then((details) => {
-                                                                        updatePts(row.calories);
+                                                                        updatePts(row.calories, details);
                                                                         const name = details.payer.name.given_name;
                                                                         //console.log(`Transaction completed by ${name}`);
-                                                                        //console.log(details);
                                                                         message();                                                                        
                                                                     })
                                                                     /*/return actions.order.capture().then((details) => {
