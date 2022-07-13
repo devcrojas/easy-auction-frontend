@@ -4,6 +4,7 @@ import { Container, Row, Col, Card, Button, Form} from 'react-bootstrap';
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import '@sweetalert2/theme-material-ui/material-ui.css'
 import AuthService from '../services/auth.service'
+import Reviews from './Reviews';
 
 
 const colors = {
@@ -17,9 +18,7 @@ function Views() {
     // Se obtiene el usuario de sesion
     let user = AuthService.getCurrentUser();
     let userAuth = user.id;
-    /*   // Prueba con:
-    let userAuth = 't@gmail.com'; */
-
+    
     useEffect(() => {
         getReviews()
     }, [])
@@ -62,12 +61,13 @@ function Views() {
 
     //Modificar reseña
     const modifyReview = async () => {
+        let emailSeller = product.filter((e) => e._id === selectProducts);   
         const resenaM = {
             comment: comentario,
             stars: estrellas,
             type: tipo
         }
-        let resp = await fetch(`/api/reviews${_id}`,
+        let resp = await fetch(`/api/reviews/`,
             {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
@@ -182,4 +182,4 @@ function Views() {
     )
 }
 
-export default Views
+export default Views;

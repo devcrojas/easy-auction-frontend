@@ -58,14 +58,8 @@ root.render(
       <Route exact path="/buys/points" element={<ProtectedRoute> <Points /> </ProtectedRoute>}></Route>
       <Route exact path="/createProducts" element={<ProtectedRoute> <CreateProduct /> </ProtectedRoute>}></Route>
       <Route exact path="/misproductos" element={<ProtectedRoute> <MyProducts /> </ProtectedRoute>}></Route>
-<<<<<<< HEAD
-
-      <Route exact path="/vistas" element={<ProtectedRoute> <Views /> </ProtectedRoute>}></Route>
-
-=======
       <Route exact path="/admin" element={<ProtectedRouteAdmin> <Admin /> </ProtectedRouteAdmin>}></Route>
       <Route exact path="/admin/productos" element={ <ProtectedRouteAdmin > <ProductsAdmin /> </ProtectedRouteAdmin>}></Route>
->>>>>>> staging
     </Routes>
   </Router>
 );
