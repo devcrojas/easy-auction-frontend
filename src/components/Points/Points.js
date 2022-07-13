@@ -39,8 +39,8 @@ function Points() {
         setPts(pointsCurrent[0].pts);
     }
 
-    const updatePts = async function(pts){
-        let pointsUpdate = await PointsService.updatePointsByUserId({userId: user.id, pts: parseInt(pts)});
+    const updatePts = async function(pts, details){
+        let pointsUpdate = await PointsService.updatePointsByUserId({userId: user.id, pts: parseInt(pts), details: details});
         setPts(parseInt(pointsUpdate.pts))
         //console.log(pointsUpdate);
     }
@@ -130,8 +130,7 @@ function Points() {
                                                     <StyledTableCell align="center">
                                                         <PayPalScriptProvider options={{ "client-id": "AZXrjdT9OpCmjWo-0NPJkcsUHUlOS6-cK9HcDzXee0qHuIqNMf8D9xgwJ2G-tbnrenjaHgAyBTz6zamX", currency: "MXN" }}>
                                                             <PayPalButtons
-
-                                                                style={{ layout: "horizontal", tagline: false, width: "50%" }}
+                                                                style={{ layout: "horizontal", tagline: false }}
                                                                 createOrder={(data, actions) => {
                                                                     return actions.order.create({
                                                                         purchase_units: [
@@ -147,10 +146,9 @@ function Points() {
                                                                     //console.log(data);
                                                                     //console.log(actions);
                                                                     actions.order.capture().then((details) => {
-                                                                        updatePts(row.calories);
+                                                                        updatePts(row.calories, details);
                                                                         const name = details.payer.name.given_name;
                                                                         //console.log(`Transaction completed by ${name}`);
-                                                                        //console.log(details);
                                                                         message();                                                                        
                                                                     })
                                                                     /*/return actions.order.capture().then((details) => {
