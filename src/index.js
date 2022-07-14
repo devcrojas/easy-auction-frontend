@@ -6,10 +6,13 @@ import Welcome from './components/Welcome';
 import Products from './components/Products';
 import serviceAuth from './services/auth.service'
 import Profile from './components/Profile';
+import Admin from './components/Admin/Home';
 import ResetPassword from './components/ResetPassword';
+import Points from './components/Points/Points';
 import Reviews from './components/Reviews';
 import CreateProduct from './components/CreateProduct';
 import { Home } from '@mui/icons-material';
+import ProductsAdmin from './components/Admin/ProductsAdmin';
 import MyProducts from './components/MyProducts';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -21,10 +24,21 @@ const ProtectedRoute = ({ children }) => {
   return children;
 };
 
+const ProtectedRouteAdmin = ({ children }) => {
+  var user = serviceAuth.getCurrentUser();
+  if (!user) {
+    return <Navigate to="/" replace />;
+  }else if(user.isAdmin){
+    return children;
+  }else{
+    return <Navigate to="/productos" replace/>;
+  }
+};
+
 const ProtectedRouteLogin = ({ children }) => {
   var user = serviceAuth.getCurrentUser();
   if (user) {
-    return <Navigate to="/producto" replace />;
+    return <Navigate to="/productos" replace />;
   }
   return children;
 };
@@ -36,10 +50,14 @@ root.render(
       <Route exact path='/ejemploDeIntegracion' element={ <ProtectedRoute >  <Home /> </ProtectedRoute> }></Route>
       <Route exact path="/profile" element={ <ProtectedRoute >  <Profile /> </ProtectedRoute>}></Route>
       <Route exact path="/resetPassword/:jwtoken" element={  <ResetPassword /> }></Route>
-      <Route exact path="/producto" element={ <ProtectedRoute > <Products /> </ProtectedRoute>}></Route>
+      <Route exact path="/productos" element={ <ProtectedRoute > <Products /> </ProtectedRoute>}></Route>
       <Route exact path="/resenas" element={<ProtectedRoute> <Reviews /> </ProtectedRoute>}></Route>
+      <Route exact path="/buys/points" element={<ProtectedRoute> <Points /> </ProtectedRoute>}></Route>
       <Route exact path="/createProducts" element={<ProtectedRoute> <CreateProduct /> </ProtectedRoute>}></Route>
+      <Route exact path="/updateProduct/:productId" element={<ProtectedRoute> <CreateProduct /> </ProtectedRoute>}></Route>
       <Route exact path="/misproductos" element={<ProtectedRoute> <MyProducts /> </ProtectedRoute>}></Route>
+      <Route exact path="/admin" element={<ProtectedRouteAdmin> <Admin /> </ProtectedRouteAdmin>}></Route>
+      <Route exact path="/admin/productos" element={ <ProtectedRouteAdmin > <ProductsAdmin /> </ProtectedRouteAdmin>}></Route>
     </Routes>
   </Router>
 );

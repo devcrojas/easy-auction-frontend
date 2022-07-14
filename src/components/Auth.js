@@ -62,7 +62,7 @@ function Auth() {
         }
     }
     async function sendUser() {
-        console.log(user);
+        //console.log(user);
         //Valida si los inputs vienen vacios, muestra dos errores
         if (user.email === "" && user.pass === "") {
             setErrorEmail(true);
@@ -91,7 +91,7 @@ function Auth() {
                 if (data.status !== -1) {
                     localStorage.setItem("token", data.data.token);
                     //Evita que el usuario regrese con el boton de volver al login.
-                    navigate("/producto", { replace: true });
+                    navigate("/productos", { replace: true });
                 } else {
                     localStorage.removeItem("token");
                     //console.log(data);
