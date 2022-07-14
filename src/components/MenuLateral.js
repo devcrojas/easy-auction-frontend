@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Button, Col, Container, Image, Row } from 'react-bootstrap'
-import { ReactComponent as ProductIco } from "../images/products_nav.svg"
+import { ReactComponent as ProductIco } from "../images/new_products_nav.svg"
 import { ReactComponent as ComprasIco } from "../images/compras_nav.svg"
 import { ReactComponent as OfertasIco } from "../images/ofertas_nav.svg"
 import { ReactComponent as ResenasIco } from "../images/resenas_nav.svg"
@@ -70,6 +70,7 @@ function MenuLateral(params) {
           </Button>
         </Col>
       </Row>
+      <hr></hr>
     </Container >
   )
 }
