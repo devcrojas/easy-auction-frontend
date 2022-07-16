@@ -37,9 +37,7 @@ return (
                                   isSubObject={true}
                                   subObject={'email'}
                                   actualView={'myProducts'}
-                                  
                                   />
-
                 </Row>
             </Col>
         </Row>

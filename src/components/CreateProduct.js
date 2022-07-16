@@ -141,7 +141,7 @@ const CreateProduct = () => {
         formData.append("final", finalDate)
         // Se mandan los datos del status y usuario
         formData.append("status", 'Inactive')
-        formData.append("email", user.id)
+        formData.append("profile", user.id)
         // Se manda a realizar la peticion
         sendData(formData)
     }
@@ -149,7 +149,10 @@ const CreateProduct = () => {
     // Funcion para enviar los datos del form
     const sendData = async (formData) => {
         // Se realiza la peticion al back
-        let resp = await axios.post('/api/products', formData);
+        let resp = await axios.post('/api/products', formData, {
+            headers: {
+                'Authorization': localStorage.getItem("token")
+            }});
         // Se obtiene el status de la respuesta
         if(resp.status === 201){
             cleanForm();

@@ -3,41 +3,56 @@ import { Col, Modal, Row } from 'react-bootstrap';
 import { Card, CardContent, CardMedia, Typography, CardActionArea, ListItem, CardHeader, Avatar, Button } from '@mui/material'
 import 'react-slideshow-image/dist/styles.css'
 import { Zoom } from 'react-slideshow-image';
+import BorderColorIcon from '@mui/icons-material/BorderColor';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import Swal from 'sweetalert2/dist/sweetalert2.js'
+import axios from 'axios';
 
 const ProductCard = (props) => {
-    // Manejadores para cerrar o mostrar el modal del producto
+    // Manejadores para cerrar o mostrar el modal del detalle del producto
     const [show, setShow] = useState(false);
     const handleShow = () => setShow(true);
     const handleClose = () => setShow(false);
+    // Manejadores para cerrar o mostrar el modal de la confirmacion de borrado
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const handleShowConfirmModal = () => setShowConfirmModal(true);
+    const handleCloseConfirmModal = () => setShowConfirmModal(false);
     // Se obtienen los datos necesarios para el card del producto
     const producto = props.product;
     let initialDate = new Date(producto.auctionDate.initialD).toLocaleDateString();
     let finalDate = new Date(producto.auctionDate.final).toLocaleDateString() + ' ' + new Date(producto.auctionDate.final).toLocaleTimeString();
     let imag = (producto.file) ? producto.file.filePath : 'uploads\\sin.jpg'
     // Se obtienen las opciones por vista
-    let viewOptions;
-    // Opciones para mis productos
+    let editOptions;
+    let listOptions;
+    // Opciones dependiendo de la vista
     if(props.actualView === 'myProducts'){
-        viewOptions = <Row>
-                        <Col>
-                            <Button variant="contained" color="warning" className='w-100'
-                                    onClick={() => {window.location.href = "/updateProduct/"+producto._id}}>Actualizar</Button>
-                        </Col>
-                        <Col>
-                            <Button variant="contained" color="error" className='w-100'>Borrar</Button>
-                        </Col>
-                      </Row>
+        editOptions = 
+                    <>
+                        <Button variant="contained" color="warning" className='w-25 rounded-5 mx-2' onClick={() => {window.location.href = "/updateProduct/"+producto._id}}>
+                            <BorderColorIcon/>
+                        </Button>
+                        <Button variant="contained" color="error" className='w-25 rounded-5 mx-2' onClick ={() => handleShowConfirmModal()}>
+                            <DeleteForeverIcon/>
+                        </Button>
+                    </>
     }
-    // Opciones para lista de productos generales
-    if(props.actualView === 'productsList'){
-        viewOptions = <Row>
-                        <Col>
-                            <Button>Comprar ahora</Button>
-                        </Col>
-                        <Col>
-                            <Button>Ofertar</Button>
-                        </Col>
-                      </Row>
+    const deleteProduct = async () => {
+        producto.status = "cancelled";
+        console.log('producto',producto);
+        let resp = await axios.put('/api/products/'+producto._id, producto);
+        if(resp.status === 201){
+            Swal.fire({
+                icon: 'success',
+                title: '¡Ah borrado el producto de forma exitosa!'
+            })
+        }else{
+            Swal.fire({
+                icon: 'error',
+                title: 'Error: '+resp.status,
+                text: resp.statusText,
+            })
+        }
     }
     // Funcion para mostrar el slider con las fotos del producto
     const showSlider = (detImages,principal) => {
@@ -57,13 +72,16 @@ const ProductCard = (props) => {
         }
     }
 
+    console.log('producto',producto);
   return (
     <>
-        <Card sx={{ maxWidth:'100%',height:'100%', borderRadius: 5,  marginBottom: 10 }} elevation={10} key={producto._id}>
+        <Card sx={{ height:'100%', borderRadius: 5,  marginBottom: 10 }} elevation={10} key={producto._id}>
             <CardActionArea onClick={ () => { handleShow(); }}>
                 <CardHeader avatar={ <Avatar src={producto.email.file.filePath} /> }
                             title={producto.email.firstName + " " + producto.email.lastName}
-                            subheader={producto.email.email} />
+                            subheader={producto.email.email} 
+                            action={editOptions}/>
+                
                 <Row className="justify-content-center my-2">
                     <div className="modal-image-container">
                         <CardMedia id={producto._id}
@@ -122,10 +140,10 @@ const ProductCard = (props) => {
                     
                 </CardContent>
             </CardActionArea>
-            {viewOptions}
+            {listOptions}
         </Card>
-
-        <Modal show={show} size="xl"  centered onHide={handleClose} >
+        {/* Modal que muestra la informacion de los productos */}
+        <Modal show={show} size="xl" centered onHide={handleClose} >
             <Modal.Header closeButton>
                 <h1> {producto.nameProduct}</h1>
             </Modal.Header>
@@ -148,6 +166,26 @@ const ProductCard = (props) => {
                         <p>Precio ofertado:${producto.price.offered}</p>
                         <p>Inicio subasta:{initialDate}</p>
                         <p>Fin de la subasta: {finalDate}</p>
+                    </Col>
+                </Row>
+            </Modal.Body>
+        </Modal>
+        {/* Modal para confirmar el borrado de un producto */}
+        <Modal show={showConfirmModal} size="md" centered onHide={handleCloseConfirmModal} >
+            <Modal.Header closeButton className='text-center'>
+                <h3>¿Estas seguro de querer eliminar este producto?</h3>
+            </Modal.Header>
+            <Modal.Body>
+                <Row>
+                    <Col md={6}>
+                        <Button variant="contained" color="error" className='w-25 rounded-5 mx-2' onClick={() => {handleCloseConfirmModal() }}>
+                            No
+                        </Button>
+                    </Col>
+                    <Col md={6}>
+                        <Button variant="contained" color="success" className='w-25 rounded-5 mx-2' onClick={() => {deleteProduct() }}>
+                            Si
+                        </Button>
                     </Col>
                 </Row>
             </Modal.Body>

@@ -19,6 +19,7 @@ function ProductsList(props) {
         );
         let awProduc = await produc.json();
         setApis(awProduc);
+        console.log('apis',apis)
         return;
     };
 
@@ -30,6 +31,7 @@ function ProductsList(props) {
                 // Pregunta si el campo a filtrar esta en un sub objeto
                 if(props.isSubObject){
                     // Realiza la comparacion para buscar el valor en el sub objeto
+                    console.log('producto',producto);
                     if(props.filterValue === producto[props.subObject][props.filterField]){
                         return (
                             <Col sx={12} lg={6} key={producto._id} className='mb-5'>
