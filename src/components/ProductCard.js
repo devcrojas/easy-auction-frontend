@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Col, Modal, Row } from 'react-bootstrap';
-import { Card, CardContent, CardMedia, Typography, CardActionArea, ListItem, CardHeader, Avatar } from '@mui/material'
+import { Card, CardContent, CardMedia, Typography, CardActionArea, ListItem, CardHeader, Avatar, Button } from '@mui/material'
 import 'react-slideshow-image/dist/styles.css'
 import { Zoom } from 'react-slideshow-image';
 
@@ -14,6 +14,31 @@ const ProductCard = (props) => {
     let initialDate = new Date(producto.auctionDate.initialD).toLocaleDateString();
     let finalDate = new Date(producto.auctionDate.final).toLocaleDateString() + ' ' + new Date(producto.auctionDate.final).toLocaleTimeString();
     let imag = (producto.file) ? producto.file.filePath : 'uploads\\sin.jpg'
+    // Se obtienen las opciones por vista
+    let viewOptions;
+    // Opciones para mis productos
+    if(props.actualView === 'myProducts'){
+        viewOptions = <Row>
+                        <Col>
+                            <Button variant="contained" color="warning" className='w-100'
+                                    onClick={() => {window.location.href = "/updateProduct/"+producto._id}}>Actualizar</Button>
+                        </Col>
+                        <Col>
+                            <Button variant="contained" color="error" className='w-100'>Borrar</Button>
+                        </Col>
+                      </Row>
+    }
+    // Opciones para lista de productos generales
+    if(props.actualView === 'productsList'){
+        viewOptions = <Row>
+                        <Col>
+                            <Button>Comprar ahora</Button>
+                        </Col>
+                        <Col>
+                            <Button>Ofertar</Button>
+                        </Col>
+                      </Row>
+    }
     // Funcion para mostrar el slider con las fotos del producto
     const showSlider = (detImages,principal) => {
         if (detImages.length >= 1) {
@@ -34,17 +59,19 @@ const ProductCard = (props) => {
 
   return (
     <>
-        <Card sx={{ width:'100%',height:'100%', borderRadius: 5,  marginBottom: 10 }} elevation={10} key={producto._id}>
+        <Card sx={{ maxWidth:'100%',height:'100%', borderRadius: 5,  marginBottom: 10 }} elevation={10} key={producto._id}>
             <CardActionArea onClick={ () => { handleShow(); }}>
-                <CardHeader avatar={ <Avatar src={producto.sellerData.file.filePath} /> }
-                            title={producto.sellerData.firstName + " " + producto.sellerData.lastName}
-                            subheader={producto.sellerData.email} />
+                <CardHeader avatar={ <Avatar src={producto.email.file.filePath} /> }
+                            title={producto.email.firstName + " " + producto.email.lastName}
+                            subheader={producto.email.email} />
                 <Row className="justify-content-center my-2">
-                    <CardMedia  id={producto._id}
+                    <div className="modal-image-container">
+                        <CardMedia id={producto._id}
                                 component="img"
                                 image={`\\${imag}`}
                                 alt={producto.nameProduct}
-                                sx={{ width: 350,height: 350 }} />
+                                className='modal-image' />
+                    </div>
                 </Row>
                 <CardContent>
                     <Row className='my-2'>
@@ -95,6 +122,7 @@ const ProductCard = (props) => {
                     
                 </CardContent>
             </CardActionArea>
+            {viewOptions}
         </Card>
 
         <Modal show={show} size="xl"  centered onHide={handleClose} >

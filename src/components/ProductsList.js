@@ -33,7 +33,7 @@ function ProductsList(props) {
                     if(props.filterValue === producto[props.subObject][props.filterField]){
                         return (
                             <Col sx={12} lg={6} key={producto._id} className='mb-5'>
-                                <ProductCard product={producto}></ProductCard>
+                                <ProductCard product={producto} actualView={props.actualView}></ProductCard>
                             </Col>
                         )
                     }
@@ -42,7 +42,7 @@ function ProductsList(props) {
                     if(props.filterValue === producto[props.filterField]){
                         return (
                             <Col sx={12} lg={6} key={producto._id} className='mb-5'>
-                                <ProductCard product={producto}></ProductCard>
+                                <ProductCard product={producto} actualView={props.actualView}></ProductCard>
                             </Col>
                         )
                     }
@@ -51,7 +51,7 @@ function ProductsList(props) {
                 // Si no se esta filtrando que traiga todas las cards
                 return (
                     <Col sx={12} lg={6} key={producto._id} className='mb-5'>
-                        <ProductCard product={producto}></ProductCard>
+                        <ProductCard product={producto} actualView={props.actualView}></ProductCard>
                     </Col>
                 )
             }
