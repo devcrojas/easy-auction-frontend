@@ -349,7 +349,7 @@ return (
                                     <Col xs={12} sm={6}>
                                         <FormControl className='w-100 my-2'>
                                             <TextField required id="outlined-required" label="Nombre del producto" value={productName}
-                                                       onChange={(event) => setProductName(event.target.value)} placeholder="Nombre"/>
+                                                       onChange={(event) => setProductName(event.target.value)} placeholder="Nombre" name='productName'/>
                                         </FormControl>
                                     </Col>
                                     <Col xs={12} sm={6}>
@@ -377,21 +377,21 @@ return (
                                         <FormControl className='w-100 my-2'>
                                             <TextField required id="outlined-required" label="Material" value={material}
                                                        onChange={(event) => setMaterial(event.target.value)} 
-                                                       placeholder="Material del producto"/>
+                                                       placeholder="Material del producto" name='material'/>
                                         </FormControl>
                                     </Col>
                                     <Col xs={12} sm={6} md={4}>
                                         <FormControl className='w-100 my-2'>
                                             <TextField required id="outlined-required" label="Marca" value={marca}
                                                        onChange={(event) => setMarca(event.target.value)} 
-                                                       placeholder="Marca del producto"/>
+                                                       placeholder="Marca del producto" name='marca'/>
                                         </FormControl>
                                     </Col>
                                     <Col xs={12} sm={6} md={4}>
                                         <FormControl className='w-100 my-2'>
                                             <TextField required id="outlined-required" label="Dimensiones" value={dimensions}
                                                        onChange={(event) => setDimensions(event.target.value)} 
-                                                       placeholder="Dimensiones del producto"/>
+                                                       placeholder="Dimensiones del producto" name='dimensions'/>
                                         </FormControl>
                                     </Col>
                                 </Row>
@@ -432,7 +432,7 @@ return (
                                         <FormControl className='w-100 my-2'>
                                             <TextField required id="outlined-multiline-flexible" label="Observaciones del producto" value={observations}
                                                        multiline maxRows={4} onChange={(event) => setObservations(event.target.value)} 
-                                                       onKeyUp={(event) => setcaracRestantes(event.target.value.length)}/>
+                                                       onKeyUp={(event) => setcaracRestantes(event.target.value.length)} name='observations'/>
                                         </FormControl>
                                         <p className='text-danger fs-7 fw-light'>{caracRestantes} de 200 caracteres permitidos</p>
                                     </Col>

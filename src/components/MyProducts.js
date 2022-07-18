@@ -8,7 +8,6 @@ import NavBarMenu from './NavBarMenu';
 import ProductsList from './ProductsList';
 
 const MyProducts = () => {
-    const [user, setUser] = useState(AuthService.getCurrentUser());
 
 return (
 <Fragment>
