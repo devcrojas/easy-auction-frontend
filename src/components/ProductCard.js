@@ -13,10 +13,6 @@ const ProductCard = (props) => {
     const [show, setShow] = useState(false);
     const handleShow = () => setShow(true);
     const handleClose = () => setShow(false);
-    // Manejadores para cerrar o mostrar el modal de la confirmacion de borrado
-    const [showConfirmModal, setShowConfirmModal] = useState(false);
-    const handleShowConfirmModal = () => setShowConfirmModal(true);
-    const handleCloseConfirmModal = () => setShowConfirmModal(false);
     // Se obtienen los datos necesarios para el card del producto
     const producto = props.product;
     let initialDate = new Date(producto.auctionDate.initialD).toLocaleDateString();
@@ -24,35 +20,75 @@ const ProductCard = (props) => {
     let imag = (producto.file) ? producto.file.filePath : 'uploads\\sin.jpg'
     // Se obtienen las opciones por vista
     let editOptions;
-    let listOptions;
     // Opciones dependiendo de la vista
     if(props.actualView === 'myProducts'){
-        editOptions = 
+        switch (producto.status) {
+            case 'active':
+                editOptions = 
+                    <>
+                        <h5 className='text-success'>ACTIVA</h5>
+                    </>
+            break;
+            case 'inactive':
+                editOptions = 
                     <>
                         <Button variant="contained" color="warning" className='w-25 rounded-5 mx-2' onClick={() => {window.location.href = "/updateProduct/"+producto._id}}>
                             <BorderColorIcon/>
                         </Button>
-                        <Button variant="contained" color="error" className='w-25 rounded-5 mx-2' onClick ={() => handleShowConfirmModal()}>
+                        <Button variant="contained" color="error" className='w-25 rounded-5 mx-2' onClick ={() => cancelProduct()}>
                             <DeleteForeverIcon/>
                         </Button>
                     </>
-    }
-    const deleteProduct = async () => {
-        producto.status = "cancelled";
-        console.log('producto',producto);
-        let resp = await axios.put('/api/products/'+producto._id, producto);
-        if(resp.status === 201){
-            Swal.fire({
-                icon: 'success',
-                title: '¡Ah borrado el producto de forma exitosa!'
-            })
-        }else{
-            Swal.fire({
-                icon: 'error',
-                title: 'Error: '+resp.status,
-                text: resp.statusText,
-            })
+            break;
+            case 'cancelled':
+                editOptions = 
+                    <>
+                        <h5 className='text-danger'>CANCELADA</h5>
+                    </>
+            break;
+        
+            default:
+            break;
         }
+    }
+    const cancelProduct = async () => {
+        
+        Swal.fire({
+            title: '¿Estas seguro de cancelar la subasta?',
+            text: "No podras deshacer esta accion!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Cancelar subasta',
+            cancelButtonText: 'Volver',
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                // Prepara los datos para su envio
+                const cancelObject = {
+                    status: 'cancelled',
+                    id:producto._id
+                }
+                //Realiza la peticion
+                let resp = await axios.put('/api/products/status/'+producto._id,JSON.stringify(cancelObject),{
+                        headers: { 'Authorization': localStorage.getItem("token"),
+                                'Content-Type': 'application/json' }});
+                // Obtiene la respuesta
+                if(resp.status === 200) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Ah cancelado la subasta de forma exitosa!'
+                    })
+                }else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error: '+resp.status,
+                        text: resp.statusText,
+                    })
+                }
+            }
+        });
+
     }
     // Funcion para mostrar el slider con las fotos del producto
     const showSlider = (detImages,principal) => {
@@ -71,76 +107,71 @@ const ProductCard = (props) => {
             return <img  style={{ width: "100%", height: 350, border: 5 }} src={`\\${principal.filePath}`} alt={principal.nameProduct} />
         }
     }
-
-    console.log('producto',producto);
   return (
     <>
         <Card sx={{ height:'100%', borderRadius: 5,  marginBottom: 10 }} elevation={10} key={producto._id}>
-            <CardActionArea onClick={ () => { handleShow(); }}>
                 <CardHeader avatar={ <Avatar src={producto.email.file.filePath} /> }
                             title={producto.email.firstName + " " + producto.email.lastName}
                             subheader={producto.email.email} 
                             action={editOptions}/>
-                
-                <Row className="justify-content-center my-2">
-                    <div className="modal-image-container">
-                        <CardMedia id={producto._id}
-                                component="img"
-                                image={`\\${imag}`}
-                                alt={producto.nameProduct}
-                                className='modal-image' />
-                    </div>
-                </Row>
-                <CardContent>
-                    <Row className='my-2'>
-                        <Col>
-                            <div className='w-100'>
-                                <div><Typography component="div" variant="h5">{producto.nameProduct}</Typography></div>
-                                <div><Typography component="div" >{producto.category}  </Typography></div>
-                            </div>
-                        </Col>
+                <CardActionArea onClick={ () => { handleShow(); }}>
+                    <Row className="justify-content-center my-2">
+                        <div className="modal-image-container">
+                            <CardMedia id={producto._id}
+                                    component="img"
+                                    image={`\\${imag}`}
+                                    alt={producto.nameProduct}
+                                    className='modal-image' />
+                        </div>
                     </Row>
-                    <Row className='my-2'>
-                        <Col >
-                            <div className='w-100'>
-                                <div><Typography component="div">Precio inicial: </Typography></div>
-                                <div><Typography component="div"><em><b>$</b></em> {producto.price.initialP} </Typography></div>
-                            </div>
-                        </Col>
-                        <Col >
-                            <div className='w-100'>
-                                <div><Typography component="div">Fecha inicio: </Typography></div>
-                                <div><Typography component="div">{initialDate} </Typography></div>
-                            </div>
-                        </Col>
-                    </Row>
-                    <Row className='my-2'>
-                        <Col>
-                            <div className='w-100'>
-                                <div><Typography component="div">Comprar ahora: </Typography></div>
-                                <div><Typography component="div"><em><b>$</b></em>  {producto.price.buyNow} </Typography></div>
-                            </div>
-                        </Col>
-                        <Col>
-                            <div className='w-100'>
-                                <div><Typography component="div">Fecha fin: </Typography></div>
-                                <div><Typography component="div">{finalDate} </Typography></div>
-                            </div>
-                        </Col>
-                    </Row>
-                    <Row className='my-5'>
-                        <Col></Col>
-                        <Col>
-                            <ListItem>
-                                <Typography component="div" variant='h5' color='success'>Ofertado:<em><b>$</b></em></Typography>
-                                <Typography component="div" variant='h5' className="text-success">{producto.price.offered} </Typography>
-                            </ListItem>
-                        </Col>
-                    </Row>
-                    
-                </CardContent>
+                    <CardContent>
+                        <Row className='my-2'>
+                            <Col>
+                                <div className='w-100'>
+                                    <div><Typography component="div" variant="h5">{producto.nameProduct}</Typography></div>
+                                    <div><Typography component="div" >{producto.category}  </Typography></div>
+                                </div>
+                            </Col>
+                        </Row>
+                        <Row className='my-2'>
+                            <Col >
+                                <div className='w-100'>
+                                    <div><Typography component="div">Precio inicial: </Typography></div>
+                                    <div><Typography component="div"><em><b>$</b></em> {producto.price.initialP} </Typography></div>
+                                </div>
+                            </Col>
+                            <Col >
+                                <div className='w-100'>
+                                    <div><Typography component="div">Fecha inicio: </Typography></div>
+                                    <div><Typography component="div">{initialDate} </Typography></div>
+                                </div>
+                            </Col>
+                        </Row>
+                        <Row className='my-2'>
+                            <Col>
+                                <div className='w-100'>
+                                    <div><Typography component="div">Comprar ahora: </Typography></div>
+                                    <div><Typography component="div"><em><b>$</b></em>  {producto.price.buyNow} </Typography></div>
+                                </div>
+                            </Col>
+                            <Col>
+                                <div className='w-100'>
+                                    <div><Typography component="div">Fecha fin: </Typography></div>
+                                    <div><Typography component="div">{finalDate} </Typography></div>
+                                </div>
+                            </Col>
+                        </Row>
+                        <Row className='my-5'>
+                            <Col></Col>
+                            <Col>
+                                <ListItem>
+                                    <Typography component="div" variant='h5' color='success'>Ofertado:<em><b>$</b></em></Typography>
+                                    <Typography component="div" variant='h5' className="text-success">{producto.price.offered} </Typography>
+                                </ListItem>
+                            </Col>
+                        </Row>
+                    </CardContent>
             </CardActionArea>
-            {listOptions}
         </Card>
         {/* Modal que muestra la informacion de los productos */}
         <Modal show={show} size="xl" centered onHide={handleClose} >
@@ -166,26 +197,6 @@ const ProductCard = (props) => {
                         <p>Precio ofertado:${producto.price.offered}</p>
                         <p>Inicio subasta:{initialDate}</p>
                         <p>Fin de la subasta: {finalDate}</p>
-                    </Col>
-                </Row>
-            </Modal.Body>
-        </Modal>
-        {/* Modal para confirmar el borrado de un producto */}
-        <Modal show={showConfirmModal} size="md" centered onHide={handleCloseConfirmModal} >
-            <Modal.Header closeButton className='text-center'>
-                <h3>¿Estas seguro de querer eliminar este producto?</h3>
-            </Modal.Header>
-            <Modal.Body>
-                <Row>
-                    <Col md={6}>
-                        <Button variant="contained" color="error" className='w-25 rounded-5 mx-2' onClick={() => {handleCloseConfirmModal() }}>
-                            No
-                        </Button>
-                    </Col>
-                    <Col md={6}>
-                        <Button variant="contained" color="success" className='w-25 rounded-5 mx-2' onClick={() => {deleteProduct() }}>
-                            Si
-                        </Button>
                     </Col>
                 </Row>
             </Modal.Body>
