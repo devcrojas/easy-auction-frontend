@@ -2,59 +2,55 @@ import React, { useEffect, useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
 import 'react-slideshow-image/dist/styles.css'
 import ProductCard from './ProductCard';
+import AuthService from '../services/auth.service'
+import axios from 'axios';
 
 function ProductsList(props) {
 
     const [apis, setApis] = useState([]);
+    const [user, setUser] = useState(AuthService.getCurrentUser());
 
     useEffect(() => {
         getProductos()
     }, [])
 
     let getProductos = async function () {
-        let produc = await fetch("/api/products",
-            {
-                method: "GET"
-            }
-        );
-        let awProduc = await produc.json();
-        setApis(awProduc);
+        let products;
+        let awProduc;
+        // Valida en que vista se encuentra y dependiendo de eso realiza la peticion
+        switch (props.actualView) {
+            // Vista general de productos
+            case 'productsList':
+                products = await fetch("/api/products", { method: "GET" } );
+                awProduc = await products.json();
+                setApis(awProduc);
+            break;
+            // Vista de mis productos
+            case 'myProducts':
+                let userEmail = { email:user.id}
+                products = await axios.post('/api/products/myproducts',JSON.stringify(userEmail),{
+                                            headers: { 'Authorization': localStorage.getItem("token"),
+                                            'Content-Type': 'application/json' }});
+                console.log('products',products)
+                awProduc = await products.data;
+                setApis(awProduc);
+            break;
+            // Por si no manda ninguna vista o manda una vista que no existe
+            default:
+                console.log('Vista no registrada');
+            break;
+        }
         return;
     };
 
     const cardList = () => {
         // Cicla los resultados de la peticion
         let card = apis.map((producto) => {
-            // Pregunta si existe algun filtro, de lo contrario mostrara todas
-            if(props.filter){
-                // Pregunta si el campo a filtrar esta en un sub objeto
-                if(props.isSubObject){
-                    // Realiza la comparacion para buscar el valor en el sub objeto
-                    if(props.filterValue === producto[props.subObject][props.filterField]){
-                        return (
-                            <Col sx={12} lg={6} key={producto._id} className='mb-5'>
-                                <ProductCard product={producto} actualView={props.actualView}></ProductCard>
-                            </Col>
-                        )
-                    }
-                }else{
-                    // Si no se esta buscando sobre un sub objeto buscar por arriba del objeto principal
-                    if(props.filterValue === producto[props.filterField]){
-                        return (
-                            <Col sx={12} lg={6} key={producto._id} className='mb-5'>
-                                <ProductCard product={producto} actualView={props.actualView}></ProductCard>
-                            </Col>
-                        )
-                    }
-                }
-            }else{
-                // Si no se esta filtrando que traiga todas las cards
-                return (
-                    <Col sx={12} lg={6} key={producto._id} className='mb-5'>
-                        <ProductCard product={producto} actualView={props.actualView}></ProductCard>
-                    </Col>
-                )
-            }
+        return (
+            <Col sx={12} lg={6} key={producto._id} className='mb-5'>
+                <ProductCard product={producto} actualView={props.actualView}></ProductCard>
+            </Col>
+        )
         });
         return card
     }
@@ -63,9 +59,7 @@ function ProductsList(props) {
             <Container>
                 <Row md="auto" className='d-flex justify-content-around mt-5'>
                     <>
-                        {
-                            cardList()
-                        }
+                        { cardList() }
                     </>
                 </Row>
             </Container>
