@@ -156,7 +156,7 @@ function Reviews() {
     const [product, setProduct] = useState([]);
     const [comentario, setComentario] = useState("");
     const [tipo, setTipo] = useState("");
-    const [user, setUser] = useState(AuthService.getCurrentUser());
+    const [user] = useState(AuthService.getCurrentUser());
     const [selectProducts, setSelectProducts] = useState('');
 
     useEffect(() => {

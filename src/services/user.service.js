@@ -17,8 +17,8 @@ const validateToken = async (body) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body)
     };
-    var getUser = await fetch("/api//auth/resetPassword/validateJWToken", requestOptions);
-    resolve(await getUser.json());
+    var getUser = await fetch("/api/auth/resetPassword/validateJWToken", requestOptions);
+    resolve(await getUser.json())
   });
 }
 
@@ -29,8 +29,8 @@ const applyResetPassword = async (body) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body)
     };
-    var result = await fetch("/api//auth/resetPassword/Apply", requestOptions);
-    resolve(await result.json());
+    var result = await fetch("/api/auth/resetPassword/Apply", requestOptions);
+    resolve(await result.json())
   });
 };
 
