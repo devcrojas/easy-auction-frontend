@@ -85,28 +85,28 @@ const ProductCard = (props) => {
                     <Row className='my-2'>
                         <Col >
                             <div className='w-100'>
-                                <div><Typography component="div">Precio inicial: </Typography></div>
-                                <div><Typography component="div"><em><b>$</b></em> {producto.price.initialP} </Typography></div>
+                                <div><Typography component="div">Precio inicial</Typography></div>
+                                <div><Typography component="div"><Badge bg="success"><em><b>$</b></em> {producto.price.initialP}</Badge> </Typography></div>
                             </div>
                         </Col>
                         <Col >
                             <div className='w-100'>
-                                <div><Typography component="div">Fecha inicio: </Typography></div>
-                                <div><Typography component="div">{initialDate} </Typography></div>
+                                <div><Typography component="div">Fecha inicio</Typography></div>
+                                <div><Typography component="div"><Badge bg="dark">{initialDate}</Badge> </Typography></div>
                             </div>
                         </Col>
                     </Row>
                     <Row className='my-2'>
                         <Col>
                             <div className='w-100'>
-                                <div><Typography component="div">Comprar ahora: </Typography></div>
-                                <div><Typography component="div"><em><b>$</b></em>  {producto.price.buyNow} </Typography></div>
+                                <div><Typography component="div">Comprar ahora</Typography></div>
+                                <div><Typography component="div"> <Badge bg="info"> <em><b>$</b></em>  {producto.price.buyNow} </Badge></Typography></div>
                             </div>
                         </Col>
                         <Col>
                             <div className='w-100'>
                                 <div><Typography component="div">Fecha fin: </Typography></div>
-                                <div><Typography component="div">{finalDate} </Typography></div>
+                                <div><Typography component="div"> <Badge bg="danger">{finalDate} </Badge></Typography></div>
                             </div>
                         </Col>
                     </Row>
@@ -114,7 +114,7 @@ const ProductCard = (props) => {
                         <Col></Col>
                         <Col>
                             <ListItem>
-                                <Typography component="div" variant='h5' color='success'>Ofertado:<em><b>$</b></em></Typography>
+                                <Typography component="div" variant='h5' color='success'>Ofertado:<em className='text-success'><b>$0</b></em></Typography>
                                 <Typography component="div" variant='h5' className="text-success">{producto.price.offered} </Typography>
                             </ListItem>
                         </Col>
