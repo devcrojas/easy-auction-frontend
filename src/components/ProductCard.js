@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Col, Modal, Row } from 'react-bootstrap';
+import { Col, Modal, Row, Badge } from 'react-bootstrap';
 import { Card, CardContent, CardMedia, Typography, CardActionArea, ListItem, CardHeader, Avatar, Button } from '@mui/material'
 import 'react-slideshow-image/dist/styles.css'
 import { Zoom } from 'react-slideshow-image';
@@ -44,16 +44,16 @@ const ProductCard = (props) => {
         if (detImages.length >= 1) {
             return (
                 <Zoom scale={0.4}>
-                    <img style={{ width: "100%", height: 350, border: 5 }} src={`\\${principal.filePath}`} alt={principal.nameProduct} />
+                    <img style={{ width: "100%", height: "auto", border: 5 }} src={`\\${principal.filePath}`} alt={principal.nameProduct} />
                     {
                         detImages.map(((im, index) => {
-                            return <img key={index} style={{ width: "100%", height: 350, border: 5 }} src={`\\${im.filePath}`} alt={index} />
+                            return <img key={index} style={{ width: "100%", height: "auto" }} src={`\\${im.filePath}`} alt={index} />
                         }))
                     }
                 </Zoom>
             );
         }else{
-            return <img  style={{ width: "100%", height: 350, border: 5 }} src={`\\${principal.filePath}`} alt={principal.nameProduct} />
+            return <img  style={{ width: "100%", height: "auto", border: 5 }} src={`\\${principal.filePath}`} alt={principal.nameProduct} />
         }
     }
 
@@ -77,8 +77,8 @@ const ProductCard = (props) => {
                     <Row className='my-2'>
                         <Col>
                             <div className='w-100'>
-                                <div><Typography component="div" variant="h5">{producto.nameProduct}</Typography></div>
-                                <div><Typography component="div" >{producto.category}  </Typography></div>
+                                <div className='text-center' style={{height: "4rem"}}><Typography component="div" variant="h6">{producto.nameProduct}</Typography></div>
+                                <div><Typography component="div" > <Badge bg="secondary">{producto.category}</Badge>  </Typography></div>
                             </div>
                         </Col>
                     </Row>
