@@ -9,7 +9,6 @@ function NavBarMenu(params) {
     const [user] = useState(authService.getCurrentUser());
     const [isAdmin] = useState(user.isAdmin);
     useEffect(() => {
-        console.log(user)
         let x = async function () {
             let getF = new Promise(async (resolve, reject) => {
                 try {

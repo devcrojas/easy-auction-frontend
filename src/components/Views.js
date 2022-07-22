@@ -147,7 +147,7 @@ function Views() {
 
                                 <>
                                     <Col align="center">
-                                        <Button variant="success" type="button" className='btn btn-success text-center' onClick={() => {showModal(review._id); handleShow();}}>
+                                        <Button variant="success" type="button" className='btn btn-success text-center' onClick={() => { showModal(review._id); handleShow(); }}>
                                             Modificar
                                         </Button>
                                     </Col>
@@ -165,7 +165,7 @@ function Views() {
 
     const showModal = (id) => {
         let reviewFilter = apis.filter(fil => fil._id === id)
-        let review = reviewFilter[0]  
+        let review = reviewFilter[0]
         return (
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>

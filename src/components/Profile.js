@@ -113,7 +113,7 @@ function Profile() {
             }
             let resp = await fetch(`/api/profiles/${user.id}`, options)
             console.log(resp)
-            if (resp.status === 201) {
+            if (resp.status === 200) {
                 changeImgProf();
                 handleExpandClick()
                 Swal.fire(
