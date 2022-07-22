@@ -35,7 +35,8 @@ function Reviews() {
 
     useEffect(() => {
         getProducts()
-    }, [])
+    }, [])// eslint-disable-line react-hooks/exhaustive-deps
+
     let getProducts = async function () {
         let prod = await fetch('/api/products',
             {
@@ -43,6 +44,10 @@ function Reviews() {
             });
         let awProduc = await prod.json();
         setProduct(awProduc);
+    }
+
+    const handleChange = (event) => {
+        setSelectProducts(event.target.value)
     }
     const handleClick = value => {
         setEstrellas(value)
@@ -53,9 +58,6 @@ function Reviews() {
             setTipo("Excelente servicio")
         }
     };
-    const handleChange = (event) => {
-        setSelectProducts(event.target.value)
-    }
     const handleMouseOver = value => {
         setHoverValue(value)
     };
@@ -63,7 +65,7 @@ function Reviews() {
         setHoverValue(undefined)
     }
     const sendReview = async () => {
-        
+
         let emailSeller = product.filter((e) => e._id === selectProducts);
         const resena = {
             emailU: user.profile.email,
