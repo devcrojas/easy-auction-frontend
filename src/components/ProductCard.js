@@ -11,7 +11,7 @@ const ProductCard = (props) => {
     const handleClose = () => setShow(false);
     // Se obtienen los datos necesarios para el card del producto
     const producto = props.product;
-    let initialDate = new Date(producto.auctionDate.initialD).toLocaleDateString();
+    let initialDate = new Date(producto.auctionDate.initialD).toLocaleDateString() + ' ' +  new Date(producto.auctionDate.final).toLocaleTimeString();
     let finalDate = new Date(producto.auctionDate.final).toLocaleDateString() + ' ' + new Date(producto.auctionDate.final).toLocaleTimeString();
     let imag = (producto.file) ? producto.file.filePath : 'uploads\\sin.jpg'
     // Se obtienen las opciones por vista
