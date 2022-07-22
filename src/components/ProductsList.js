@@ -68,7 +68,7 @@ function ProductsList(props) {
     return (
         <>
             <Container>
-                <Row md="auto" className='d-flex justify-content-around mt-5'>
+                <Row md="auto" className='d-flex justify-content-around mt-3'>
                     <>
                         { cardList() }
                     </>
