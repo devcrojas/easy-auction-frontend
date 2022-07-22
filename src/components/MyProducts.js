@@ -8,6 +8,7 @@ import NavBarMenu from './NavBarMenu';
 import ProductsList from './ProductsList';
 
 const MyProducts = () => {
+    const [user, setUser] = useState(AuthService.getCurrentUser());
 
 return (
 <Fragment>
@@ -30,7 +31,15 @@ return (
                     </Card>
                 </Row>
                 <Row>
-                    <ProductsList actualView={'myProducts'} />
+                    <ProductsList filter={true}
+                                  filterField={'_id'}
+                                  filterValue={user.id}
+                                  isSubObject={true}
+                                  subObject={'email'}
+                                  actualView={'myProducts'}
+                                  
+                                  />
+
                 </Row>
             </Col>
         </Row>

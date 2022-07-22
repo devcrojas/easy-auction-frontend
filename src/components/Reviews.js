@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa";
 import { Container, Button, Row, Card, Form, Col } from "react-bootstrap";
-import { TextField } from '@mui/material';
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import '@sweetalert2/theme-material-ui/material-ui.css'
 import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+
 import AuthService from '../services/auth.service'
+
 import "../nav.css"
 import NavBarMenu from './NavBarMenu'
 import MenuLateral from './MenuLateral';
 
-//Estilos de las estrellas
 const colors = {
     yellow: "#ECFF00",
     grey: "#a9a9a9"
@@ -33,7 +33,6 @@ function Reviews() {
     const [user] = useState(AuthService.getCurrentUser());
     const [selectProducts, setSelectProducts] = useState('');
 
-    //useEffect para traer los productos
     useEffect(() => {
         getProducts()
     }, [])
@@ -45,7 +44,6 @@ function Reviews() {
         let awProduc = await prod.json();
         setProduct(awProduc);
     }
-    //Muestra el tipo dependiendo las estrellas
     const handleClick = value => {
         setEstrellas(value)
         if (value <= 2) {
@@ -64,7 +62,6 @@ function Reviews() {
     const handleMouseLeave = () => {
         setHoverValue(undefined)
     }
-    //Envia los datos al back
     const sendReview = async () => {
         
         let emailSeller = product.filter((e) => e._id === selectProducts);
@@ -77,7 +74,6 @@ function Reviews() {
             emailP: emailSeller[0].sellerData.email
 
         }
-        //Envia la reseña
         let resp = await fetch('/api/reviews/',
             {
                 method: 'POST',
@@ -101,7 +97,7 @@ function Reviews() {
         else {
             Swal.fire({
                 icon: 'error',
-                title: '¡Oh oh, Ah ocurrido un error inesperado!',
+                title: '¡Ah ocurrido un error inesperado!',
             })
         }
 
@@ -118,7 +114,7 @@ function Reviews() {
                     <Col xs={9}>
                         <Row className="justify-content-center align-items-center">
                             <Card style={{ width: '50%', padding: "0" }} className="m-3">
-                                <Card.Header className='text-center bg-dark text-white' style={{ width: "100%" }}>¿Cómo estuvo tu experiencia?</Card.Header>
+                                <Card.Header className='text-center bg-dark text-white' style={{ width: "100%" }}>Cuéntanos como te fue</Card.Header>
                                 <Card.Body>
                                     <Form className='text-center'>
                                         <Form.Group className="mb-3" controlId="stars">
@@ -151,10 +147,11 @@ function Reviews() {
                                                     <Form.Control className='text-center bg-danger text-white' value={tipo} onChange={(handleClick) => setTipo()} disabled />
                                                 </Form.Group>
                                             </Row>
+                                            <Row>&nbsp;</Row>
                                             <Row>
-                                                <FormControl className='w-100 my-5'>
+                                                <FormControl className='w-100 my-2'>
                                                     <InputLabel id="productos">Productos</InputLabel>
-                                                    <Select onChange={handleChange} displayEmpty labelId="productos" label="Productos" value={selectProducts}>
+                                                    <Select onChange={handleChange} displayEmpty labelId="productos" value={selectProducts}>
 
                                                         {
                                                             product.map((product) => {
@@ -167,12 +164,12 @@ function Reviews() {
                                                 </FormControl>
                                             </Row>
                                             <Row>
-                                                <Col xs={12}>
-                                                    <FormControl className='w-100 my-2' controlId="comentario">
-                                                    <TextField required id="outlined-multiline-flexible" value={comentario} label="¿Qué te pareció tu producto?" multiline maxRows={4} onChange={(event) => setComentario(event.target.value)} />
-                                                    </FormControl>
-                                                </Col>
+                                                <Form.Group className="mb-3" controlId="comentario">
+                                                    <Form.Label>¿Qué te parecio la subasta?</Form.Label>
+                                                    <Form.Control as="textarea" rows="3" value={comentario} onChange={(event) => setComentario(event.target.value)} />
+                                                </Form.Group>
                                             </Row>
+                                            <Row>&nbsp;</Row>
                                         </Form.Group>
                                         <Button variant="primary" type="button" className='btn btn-success text-center' onClick={sendReview}>
                                             Enviar
