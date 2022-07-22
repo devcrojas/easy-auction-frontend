@@ -14,6 +14,9 @@ import NavBarMenu from './NavBarMenu';
 import { useParams } from "react-router-dom";
 import moment from 'moment';
 
+
+
+
 const CreateProduct = () => {
     //Variable para los caracteres restantes en observaciones
     const [caracRestantes, setcaracRestantes] = useState(0);
