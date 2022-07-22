@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Col, Modal, Row } from 'react-bootstrap';
-import { Card, CardContent, CardMedia, Typography, CardActionArea, ListItem, CardHeader, Avatar, Button } from '@mui/material'
+import { Card, CardContent, CardMedia, Typography, CardActionArea, ListItem, CardHeader, Avatar, Button, Tooltip } from '@mui/material'
 import 'react-slideshow-image/dist/styles.css'
 import { Zoom } from 'react-slideshow-image';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
@@ -26,18 +26,22 @@ const ProductCard = (props) => {
             case 'active':
                 editOptions = 
                     <>
-                        <h5 className='text-success'>ACTIVA</h5>
+                        <h5 className='text-success'>SUBASTA ACTIVA</h5>
                     </>
             break;
             case 'inactive':
                 editOptions = 
                     <>
-                        <Button variant="contained" color="warning" className='w-25 rounded-5 mx-2' onClick={() => {window.location.href = "/updateProduct/"+producto._id}}>
-                            <BorderColorIcon/>
-                        </Button>
-                        <Button variant="contained" color="error" className='w-25 rounded-5 mx-2' onClick ={() => cancelProduct()}>
-                            <DeleteForeverIcon/>
-                        </Button>
+                        <Tooltip title="Editar subasta">
+                            <Button variant="contained" color="warning" className='w-25 rounded-5 mx-2' onClick={() => {window.location.href = "/updateProduct/"+producto._id}}>
+                                <BorderColorIcon/>
+                            </Button>
+                        </Tooltip>
+                        <Tooltip title="Cancelar subasta">
+                            <Button variant="contained" color="error" className='w-25 rounded-5 mx-2' onClick ={() => cancelProduct()}>
+                                <DeleteForeverIcon/>
+                            </Button>
+                        </Tooltip>
                     </>
             break;
             case 'cancelled':
@@ -51,6 +55,7 @@ const ProductCard = (props) => {
             break;
         }
     }
+
     const cancelProduct = async () => {
         
         Swal.fire({
@@ -75,6 +80,7 @@ const ProductCard = (props) => {
                                 'Content-Type': 'application/json' }});
                 // Obtiene la respuesta
                 if(resp.status === 200) {
+                    document.getElementById(producto._id).style.display = "none";
                     Swal.fire({
                         icon: 'success',
                         title: '¡Ah cancelado la subasta de forma exitosa!'
@@ -107,9 +113,10 @@ const ProductCard = (props) => {
             return <img  style={{ width: "100%", height: 350, border: 5 }} src={`\\${principal.filePath}`} alt={principal.nameProduct} />
         }
     }
-  return (
+    return (
     <>
-        <Card sx={{ height:'100%', borderRadius: 5,  marginBottom: 10 }} elevation={10} key={producto._id}>
+        <Card sx={{ height:'100%', borderRadius: 5,  marginBottom: 10 }} 
+              elevation={10} key={producto._id} id={producto._id}>
                 <CardHeader avatar={ <Avatar src={producto.email.file.filePath} /> }
                             title={producto.email.firstName + " " + producto.email.lastName}
                             subheader={producto.email.email} 
@@ -150,8 +157,16 @@ const ProductCard = (props) => {
                         <Row className='my-2'>
                             <Col>
                                 <div className='w-100'>
-                                    <div><Typography component="div">Comprar ahora: </Typography></div>
-                                    <div><Typography component="div"><em><b>$</b></em>  {producto.price.buyNow} </Typography></div>
+                                    {(props.actualView === 'myShoppings') ? 
+                                    <>
+                                        <div><Typography component="div">En posesion</Typography></div>
+                                    </>
+                                    :
+                                    <>
+                                        <div><Typography component="div">Comprar ahora: </Typography></div>
+                                        <div><Typography component="div"><em><b>$</b></em>  {producto.price.buyNow} </Typography></div>
+                                    </>
+                                    }
                                 </div>
                             </Col>
                             <Col>

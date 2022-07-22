@@ -31,7 +31,6 @@ function ProductsList(props) {
                 products = await axios.post('/api/products/myproducts',JSON.stringify(userEmail),{
                                             headers: { 'Authorization': localStorage.getItem("token"),
                                             'Content-Type': 'application/json' }});
-                console.log('products',products)
                 awProduc = await products.data;
                 setApis(awProduc);
             break;
@@ -46,11 +45,23 @@ function ProductsList(props) {
     const cardList = () => {
         // Cicla los resultados de la peticion
         let card = apis.map((producto) => {
-        return (
-            <Col sx={12} lg={6} key={producto._id} className='mb-5'>
-                <ProductCard product={producto} actualView={props.actualView}></ProductCard>
-            </Col>
-        )
+            // Si la vista es de mis productos que no muestre los cancelados
+            if(props.actualView === 'myProducts' && producto.status !== 'cancelled'){
+                return (
+                    <Col sx={12} lg={6} key={producto._id} className='mb-5'>
+                        <ProductCard product={producto} actualView={props.actualView}></ProductCard>
+                    </Col>
+                )
+            }
+            // Si la vista es la lista de productos que muestre todo como llega
+            else {
+                return (
+                    <Col sx={12} lg={6} key={producto._id} className='mb-5'>
+                        <ProductCard product={producto} actualView={props.actualView}></ProductCard>
+                    </Col>
+                )
+            }
+            
         });
         return card
     }

@@ -4,6 +4,10 @@ import Swal from 'sweetalert2/dist/sweetalert2.js'
 import '@sweetalert2/theme-material-ui/material-ui.css'
 import axios from 'axios';
 import { Button, TextField, Select, MenuItem, FormControl, InputLabel, Card, ImageList, ImageListItem, CardContent } from '@mui/material';
+import CollectionsIcon from '@mui/icons-material/Collections';
+import ImageIcon from '@mui/icons-material/Image';
+import ClearIcon from '@mui/icons-material/Clear';
+import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
 import AuthService from '../services/auth.service'
 import MenuLateral from './MenuLateral';
 import NavBarMenu from './NavBarMenu';
@@ -42,7 +46,6 @@ const CreateProduct = () => {
     const [user, setUser] = useState(AuthService.getCurrentUser());
     // Se obtiene la fecha actual
     const actualDate = new Date();
-    // Obtiene el detalle del producto si esta actualizando
 
     // UseEffect para traerse el detalle del producto si se esta actualizando
     useEffect(() => {
@@ -97,8 +100,7 @@ const CreateProduct = () => {
         // Previene que se actualize la pagina
         e.preventDefault();
         // Valida de nuevo que los campos esten bien
-        console.log('validateButton',validateButton());
-        if(!validateButton){
+        if(validateButton()){
             return;
         }
         // Inicia los parametros para el envio de datos
@@ -320,8 +322,27 @@ const CreateProduct = () => {
         setCloseDate(new Date(value));
     }
 
-    console.log('product',product);
+    const deleteSingleImage = (image, imageId) => {
+        if(image && image.fileName){
+            // Quita del array de imagenes del back la seleccionada
+            const i = product.files.indexOf( image );
+            if ( i !== -1 ) {
+                product.files.splice( i, 1 );
+            }
+            console.log('product.files',product.files);
+        }else {
+            // Quita del array de preview de la imagen seleccionada
+            const i = secondaryPreview.indexOf( image);
+            if ( i !== -1 ) {
+                secondaryPreview.splice( i, 1 );
+            }
+            //
+            console.log('images',images[imageId]);
+            console.log('secondaryPreview',secondaryPreview);
+        }
+        document.getElementById(imageId).style.display = "none";
 
+    }
 
 return (
     <Fragment>
@@ -454,9 +475,13 @@ return (
                                     <Col xs={12} lg={6}>
                                         <div className='w-100 my-2'>
                                             <h6>Imagen principal del articulo <strong className='text-danger'>*</strong></h6>
-                                            <Form.Control type="file" accept="image/png,image/jpeg" 
-                                                          ref={imgPrincipalRef} className="form-control" 
-                                                          onChange= {(e) => imageValidator(e.target.files, imgPrincipalRef, setImagePrincipal)}/>
+                                            <Button variant="contained" component="label" >
+                                                <ImageIcon />
+                                                {(product) ? "Cambiar imagen principal":"Elegir imagen principal"}
+                                                <input  type="file" accept="image/png,image/jpeg" 
+                                                        ref={imgPrincipalRef} className="form-control" 
+                                                        onChange= {(e) => imageValidator(e.target.files, imgPrincipalRef, setImagePrincipal)} hidden />
+                                            </Button>
                                             <div className='d-flex justify-content-center'>
                                                 {(product && !imagePrincipal) ? <img style={{height: '120px'}} src={`\\${product.file.filePath}`} alt={product.file.nameProduct} />:''}
                                                 {imagePrincipal && <img src={preview} alt='Principal' className='mt-3' style={{height: '120px'}} /> }
@@ -467,15 +492,20 @@ return (
                                     <Col xs={12} lg={6}>
                                         <div className='w-100 my-2'>
                                             <h6>Imagenes secundarias del articulo (Max 5) <strong className='text-danger'>*</strong></h6>
-                                            <Form.Control type="file" accept="image/png,image/jpeg" 
-                                                          ref={imagesRef} multiple className="form-control"
-                                                          onChange= {(e) => imageValidator(e.target.files, imagesRef, setImages)}/>
-                                            <ImageList cols={3} rowHeight={120} className='mt-3' style={secondaryPreview ? {border: '1px solid #000'}:{}}>
+                                            <Button variant="contained" component="label" >
+                                                <CollectionsIcon />
+                                                {(product) ? "Cambiar todas las imagenes":"Elegir imagenes"}
+                                                <input  type="file" accept="image/png,image/jpeg" 
+                                                        ref={imagesRef} multiple className="form-control"
+                                                        onChange= {(e) => imageValidator(e.target.files, imagesRef, setImages)} hidden />
+                                            </Button>
+                                            <ImageList cols={3} rowHeight={120} className='mt-3'>
                                                 {
-                                                    // Se muestran las imagenes que se traen del detalle el producto
+                                                    // Se muestran las imagenes que se traen en la actualizacion el producto
                                                     (product && !secondaryPreview) ? product.files.map( (dato, index) => {
-                                                    return  <ImageListItem key={index}>
-                                                                    <img src={`\\${dato.filePath}`} alt={index} style={{borderRadius: 2}}/>
+                                                    return  <ImageListItem key={index} id={index}>
+                                                                <ClearIcon className='position-absolute bg-white text-dark rounded-circle' role="button" onClick={ () => deleteSingleImage(dato,index)}/>
+                                                                <img src={`\\${dato.filePath}`} alt={index} style={{borderRadius: 2, height:"120px"}}/>
                                                             </ImageListItem>
                                                     }):''
                                                 }
@@ -483,8 +513,9 @@ return (
                                                     // Se muestran las imagenes que se seleccionaron en el input
                                                     !secondaryPreview ? '':
                                                     secondaryPreview.map( (dato, index) => {
-                                                    return  <ImageListItem key={index}>
-                                                                    <img src={dato} alt='Secundarias' style={{borderRadius: 2}}/>
+                                                    return  <ImageListItem key={index} id={index}>                                                
+                                                                {/* <ClearIcon className='position-absolute bg-white text-dark rounded-circle' role="button" onClick={ () => deleteSingleImage(secondaryPreview[index],index)}/> */}
+                                                                <img src={dato} alt='Secundarias' style={{borderRadius: 2}}/>
                                                             </ImageListItem>
                                                     })
                                                 }
