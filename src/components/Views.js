@@ -5,6 +5,10 @@ import Swal from 'sweetalert2/dist/sweetalert2.js'
 import '@sweetalert2/theme-material-ui/material-ui.css'
 import AuthService from '../services/auth.service'
 
+import "../nav.css"
+import NavBarMenu from './NavBarMenu'
+import MenuLateral from './MenuLateral';
+
 const colors = {
     yellow: "#ECFF00",
     grey: "#a9a9a9"
@@ -140,14 +144,14 @@ function Views() {
                         <Card.Footer>
                             <Row>
                                 <Col align="center">
-                                    <Button variant="danger" type="button" className='btn btn-danger text-center' onClick={deleteReview(review._id)}>
+                                    <Button variant="danger" type="button" className='btn btn-danger text-center' onClick={() => {deleteReview(review._id)}}>
                                         Eliminar
                                     </Button>
                                 </Col>
 
                                 <>
                                     <Col align="center">
-                                        <Button variant="success" type="button" className='btn btn-success text-center' onClick={() => {showModal(review._id); handleShow();}}>
+                                        <Button variant="success" type="button" className='btn btn-success text-center' onClick={() => { showModal(review._id); handleShow(); }}>
                                             Modificar
                                         </Button>
                                     </Col>
@@ -165,7 +169,7 @@ function Views() {
 
     const showModal = (id) => {
         let reviewFilter = apis.filter(fil => fil._id === id)
-        let review = reviewFilter[0]  
+        let review = reviewFilter[0]
         return (
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
@@ -224,14 +228,22 @@ function Views() {
 
 
     return (
-        <Container>
-            <Row>&nbsp;</Row>
-            <Col md='8'>
-                {
-                    cards()
-                }
-            </Col>
-        </Container>
+        <>
+            <NavBarMenu view={"Views"}></NavBarMenu>
+            <Container style={{ background: "#F0F2F5" }} fluid>
+                <Row>
+                    <Col xs={3} className="sidebarEasy">
+                        <MenuLateral view={"MyReviews"}></MenuLateral>
+                    </Col>
+                    <Col md='6' align="right">
+                    <Row>&nbsp;</Row>
+                        {
+                            cards()
+                        }
+                    </Col>
+                </Row>
+            </Container>
+        </>
     )
 }
 

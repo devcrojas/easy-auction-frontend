@@ -113,7 +113,7 @@ function Reviews() {
             <Container style={{ background: "#F0F2F5" }} fluid>
                 <Row>
                     <Col xs={3} className="sidebarEasy">
-                        <MenuLateral view={"MyReviews"}></MenuLateral>
+                        <MenuLateral view={"MyShops"}></MenuLateral>
                     </Col>
                     <Col xs={9}>
                         <Row className="justify-content-center align-items-center">
@@ -188,4 +188,4 @@ function Reviews() {
     )
 }
 
-export default Reviews;
+export default Reviews
