@@ -36,7 +36,7 @@ function NavBarMenu(params) {
     },[]); // eslint-disable-line react-hooks/exhaustive-deps
     return (
         <>
-            <Navbar collapseOnSelect expand="lg" >
+            <Navbar collapseOnSelect expand="lg" style={{borderBottom:"1px solid black"}} >
                 <Container fluid>
                     <Navbar.Brand href="#home"><EasyicoNavBar className="profilePicture-sidebar"></EasyicoNavBar></Navbar.Brand>
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
