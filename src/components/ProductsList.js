@@ -34,6 +34,19 @@ function ProductsList(props) {
                 awProduc = await products.data;
                 setApis(awProduc);
             break;
+            // Vista de mis compras
+            case 'myShoppings':
+                let profileWin = { profileWin:user.id}
+                let fProducts = await fetch('/api/products/myearnedproducts',
+                {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(profileWin)
+                }
+                );
+                awProduc = await fProducts.json();
+                setApis(awProduc);
+            break;
             // Por si no manda ninguna vista o manda una vista que no existe
             default:
                 console.log('Vista no registrada');
