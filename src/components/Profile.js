@@ -151,7 +151,7 @@ function Profile() {
             <NavBarMenu view={""} user={user.profile}></NavBarMenu>
             <Container fluid style={{ background: "#F0F2F5", minHeight: "100vh"  }}>
                 <Row>
-                    <Col xs={3} id="sidebarEasy" className="sidebarEasy" style={{position:"fixed", width:"25%", zIndex:"100000"}}>
+                    <Col xs={3} id="sidebarEasy" className="sidebarEasy" style={{position:"fixed", width:"25%"}}>
                         <MenuLateral view={"MyProfile"} profileImg={imageProfile}></MenuLateral>
                     </Col>
                     <Col xs={9} style={{width:"75%", marginLeft:"25%"}}>

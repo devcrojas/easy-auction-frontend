@@ -95,7 +95,7 @@ function Points() {
 
             <Container fluid style={{ background: "#F0F2F5", minHeight: "100vh" }}>
                 <Row>
-                    <Col xs={3} id="sidebarEasy" style={{position:"fixed", width:"25%", zIndex:"100000"}} className="sidebarEasy">
+                    <Col xs={3} id="sidebarEasy" style={{position:"fixed", width:"25%"}} className="sidebarEasy">
                         <MenuLateral view={"Points"} profileImg={"imageProfile"}></MenuLateral>
                     </Col>
                     <Col xs={9} className="p-4" style={{width:"75%", marginLeft:"25%"}}>
