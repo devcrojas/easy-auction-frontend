@@ -11,13 +11,13 @@ function Productos() {
   return (
     <>
       <NavBarMenu view={"Products"} user={user.profile} ></NavBarMenu>
-      <Container fluid style={{ background: "#F0F2F5" }}>
+      <Container fluid style={{ background: "#F0F2F5",  minHeight: "100vh" }}>
         <Row>
-          <Col xs={3} className="sidebarEasy">
+          <Col id="sidebarEasy" xs={3} style={{position:"fixed", width:"25%"}} className="sidebarEasy">
             <MenuLateral view={""} imgProfile={profile.file}></MenuLateral>
           </Col>
-          <Col xs={9}>
-            <ProductsList actualView={'productsList'}></ProductsList>
+          <Col xs={9} style={{width:"75%", marginLeft:"25%"}}>
+            <ProductsList filter={true} filterField={'status'} filterValue={'active'}  actualView={'productsList'}></ProductsList>
           </Col>
         </Row>
       </Container>

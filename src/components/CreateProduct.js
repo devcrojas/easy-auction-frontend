@@ -15,6 +15,9 @@ import NavBarMenu from './NavBarMenu';
 import { useParams } from "react-router-dom";
 import moment from 'moment';
 
+
+
+
 const CreateProduct = () => {
     //Variable para los caracteres restantes en observaciones
     const [caracRestantes, setcaracRestantes] = useState(0);
@@ -369,7 +372,7 @@ return (
         <NavBarMenu view={"Reviews"}></NavBarMenu>
         <Container style={{ background: "#F0F2F5" }} fluid>
             <Row>
-                <Col xs={3} className="sidebarEasy">
+                <Col id="sidebarEasy" xs={3} className="sidebarEasy">
                     <MenuLateral view={"MyProducts"}></MenuLateral>
                 </Col>
                 <Col xs={9}>

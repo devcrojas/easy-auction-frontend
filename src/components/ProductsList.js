@@ -1,17 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
+import AuthService from '../services/auth.service'
 import 'react-slideshow-image/dist/styles.css'
 import ProductCard from './ProductCard';
-import AuthService from '../services/auth.service'
 import axios from 'axios';
+import PointsService from '../services/points.service'
 
 function ProductsList(props) {
 
     const [apis, setApis] = useState([]);
     const [user, setUser] = useState(AuthService.getCurrentUser());
+    const [pointsUser, setPointsUser] = useState(null);
 
     useEffect(() => {
         getProductos()
+        //console.log("Iniciando get de puntos...");
+        //console.log(user);
+        let getPoints = async function(){
+            setPointsUser(await PointsService.getPointsByUserId(user.id))
+        }
+        getPoints()
     }, [])
 
     let getProductos = async function () {
@@ -42,13 +50,13 @@ function ProductsList(props) {
             break;
         }
         return;
-    };
+    }
 
     const cardList = () => {
         // Cicla los resultados de la peticion
         let card = apis.map((producto) => {
-            // Si la vista es de mis productos que no muestre los cancelados
-            if(props.actualView === 'myProducts' && producto.status !== 'cancelled'){
+             // Si la vista es de mis productos que no muestre los cancelados
+             if(props.actualView === 'myProducts' && producto.status !== 'cancelled'){
                 return (
                     <Col sx={12} lg={6} key={producto._id} className='mb-5'>
                         <ProductCard product={producto} actualView={props.actualView}></ProductCard>
@@ -58,21 +66,22 @@ function ProductsList(props) {
             // Si la vista es la lista de productos que muestre todo como llega
             else {
                 return (
-                    <Col sx={12} lg={6} key={producto._id} className='mb-5'>
-                        <ProductCard product={producto} actualView={props.actualView}></ProductCard>
+                    <Col sx={12} md={12} lg={6} key={producto._id} className='mb-5'>
+                        <ProductCard product={producto} actualView={props.actualView} pointsUser={pointsUser[0]} setPoints={setPointsUser}></ProductCard>
                     </Col>
                 )
             }
-            
         });
         return card
     }
     return (
         <>
             <Container>
-                <Row md="auto" className='d-flex justify-content-around mt-5'>
+                <Row md="auto" className='d-flex justify-content-around mt-3'>
                     <>
-                        { cardList() }
+                        {
+                            cardList()
+                        }
                     </>
                 </Row>
             </Container>

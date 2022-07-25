@@ -11,7 +11,7 @@ function Home() {
       <NavBarMenu view={"Products"}></NavBarMenu>
       <Container fluid style={{ background: "#F0F2F5" }}>
         <Row>
-          <Col xs={3} className="sidebarEasy">
+          <Col xs={3} id="sidebarEasy" className="sidebarEasy">
             <MenuLateral view={""}></MenuLateral>
           </Col>
           <Col xs={9}>

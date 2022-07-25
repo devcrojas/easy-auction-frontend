@@ -36,14 +36,14 @@ function NavBarMenu(params) {
     },[]); // eslint-disable-line react-hooks/exhaustive-deps
     return (
         <>
-            <Navbar collapseOnSelect expand="lg" >
+            <Navbar sticky="top" fixed="top" collapseOnSelect expand="lg" style={{borderBottom:"1px solid black", background:"white"}} >
                 <Container fluid>
                     <Navbar.Brand href="#home"><EasyicoNavBar className="profilePicture-sidebar"></EasyicoNavBar></Navbar.Brand>
                     <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                     <Navbar.Collapse id="responsive-navbar-nav">
                         <Nav className="me-auto">
                             <Nav.Link href="/productos" className={(view==="Products")?'nav-activate':''}>Productos</Nav.Link>
-                            <Nav.Link href="#pricing" className={(view==="Vendors")?'nav-activate':''}>Vendedores</Nav.Link>
+                            <Nav.Link href="pricing" className={(view==="Vendors")?'nav-activate':''}>Vendedores</Nav.Link>
                         </Nav>
                         <Nav>
                             <NavDropdown title={user.profile.firstName +" "+ user.profile.lastName} id="collasible-nav-dropdown">
