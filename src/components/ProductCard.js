@@ -76,7 +76,7 @@ const ProductCard = (props) => {
                 }
                 //Realiza la peticion
                 let resp = await axios.put('/api/products/status/'+producto._id,JSON.stringify(cancelObject),{
-                        headers: { 'Authorization': localStorage.getItem("token"),
+                        headers: { 'Authorization':'Bearer '+ localStorage.getItem("token"),
                                 'Content-Type': 'application/json' }});
                 // Obtiene la respuesta
                 if(resp.status === 200) {

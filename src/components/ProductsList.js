@@ -29,8 +29,10 @@ function ProductsList(props) {
             case 'myProducts':
                 let userEmail = { email:user.id}
                 products = await axios.post('/api/products/myproducts',JSON.stringify(userEmail),{
-                                            headers: { 'Authorization': localStorage.getItem("token"),
-                                            'Content-Type': 'application/json' }});
+                                            headers: { 'Authorization':'Bearer '+ localStorage.getItem("token"),
+                                                       'Content-Type': 'application/json' 
+                                                     }
+                                            });
                 awProduc = await products.data;
                 setApis(awProduc);
             break;
