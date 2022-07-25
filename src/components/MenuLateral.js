@@ -32,7 +32,7 @@ function MenuLateral(params) {
       </Row>
       <Row>
         <Col style={{ paddingRight: "0" }}>
-          <Button variant="link" onClick={() => {window.location.href = "/miscompras"}} className={(view === "MyShops") ? "btn-sidebar nav-activate" : "btn-sidebar"}>
+          <Button variant="link" onClick={() => {window.location.href = "/resenas"}} className={(view === "MyShops") ? "btn-sidebar nav-activate" : "btn-sidebar"}>
             <ComprasIco className="ico-sidebar"></ComprasIco>
             <label className='m-2'>Mis compras</label>
           </Button>
@@ -48,7 +48,7 @@ function MenuLateral(params) {
       </Row>
       <Row>
         <Col style={{ paddingRight: "0" }}>
-          <Button variant="link" onClick={() => {window.location.href = "/resenas"}} className={(view === "MyReviews") ? "btn-sidebar nav-activate" : "btn-sidebar"}>
+          <Button variant="link" onClick={() => {window.location.href = "/vistas"}} className={(view === "MyReviews") ? "btn-sidebar nav-activate" : "btn-sidebar"}>
             <ResenasIco className="ico-sidebar"></ResenasIco>
             <label className='m-2'>Mis Reseñas</label>
           </Button>
