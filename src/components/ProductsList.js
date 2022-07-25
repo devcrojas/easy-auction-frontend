@@ -1,57 +1,73 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Container, Row } from 'react-bootstrap';
+import AuthService from '../services/auth.service'
 import 'react-slideshow-image/dist/styles.css'
 import ProductCard from './ProductCard';
+import axios from 'axios';
+import PointsService from '../services/points.service'
 
 function ProductsList(props) {
 
     const [apis, setApis] = useState([]);
+    const [user, setUser] = useState(AuthService.getCurrentUser());
+    const [pointsUser, setPointsUser] = useState(null);
 
     useEffect(() => {
         getProductos()
+        //console.log("Iniciando get de puntos...");
+        //console.log(user);
+        let getPoints = async function(){
+            setPointsUser(await PointsService.getPointsByUserId(user.id))
+        }
+        getPoints()
     }, [])
 
     let getProductos = async function () {
-        let produc = await fetch("/api/products",
-            {
-                method: "GET"
-            }
-        );
-        let awProduc = await produc.json();
-        setApis(awProduc);
+        let products;
+        let awProduc;
+        // Valida en que vista se encuentra y dependiendo de eso realiza la peticion
+        switch (props.actualView) {
+            // Vista general de productos
+            case 'productsList':
+                products = await fetch("/api/products", { method: "GET" } );
+                awProduc = await products.json();
+                setApis(awProduc);
+            break;
+            // Vista de mis productos
+            case 'myProducts':
+                let userEmail = { profile:user.id}
+                products = await axios.post('/api/products/myproducts',JSON.stringify(userEmail),{
+                                            headers: { 'Authorization':'Bearer '+ localStorage.getItem("token"),
+                                                       'Content-Type': 'application/json' 
+                                                     }
+                                            });
+                awProduc = await products.data;
+                setApis(awProduc);
+            break;
+            // Por si no manda ninguna vista o manda una vista que no existe
+            default:
+                console.log('Vista no registrada');
+            break;
+        }
         return;
-    };
+    }
 
     const cardList = () => {
         // Cicla los resultados de la peticion
         let card = apis.map((producto) => {
-            // Pregunta si existe algun filtro, de lo contrario mostrara todas
-            if(props.filter){
-                // Pregunta si el campo a filtrar esta en un sub objeto
-                if(props.isSubObject){
-                    // Realiza la comparacion para buscar el valor en el sub objeto
-                    if(props.filterValue === producto[props.subObject][props.filterField]){
-                        return (
-                            <Col sx={12} lg={6} key={producto._id} className='mb-5'>
-                                <ProductCard product={producto} actualView={props.actualView}></ProductCard>
-                            </Col>
-                        )
-                    }
-                }else{
-                    // Si no se esta buscando sobre un sub objeto buscar por arriba del objeto principal
-                    if(props.filterValue === producto[props.filterField]){
-                        return (
-                            <Col sx={12} lg={6} key={producto._id} className='mb-5'>
-                                <ProductCard product={producto} actualView={props.actualView}></ProductCard>
-                            </Col>
-                        )
-                    }
-                }
-            }else{
-                // Si no se esta filtrando que traiga todas las cards
+             // Si la vista es de mis productos que no muestre los cancelados
+             if(props.actualView === 'myProducts' && producto.status !== 'cancelled'){
                 return (
                     <Col sx={12} lg={6} key={producto._id} className='mb-5'>
                         <ProductCard product={producto} actualView={props.actualView}></ProductCard>
+                    </Col>
+                )
+            }
+            // Si la vista es la lista de productos que muestre todo como llega
+            else {
+                return (
+                    <Col sx={12} md={12} lg={6} key={producto._id} className='mb-5'>
+                        <ProductCard product={producto} actualView={props.actualView} pointsUser={pointsUser[0]} setPoints={setPointsUser}></ProductCard>
                     </Col>
                 )
             }
@@ -61,7 +77,7 @@ function ProductsList(props) {
     return (
         <>
             <Container>
-                <Row md="auto" className='d-flex justify-content-around mt-5'>
+                <Row md="auto" className='d-flex justify-content-around mt-3'>
                     <>
                         {
                             cardList()

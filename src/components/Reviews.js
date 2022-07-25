@@ -35,7 +35,8 @@ function Reviews() {
 
     useEffect(() => {
         getProducts()
-    }, [])
+    }, [])// eslint-disable-line react-hooks/exhaustive-deps
+
     let getProducts = async function () {
         let prod = await fetch('/api/products',
             {
@@ -43,6 +44,10 @@ function Reviews() {
             });
         let awProduc = await prod.json();
         setProduct(awProduc);
+    }
+
+    const handleChange = (event) => {
+        setSelectProducts(event.target.value)
     }
     const handleClick = value => {
         setEstrellas(value)
@@ -53,9 +58,6 @@ function Reviews() {
             setTipo("Excelente servicio")
         }
     };
-    const handleChange = (event) => {
-        setSelectProducts(event.target.value)
-    }
     const handleMouseOver = value => {
         setHoverValue(value)
     };
@@ -63,15 +65,15 @@ function Reviews() {
         setHoverValue(undefined)
     }
     const sendReview = async () => {
-        
+
         let emailSeller = product.filter((e) => e._id === selectProducts);
         const resena = {
-            emailU: user.profile.email,
-            productId: selectProducts,
+            userLog: user.profile.email,
+            product: selectProducts,
             comment: comentario,
             stars: estrellas,
             type: tipo,
-            emailP: emailSeller[0].sellerData.email
+            profileProd: emailSeller[0].sellerData.email
 
         }
         let resp = await fetch('/api/reviews/',
@@ -108,8 +110,8 @@ function Reviews() {
             <NavBarMenu view={"Reviews"}></NavBarMenu>
             <Container style={{ background: "#F0F2F5" }} fluid>
                 <Row>
-                    <Col xs={3} className="sidebarEasy">
-                        <MenuLateral view={"MyReviews"}></MenuLateral>
+                    <Col xs={3} id="sidebarEasy" className="sidebarEasy">
+                        <MenuLateral view={"MyShops"}></MenuLateral>
                     </Col>
                     <Col xs={9}>
                         <Row className="justify-content-center align-items-center">
@@ -185,4 +187,4 @@ function Reviews() {
     )
 }
 
-export default Reviews;
+export default Reviews

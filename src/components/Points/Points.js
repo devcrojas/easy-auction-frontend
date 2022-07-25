@@ -93,13 +93,13 @@ function Points() {
         <>
             <NavBarMenu view={""} user={"Perfil Facke"}></NavBarMenu>
 
-            <Container fluid style={{ background: "#F0F2F5" }}>
+            <Container fluid style={{ background: "#F0F2F5", minHeight: "100vh" }}>
                 <Row>
-                    <Col xs={3} className="sidebarEasy">
+                    <Col xs={3} id="sidebarEasy" style={{position:"fixed", width:"25%"}} className="sidebarEasy">
                         <MenuLateral view={"Points"} profileImg={"imageProfile"}></MenuLateral>
                     </Col>
-                    <Col xs={9}>
-                        <Row className='mt-3' style={{ background: "white", boxShadow: "2px 2px 2px 1px rgba(0, 0, 0, 0.2)" }}>
+                    <Col xs={9} className="p-4" style={{width:"75%", marginLeft:"25%"}}>
+                        <Row className='mt-1' style={{ background: "white", boxShadow: "2px 2px 2px 1px rgba(0, 0, 0, 0.2)" }}>
                             <Col xs={12} sm={6} md={8} className="mt-2">
                                 <h2>Zona de compra</h2>
                                 <hr></hr>
