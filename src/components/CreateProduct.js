@@ -142,18 +142,21 @@ const CreateProduct = () => {
         formData.append("observations", observations)
         formData.append("initialP", initialPrice)
         formData.append("buyNow", buyNow)
+        formData.append("final", finalDate)
         // Si esta editando que no vuelva a mandar la create date
         if(!productId){
             formData.append("create", actualDate)
+            formData.append("profile", user.id)
+            formData.append("initialD", '')
+            formData.append("profileWin", '')
+            formData.append("adminAuth", '')
         }
-        formData.append("final", finalDate)
         // Se mandan los datos del status y usuario
         if(product){
             formData.append("status", product.status)
         }else{
             formData.append("status", 'inactive')
         }
-        formData.append("email", user.id)
         // Se manda a realizar la peticion
         sendData(formData)
     }

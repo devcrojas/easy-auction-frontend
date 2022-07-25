@@ -27,7 +27,7 @@ function ProductsList(props) {
             break;
             // Vista de mis productos
             case 'myProducts':
-                let userEmail = { email:user.id}
+                let userEmail = { profile:user.id}
                 products = await axios.post('/api/products/myproducts',JSON.stringify(userEmail),{
                                             headers: { 'Authorization':'Bearer '+ localStorage.getItem("token"),
                                                        'Content-Type': 'application/json' 
