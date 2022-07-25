@@ -3,11 +3,12 @@ import { Form, Container, Col, Row } from 'react-bootstrap'
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import '@sweetalert2/theme-material-ui/material-ui.css'
 import axios from 'axios';
-import { Button, TextField, Select, MenuItem, FormControl, InputLabel, Card, ImageList, ImageListItem, CardContent } from '@mui/material';
+import { Button, TextField, Select, MenuItem, FormControl, InputLabel, Card, ImageList, ImageListItem, CardContent, Tooltip } from '@mui/material';
 import CollectionsIcon from '@mui/icons-material/Collections';
 import ImageIcon from '@mui/icons-material/Image';
 import ClearIcon from '@mui/icons-material/Clear';
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd';
+import AddIcon from '@mui/icons-material/Add';
 import AuthService from '../services/auth.service'
 import MenuLateral from './MenuLateral';
 import NavBarMenu from './NavBarMenu';
@@ -37,6 +38,7 @@ const CreateProduct = () => {
     const [images, setImages] = useState('');
     const [preview, setPreview] = useState('');
     const [secondaryPreview, setSecondaryPreview] = useState('');
+    const [imagesCount, setImagesCount] = useState(0);
     
     //Referencias de los campos
     let imgPrincipalRef = useRef(null);
@@ -85,10 +87,18 @@ const CreateProduct = () => {
 
     // Funcion para obtener el detalle del producto si esta actualizando
     const getProductDetail = async (id) => {
-        let resp = await axios.get('/api/products/'+id);
+        let resp = await axios.get('/api/products/'+id,{
+                headers: { 'Authorization':'Bearer '+ localStorage.getItem("token")
+            }});
         // Se obtiene el status de la respuesta
         if(resp.status === 200){
-            await fillForm(resp.data);
+            //Valida si el id del usuario de sesion sea el del producto, de lo contrario que lo mande a la lista general
+            if(resp.data.sellerData._id === user.id){
+                await fillForm(resp.data);
+            }else {
+                window.location.href = "/productos";
+
+            }
         }else{
             Swal.fire({
                 icon: 'error',
@@ -135,18 +145,21 @@ const CreateProduct = () => {
         formData.append("observations", observations)
         formData.append("initialP", initialPrice)
         formData.append("buyNow", buyNow)
-        formData.append("create", actualDate)
-        formData.append("initialD", '')
         formData.append("final", finalDate)
-        formData.append("profileWin", '')
-        formData.append("adminAuth", '')
+        // Si esta editando que no vuelva a mandar la create date
+        if(!productId){
+            formData.append("create", actualDate)
+            formData.append("profile", user.id)
+            formData.append("initialD", '')
+            formData.append("profileWin", '')
+            formData.append("adminAuth", '')
+        }
         // Se mandan los datos del status y usuario
         if(product){
             formData.append("status", product.status)
         }else{
             formData.append("status", 'inactive')
         }
-        formData.append("profile", user.id)
         // Se manda a realizar la peticion
         sendData(formData)
     }
@@ -155,14 +168,14 @@ const CreateProduct = () => {
     const sendData = async (formData) => {
         let resp;
         if(product){
-            // Se realiza la peticion al back para la creacion
+            // Se realiza la peticion al back para la actualizacion
             resp = await axios.put('/api/products/'+product._id, formData, {
-                headers: { 'Authorization':'Bearer ' + localStorage.getItem("token")
+                headers: { 'Authorization':'Bearer '+ localStorage.getItem("token")
             }});
         }else{
             // Se realiza la peticion al back para la creacion
             resp = await axios.post('/api/products', formData, {
-                headers: { 'Authorization':'Bearer ' + localStorage.getItem("token")
+                headers: { 'Authorization':'Bearer '+ localStorage.getItem("token")
             }});
         }
         // Se obtiene el status de la respuesta
@@ -235,25 +248,29 @@ const CreateProduct = () => {
 
     // Funcion para inicializar el formulario si esta actualizando
     const fillForm = (producto) => {
-        // Le da su valor a product
-        setProduct(producto)
-        // Inicializa los caracteres restantes
-        setcaracRestantes(producto.description.observations.length);
-        // Inicializa las variables para el formulario
-        setProductName(producto.nameProduct);
-        setCategory(producto.category);
-        setMaterial(producto.description.material);
-        setMarca(producto.description.marca);
-        setDimensions(producto.description.dimensions);
-        setConditions(producto.description.actualCondition);
-        setObservations(producto.description.observations);
-        setBuyNow(producto.price.buyNow);
-        setInitialPrice(producto.price.initialP);
-        // Se obtiene el tiempo de fin y rellena el date time local
-        const finalDate = new Date(producto.auctionDate.final);
-        const hours = (finalDate.getHours().toString().length === 1) ? '0'+finalDate.getHours():finalDate.getHours();
-        const minutes = (finalDate.getMinutes().toString().length === 1) ? '0'+finalDate.getMinutes():finalDate.getMinutes();
-        settingCloseDates(moment(new Date(producto.auctionDate.final)).format('YYYY-MM-DDT'+hours+':'+minutes+':00.000'));
+            // Le da su valor a product
+            setProduct(producto)
+            // Inicializa los caracteres restantes
+            setcaracRestantes(producto.description.observations.length);
+            // Inicializa las variables para el formulario
+            setProductName(producto.nameProduct);
+            setCategory(producto.category);
+            setMaterial(producto.description.material);
+            setMarca(producto.description.marca);
+            setDimensions(producto.description.dimensions);
+            setConditions(producto.description.actualCondition);
+            setObservations(producto.description.observations);
+            setBuyNow(producto.price.buyNow);
+            setInitialPrice(producto.price.initialP);
+            // Obtiene cuantas imagenes tiene actualmente
+            producto.files.forEach((element, index) => {
+                setImagesCount(index+1)
+            });
+            // Se obtiene el tiempo de fin y rellena el date time local
+            const finalDate = new Date(producto.auctionDate.final);
+            const hours = (finalDate.getHours().toString().length === 1) ? '0'+finalDate.getHours():finalDate.getHours();
+            const minutes = (finalDate.getMinutes().toString().length === 1) ? '0'+finalDate.getMinutes():finalDate.getMinutes();
+            settingCloseDates(moment(new Date(producto.auctionDate.final)).format('YYYY-MM-DDT'+hours+':'+minutes+':00.000'));
     }
 
     //Funcion para validar si el boton se bloquea o no
@@ -301,6 +318,7 @@ const CreateProduct = () => {
                 if(file[i].type === 'image/png' || file[i].type === 'image/jpeg'){
                     //Le da su valor
                     await setter(file)
+                    setImagesCount(imagesCount+1)
                 }else{
                     await setter('')
                     reference.current.value = '';
@@ -328,34 +346,33 @@ const CreateProduct = () => {
         setCloseDate(new Date(value));
     }
 
-    const deleteSingleImage = (image, imageId) => {
-        if(image && image.fileName){
-            // Quita del array de imagenes del back la seleccionada
-            const i = product.files.indexOf( image );
-            if ( i !== -1 ) {
-                product.files.splice( i, 1 );
-            }
-            console.log('product.files',product.files);
-        }else {
-            // Quita del array de preview de la imagen seleccionada
-            const i = secondaryPreview.indexOf( image);
-            if ( i !== -1 ) {
-                secondaryPreview.splice( i, 1 );
-            }
-            //
-            console.log('images',images[imageId]);
-            console.log('secondaryPreview',secondaryPreview);
-        }
-        document.getElementById(imageId).style.display = "none";
-
-    }
+    // const deleteSingleImage = (image, imageId) => {
+    //     if(image && image.fileName){
+    //         // Quita del array de imagenes del back la seleccionada
+    //         const i = product.files.indexOf( image );
+    //         if ( i !== -1 ) {
+    //             product.files.splice( i, 1 );
+    //         }
+    //         console.log('product.files',product.files);
+    //     }else {
+    //         // Quita del array de preview de la imagen seleccionada
+    //         const i = secondaryPreview.indexOf( image);
+    //         if ( i !== -1 ) {
+    //             secondaryPreview.splice( i, 1 );
+    //         }
+    //         //
+    //         console.log('images',images[imageId]);
+    //         console.log('secondaryPreview',secondaryPreview);
+    //     }
+    //     document.getElementById(imageId).style.display = "none";
+    // }
 
 return (
     <Fragment>
         <NavBarMenu view={"Reviews"}></NavBarMenu>
         <Container style={{ background: "#F0F2F5" }} fluid>
             <Row>
-                <Col xs={3} className="sidebarEasy">
+                <Col id="sidebarEasy" xs={3} className="sidebarEasy">
                     <MenuLateral view={"MyProducts"}></MenuLateral>
                 </Col>
                 <Col xs={9}>
@@ -393,7 +410,10 @@ return (
                                                 <MenuItem value={'Instrumentos musicales'}>Instrumentos musicales</MenuItem>
                                                 <MenuItem value={'Videojuegos'}>Videojuegos</MenuItem>
                                                 <MenuItem value={'Comics'}>Comics</MenuItem>
-                                                <MenuItem value={'Juguetes'}>Juguetes</MenuItem>
+                                                <MenuItem value={'Artículos para el hogar'}>Artículos para el hogar</MenuItem>
+                                                <MenuItem value={'Articulos deportivos'}>Articulos deportivos</MenuItem>
+                                                <MenuItem value={'Herramientas para autos'}>Herramientas para autos</MenuItem>
+                                                <MenuItem value={'Accesorios para autos'}>Accesorios para autos</MenuItem>
                                             </Select>
                                         </FormControl>
                                     </Col>
@@ -416,9 +436,9 @@ return (
                                     </Col>
                                     <Col xs={12} sm={6} md={4}>
                                         <FormControl className='w-100 my-2'>
-                                            <TextField required id="outlined-required" label="Dimensiones" value={dimensions}
+                                            <TextField required id="outlined-required" label="Dimensiones/Talla" value={dimensions}
                                                        onChange={(event) => setDimensions(event.target.value)} 
-                                                       placeholder="Dimensiones del producto" name='dimensions'/>
+                                                       placeholder="Dimensiones/Talla del producto" name='dimensions'/>
                                         </FormControl>
                                     </Col>
                                 </Row>
@@ -458,10 +478,10 @@ return (
                                     <Col xs={12}>
                                         <FormControl className='w-100 my-2'>
                                             <TextField required id="outlined-multiline-flexible" label="Observaciones del producto" value={observations}
-                                                       multiline maxRows={4} onChange={(event) => setObservations(event.target.value)} 
+                                                       multiline maxRows={4} onChange={(event) => setObservations(event.target.value)} inputProps={{ maxLength: "400" }}
                                                        onKeyUp={(event) => setcaracRestantes(event.target.value.length)} name='observations'/>
                                         </FormControl>
-                                        <p className='text-danger fs-7 fw-light'>{caracRestantes} de 200 caracteres permitidos</p>
+                                        <p className='text-danger fs-7 fw-light'>{caracRestantes} de 400 caracteres permitidos</p>
                                     </Col>
                                 </Row>
                                 {/* Fecha de finalizacion de la subasta */}
@@ -505,19 +525,27 @@ return (
                                                         ref={imagesRef} multiple className="form-control"
                                                         onChange= {(e) => imageValidator(e.target.files, imagesRef, setImages)} hidden />
                                             </Button>
+                                            {/* <Tooltip title="Agregar una imagen">
+                                                <Button variant="contained" component="label" className='mx-2'>
+                                                    <LibraryAddIcon/>
+                                                    <input type="file" accept="image/png,image/jpeg" 
+                                                           ref={imagesRef} multiple className="form-control"
+                                                           onChange= {(e) => imageValidator(e.target.files, imagesRef, setImages)} hidden />
+                                                </Button>
+                                            </Tooltip> */}
                                             <ImageList cols={3} rowHeight={120} className='mt-3'>
                                                 {
                                                     // Se muestran las imagenes que se traen en la actualizacion el producto
-                                                    (product && !secondaryPreview) ? product.files.map( (dato, index) => {
+                                                    (!product) ? '':product.files.map( (dato, index) => {
                                                     return  <ImageListItem key={index} id={index}>
-                                                                <ClearIcon className='position-absolute bg-white text-dark rounded-circle' role="button" onClick={ () => deleteSingleImage(dato,index)}/>
+                                                                {/* <ClearIcon className='position-absolute bg-white text-dark rounded-circle' role="button" onClick={ () => deleteSingleImage(dato,index)}/> */}
                                                                 <img src={`\\${dato.filePath}`} alt={index} style={{borderRadius: 2, height:"120px"}}/>
                                                             </ImageListItem>
-                                                    }):''
+                                                    })
                                                 }
                                                 {
                                                     // Se muestran las imagenes que se seleccionaron en el input
-                                                    !secondaryPreview ? '':
+                                                    (!secondaryPreview) ? '':
                                                     secondaryPreview.map( (dato, index) => {
                                                     return  <ImageListItem key={index} id={index}>                                                
                                                                 {/* <ClearIcon className='position-absolute bg-white text-dark rounded-circle' role="button" onClick={ () => deleteSingleImage(secondaryPreview[index],index)}/> */}

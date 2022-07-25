@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button, Col, Container, Image, Row } from 'react-bootstrap'
 import { ReactComponent as ProductIco } from "../../images/new_products_nav.svg"
 import { ReactComponent as ComprasIco } from "../../images/compras_nav.svg"
@@ -12,8 +12,10 @@ function MenuLateral(params) {
   const [view, setView] = useState(params.view);
   const [user, setUser] = useState(AuthService.getCurrentUser());
   let imgProfile = user.profile.file;
+
+  
   return (
-    <Container>
+    <Col>
       <Row className='p-2 d-flex align-items-center justify-content-center'>
         <Col>
           <Image className='profilePicture-sidebar' src={"/" + imgProfile.filePath}></Image>
@@ -53,7 +55,7 @@ function MenuLateral(params) {
         </Col>
       </Row>
       <hr></hr>
-    </Container >
+    </Col >
   )
 }
 
