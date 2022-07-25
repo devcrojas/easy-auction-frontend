@@ -68,12 +68,12 @@ function Reviews() {
 
         let emailSeller = product.filter((e) => e._id === selectProducts);
         const resena = {
-            userLog: user.profile.email,
-            product: selectProducts,
+            emailU: user.profile.email,
+            productId: selectProducts,
             comment: comentario,
             stars: estrellas,
             type: tipo,
-            profileProd: emailSeller[0].sellerData.email
+            emailP: emailSeller[0].sellerData.email
 
         }
         let resp = await fetch('/api/reviews/',
