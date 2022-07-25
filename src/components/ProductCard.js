@@ -148,10 +148,21 @@ const ProductCard = (props) => {
         <>
             <Card sx={{ height: '100%', borderRadius: 5 }}
                 elevation={10} key={product._id} id={product._id}>
-                <CardHeader avatar={<Avatar src={product.email.file.filePath} />}
-                    title={product.email.firstName + " " + product.email.lastName}
-                    subheader={product.email.email}
-                    action={editOptions} />
+                    {(producto.profile) ?
+                        <>
+                            <CardHeader avatar={<Avatar src={producto.profile.file.filePath} />}
+                                title={producto.profile.firstName + " " + producto.profile.lastName}
+                                subheader={producto.profile.email}
+                                action={editOptions} />
+                        </>
+                        :
+                        <>
+                            <CardHeader avatar={<Avatar src={product.email.file.filePath} />}
+                                title={product.email.firstName + " " + product.email.lastName}
+                                subheader={product.email.email}
+                                action={editOptions} />
+                        </>
+                    }
                 <CardActionArea onClick={() => { handleShow(); }}>
                     <Row className="justify-content-center my-2">
                         <div className="modal-image-container">
