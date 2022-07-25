@@ -51,7 +51,6 @@ function ProductsAdmin() {
         );
     }
 
-
     const generateTable = () => {
         if (inactiveProds !== []) {
             return inactiveProds.map(((pro, index) => {
