@@ -43,7 +43,7 @@ function NavBarMenu(params) {
                     <Navbar.Collapse id="responsive-navbar-nav">
                         <Nav className="me-auto">
                             <Nav.Link href="/productos" className={(view==="Products")?'nav-activate':''}>Productos</Nav.Link>
-                            <Nav.Link href="#pricing" className={(view==="Vendors")?'nav-activate':''}>Vendedores</Nav.Link>
+                            <Nav.Link href="pricing" className={(view==="Vendors")?'nav-activate':''}>Vendedores</Nav.Link>
                         </Nav>
                         <Nav>
                             <NavDropdown title={user.profile.firstName +" "+ user.profile.lastName} id="collasible-nav-dropdown">
