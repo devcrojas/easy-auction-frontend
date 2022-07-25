@@ -135,15 +135,18 @@ const CreateProduct = () => {
         formData.append("observations", observations)
         formData.append("initialP", initialPrice)
         formData.append("buyNow", buyNow)
-        formData.append("initialD", actualDate)
+        formData.append("create", actualDate)
+        formData.append("initialD", '')
         formData.append("final", finalDate)
+        formData.append("profileWin", '')
+        formData.append("adminAuth", '')
         // Se mandan los datos del status y usuario
         if(product){
             formData.append("status", product.status)
         }else{
             formData.append("status", 'inactive')
         }
-        formData.append("email", user.id)
+        formData.append("profile", user.id)
         // Se manda a realizar la peticion
         sendData(formData)
     }
@@ -154,12 +157,12 @@ const CreateProduct = () => {
         if(product){
             // Se realiza la peticion al back para la creacion
             resp = await axios.put('/api/products/'+product._id, formData, {
-                headers: { 'Authorization': localStorage.getItem("token")
+                headers: { 'Authorization':'Bearer ' + localStorage.getItem("token")
             }});
         }else{
             // Se realiza la peticion al back para la creacion
             resp = await axios.post('/api/products', formData, {
-                headers: { 'Authorization': localStorage.getItem("token")
+                headers: { 'Authorization':'Bearer ' + localStorage.getItem("token")
             }});
         }
         // Se obtiene el status de la respuesta
