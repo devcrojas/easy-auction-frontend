@@ -149,14 +149,14 @@ function Profile() {
     return (
         <>
             <NavBarMenu view={""} user={user.profile}></NavBarMenu>
-            <Container fluid style={{ background: "#F0F2F5" }}>
+            <Container fluid style={{ background: "#F0F2F5", minHeight: "100vh"  }}>
                 <Row>
-                    <Col xs={3} className="sidebarEasy">
+                    <Col xs={3} id="sidebarEasy" className="sidebarEasy" style={{position:"fixed", width:"25%", zIndex:"100000"}}>
                         <MenuLateral view={"MyProfile"} profileImg={imageProfile}></MenuLateral>
                     </Col>
-                    <Col xs={9} className="p-2">
+                    <Col xs={9} style={{width:"75%", marginLeft:"25%"}}>
                         <Container fluid>
-                            <Row>
+                            <Row className="mt-5">
                                 <Col xs={12}>
                                     <Card elevation={10} sx={{ borderRadius: 5 }}>
                                         <CardContent>

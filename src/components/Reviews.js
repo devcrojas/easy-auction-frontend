@@ -110,7 +110,7 @@ function Reviews() {
             <NavBarMenu view={"Reviews"}></NavBarMenu>
             <Container style={{ background: "#F0F2F5" }} fluid>
                 <Row>
-                    <Col xs={3} className="sidebarEasy">
+                    <Col xs={3} id="sidebarEasy" className="sidebarEasy">
                         <MenuLateral view={"MyShops"}></MenuLateral>
                     </Col>
                     <Col xs={9}>

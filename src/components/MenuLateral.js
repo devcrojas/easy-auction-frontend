@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Button, Col, Container, Image, Row } from 'react-bootstrap'
 import { ReactComponent as ProductIco } from "../images/new_products_nav.svg"
 import { ReactComponent as ComprasIco } from "../images/compras_nav.svg"
@@ -14,16 +14,17 @@ function MenuLateral(params) {
   const [view ] = useState(params.view);
   const [user] = useState(AuthService.getCurrentUser());
   let imgProfile = user.profile.file;
+
   return (
-    <Container>
-      <Row className='p-2 d-flex align-items-center justify-content-center'>
-        <Col>
+    <Col>
+      <Row className='p-2 d-flex align-items-center justify-content-center '>
+        <Col style={{ paddingRight: "0" }}>
           <Image className='profilePicture-sidebar' src={"/" + imgProfile.filePath}></Image>
           <label className='m-2'>{user.profile.firstName}</label>
         </Col>
       </Row>
       <Row>
-        <Col style={{ paddingRight: "0" }}>
+        <Col style={{ paddingRight: "0"}}>
           <Button variant="link" onClick={() => {window.location.href = "/misproductos"}} className={(view === "MyProducts") ? "nav-activate btn-sidebar" : "btn-sidebar"}>
             <ProductIco className="ico-sidebar"></ProductIco>
             <label className='m-2'>Mis productos</label>
@@ -71,7 +72,7 @@ function MenuLateral(params) {
         </Col>
       </Row>
       <hr></hr>
-    </Container >
+    </Col >
   )
 }
 

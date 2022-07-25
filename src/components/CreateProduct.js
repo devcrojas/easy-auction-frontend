@@ -352,7 +352,7 @@ return (
         <NavBarMenu view={"Reviews"}></NavBarMenu>
         <Container style={{ background: "#F0F2F5" }} fluid>
             <Row>
-                <Col xs={3} className="sidebarEasy">
+                <Col id="sidebarEasy" xs={3} className="sidebarEasy">
                     <MenuLateral view={"MyProducts"}></MenuLateral>
                 </Col>
                 <Col xs={9}>

@@ -4,14 +4,22 @@ import AuthService from '../services/auth.service'
 import 'react-slideshow-image/dist/styles.css'
 import ProductCard from './ProductCard';
 import axios from 'axios';
+import PointsService from '../services/points.service'
 
 function ProductsList(props) {
 
     const [apis, setApis] = useState([]);
     const [user, setUser] = useState(AuthService.getCurrentUser());
+    const [pointsUser, setPointsUser] = useState(null);
 
     useEffect(() => {
         getProductos()
+        //console.log("Iniciando get de puntos...");
+        //console.log(user);
+        let getPoints = async function(){
+            setPointsUser(await PointsService.getPointsByUserId(user.id))
+        }
+        getPoints()
     }, [])
 
     let getProductos = async function () {
@@ -56,8 +64,8 @@ function ProductsList(props) {
             // Si la vista es la lista de productos que muestre todo como llega
             else {
                 return (
-                    <Col sx={12} lg={6} key={producto._id} className='mb-5'>
-                        <ProductCard product={producto} actualView={props.actualView}></ProductCard>
+                    <Col sx={12} md={12} lg={6} key={producto._id} className='mb-5'>
+                        <ProductCard product={producto} actualView={props.actualView} pointsUser={pointsUser[0]} setPoints={setPointsUser}></ProductCard>
                     </Col>
                 )
             }

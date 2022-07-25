@@ -88,12 +88,12 @@ function ProductsAdmin() {
     return (
         <>
             <NavBarMenu view={"Admin"}></NavBarMenu>
-            <Container fluid style={{ background: "#F0F2F5" }}>
+            <Container fluid style={{ background: "#F0F2F5", minHeight: "100vh"}}>
                 <Row>
-                    <Col xs={3} className="sidebarEasy">
+                    <Col xs={3} id="sidebarEasy" style={{position:"fixed", width:"25%", zIndex:"100000"}} className="sidebarEasy">
                         <MenuLateral view={"productsAdmin"} profileImg={profile.file}></MenuLateral>
                     </Col>
-                    <Col xs={9} className="p-2">
+                    <Col xs={9} style={{width:"75%", marginLeft:"25%"}}>
                         <Container fluid>
                             <TableContainer>
                                 <Table>
