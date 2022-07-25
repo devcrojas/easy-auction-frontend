@@ -404,7 +404,10 @@ return (
                                                 <MenuItem value={'Instrumentos musicales'}>Instrumentos musicales</MenuItem>
                                                 <MenuItem value={'Videojuegos'}>Videojuegos</MenuItem>
                                                 <MenuItem value={'Comics'}>Comics</MenuItem>
-                                                <MenuItem value={'Juguetes'}>Juguetes</MenuItem>
+                                                <MenuItem value={'Artículos para el hogar'}>Artículos para el hogar</MenuItem>
+                                                <MenuItem value={'Articulos deportivos'}>Articulos deportivos</MenuItem>
+                                                <MenuItem value={'Herramientas para autos'}>Herramientas para autos</MenuItem>
+                                                <MenuItem value={'Accesorios para autos'}>Accesorios para autos</MenuItem>
                                             </Select>
                                         </FormControl>
                                     </Col>
@@ -427,9 +430,9 @@ return (
                                     </Col>
                                     <Col xs={12} sm={6} md={4}>
                                         <FormControl className='w-100 my-2'>
-                                            <TextField required id="outlined-required" label="Dimensiones" value={dimensions}
+                                            <TextField required id="outlined-required" label="Dimensiones/Talla" value={dimensions}
                                                        onChange={(event) => setDimensions(event.target.value)} 
-                                                       placeholder="Dimensiones del producto" name='dimensions'/>
+                                                       placeholder="Dimensiones/Talla del producto" name='dimensions'/>
                                         </FormControl>
                                     </Col>
                                 </Row>
@@ -469,10 +472,10 @@ return (
                                     <Col xs={12}>
                                         <FormControl className='w-100 my-2'>
                                             <TextField required id="outlined-multiline-flexible" label="Observaciones del producto" value={observations}
-                                                       multiline maxRows={4} onChange={(event) => setObservations(event.target.value)} 
+                                                       multiline maxRows={4} onChange={(event) => setObservations(event.target.value)} inputProps={{ maxLength: "400" }}
                                                        onKeyUp={(event) => setcaracRestantes(event.target.value.length)} name='observations'/>
                                         </FormControl>
-                                        <p className='text-danger fs-7 fw-light'>{caracRestantes} de 200 caracteres permitidos</p>
+                                        <p className='text-danger fs-7 fw-light'>{caracRestantes} de 400 caracteres permitidos</p>
                                     </Col>
                                 </Row>
                                 {/* Fecha de finalizacion de la subasta */}
@@ -508,7 +511,7 @@ return (
                                     {/* Imagenes secundarias */}
                                     <Col xs={12} lg={6}>
                                         <div className='w-100 my-2'>
-                                            <h6>Imagenes secundarias del articulo (Max 5) <strong className='text-danger'>*</strong> {imagesCount}</h6>
+                                            <h6>Imagenes secundarias del articulo (Max 5) <strong className='text-danger'>*</strong></h6>
                                             <Button variant="contained" component="label" >
                                                 <CollectionsIcon />
                                                 {(product) ? "Cambiar todas las imagenes":"Elegir imagenes"}

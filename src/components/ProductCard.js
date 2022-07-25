@@ -1,6 +1,16 @@
 import React, { useState } from 'react';
 import { Col, Modal, Row } from 'react-bootstrap';
 import { Card, CardContent, CardMedia, Typography, CardActionArea, ListItem, CardHeader, Avatar, Button, Tooltip } from '@mui/material'
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import CategoryIcon from '@mui/icons-material/Category';
+import SquareFootIcon from '@mui/icons-material/SquareFoot';
+import NewReleasesIcon from '@mui/icons-material/NewReleases';
+import CarpenterIcon from '@mui/icons-material/Carpenter';
+import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
+import PaidIcon from '@mui/icons-material/Paid';
+import IconButton from '@mui/material/IconButton';
+import SendIcon from '@mui/icons-material/Send';
 import 'react-slideshow-image/dist/styles.css'
 import { Zoom } from 'react-slideshow-image';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
@@ -201,17 +211,17 @@ const ProductCard = (props) => {
                         </div>
                     </Col>
                     <Col md={6} className="fuente">
-                        <p>Categoria: {producto.category}</p>
-                        <p>Material: {producto.description.material}</p>
-                        <p>Marca: {producto.description.marca}</p>
-                        <p>Dimensiones: {producto.description.dimensions}</p>
-                        <p>Condicion: {producto.description.actualCondition}</p>
-                        <p>Observaciones: {producto.description.observations}</p>
-                        <p>Precio inicial:${producto.price.initialP}</p>
-                        <p>Comprar ahora:${producto.price.buyNow}</p>
-                        <p>Precio ofertado:${producto.price.offered}</p>
-                        <p>Inicio subasta:{initialDate}</p>
-                        <p>Fin de la subasta: {finalDate}</p>
+                        <p><CategoryIcon color="primary" /> Categoria: {producto.category}</p>
+                        <p><CarpenterIcon color="primary" /> Material: {producto.description.material}</p>
+                        <p><AssignmentTurnedInIcon color="primary" /> Marca: {producto.description.marca}</p>
+                        <p><SquareFootIcon color="primary" /> Dimensiones: {producto.description.dimensions}</p>
+                        <p><NewReleasesIcon color="primary" /> Condicion: {producto.description.actualCondition}</p>
+                        <p><RemoveRedEyeIcon color="primary" /> Observaciones: {producto.description.observations}</p>
+                        <p><PaidIcon color="primary" /> Precio inicial:<em><b>$</b></em>{producto.price.initialP}</p>
+                        <p><PaidIcon color="primary" /> Comprar ahora:<em><b>$</b></em>{producto.price.buyNow}</p>
+                        <p><PaidIcon color="primary" /> Precio ofertado:<em><b>$</b></em>{producto.price.offered}</p>
+                        <p><CalendarMonthIcon color="primary" /> Inicio subasta:{initialDate}</p>
+                        <p><CalendarMonthIcon color="primary" />  Fin de la subasta: {finalDate}</p>
                     </Col>
                 </Row>
             </Modal.Body>
