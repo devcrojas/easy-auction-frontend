@@ -93,7 +93,7 @@ const CreateProduct = () => {
         // Se obtiene el status de la respuesta
         if(resp.status === 200){
             //Valida si el id del usuario de sesion sea el del producto, de lo contrario que lo mande a la lista general
-            if(resp.data.sellerData._id === user.id){
+            if(resp.data.profile._id === user.id){
                 await fillForm(resp.data);
             }else {
                 window.location.href = "/productos";
@@ -536,12 +536,12 @@ return (
                                             <ImageList cols={3} rowHeight={120} className='mt-3'>
                                                 {
                                                     // Se muestran las imagenes que se traen en la actualizacion el producto
-                                                    (!product) ? '':product.files.map( (dato, index) => {
+                                                    (product && !images) ? product.files.map( (dato, index) => {
                                                     return  <ImageListItem key={index} id={index}>
                                                                 {/* <ClearIcon className='position-absolute bg-white text-dark rounded-circle' role="button" onClick={ () => deleteSingleImage(dato,index)}/> */}
                                                                 <img src={`\\${dato.filePath}`} alt={index} style={{borderRadius: 2, height:"120px"}}/>
                                                             </ImageListItem>
-                                                    })
+                                                    }):''
                                                 }
                                                 {
                                                     // Se muestran las imagenes que se seleccionaron en el input

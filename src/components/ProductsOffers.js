@@ -26,7 +26,7 @@ export default function KeepMountedModal(props) {
         //console.log("iniciando por producto...");
         //console.log(props);
         //Se valida la cantidad de puntos que tiene para ser el tope en la subasta o permitir el max de la subasta
-        setMaxOffered( (props.product.price.buyNow < props.pointsUser.pts) ? props.product.price.buyNow - (props.product.price.buyNow * .2) : props.pointsUser.pts);
+        setMaxOffered((props.product.price.buyNow < props.pointsUser.pts) ? props.product.price.buyNow - (props.product.price.buyNow * .2) : props.pointsUser.pts);
         let offered = (typeof props.product.price.offered !== "undefined") ? props.product.price.offered : props.product.price.initialP;
         //Valida, si ya hay una oferta, la oferta + 50 se vuelve el valor offermin ya que seria el mas bajo
         setOfferMin(offered);
@@ -35,7 +35,7 @@ export default function KeepMountedModal(props) {
         //Se muestran los puntos del usuario
         setPointsUser(props.pointsUser.pts)
         //Valida si se puede participar, si no bloquea los botones.
-        setDisabledButtons((props.pointsUser.pts >=  props.product.price.initialP) ? false: true);
+        setDisabledButtons((props.pointsUser.pts >= props.product.price.initialP) ? false : true);
         //console.log(props);
     }, [props]);
 
@@ -60,8 +60,8 @@ export default function KeepMountedModal(props) {
     //Estilos swal
     const swalWithBootstrapButtons = Swal.mixin({
         customClass: {
-          confirmButton: 'btn btn-success m-2',
-          cancelButton: 'btn btn-danger m-2'
+            confirmButton: 'btn btn-success m-2',
+            cancelButton: 'btn btn-danger m-2'
         },
         buttonsStyling: false
     });
@@ -72,25 +72,33 @@ export default function KeepMountedModal(props) {
         //Se modifica el valor de los puntos con el set que se traslado desde la clase padre.
         //props.pointsUser.pts = 100;
         //props.setPoints([props.pointsUser])
-          swalWithBootstrapButtons.fire({
+        swalWithBootstrapButtons.fire({
             title: '¿Estas seguro que quieres ofertar?',
-            text: "Se descontarán " + offerSelect + " puntos de tu saldo." ,
+            text: "Se descontarán " + offerSelect + " puntos de tu saldo.",
             showCancelButton: true,
             confirmButtonText: 'Ofertar!!',
-          }).then(async (result) => {
+        }).then(async (result) => {
             /* Read more about isConfirmed, isDenied below */
             if (result.isConfirmed) {
                 swalWithBootstrapButtons.fire('Ofertado!', '', 'success');
-                let body = {offered: offerSelect, product: props.product};
+                let body = { offered: offerSelect, product: props.product };
                 let resp = await offersService.offerApply(body);
-                console.log(resp);
-                //props.product.price.offered = offerSelect;
-                props.setOffered(offerSelect);
-                setOfferNow(offerSelect);
-                console.log(props.product);
-              //Se realiza oferta, insertando atrobuto en producto.price.offered y un log de oferta del producto.
+                if (resp.status === -1) {
+                    swalWithBootstrapButtons.fire({
+                        icon: 'error',
+                        title: '¡Error al subastar!',
+                        text: resp.mssg
+                    })
+                } else {
+                    console.log(resp);
+                    //props.product.price.offered = offerSelect;
+                    props.setOffered(offerSelect);
+                    setOfferNow(offerSelect);
+                    console.log(props.product);
+                    //Se realiza oferta, insertando atrobuto en producto.price.offered y un log de oferta del producto.
+                }
             }
-          })
+        })
     }
 
     return (

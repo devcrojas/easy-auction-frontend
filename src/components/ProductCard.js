@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Col, Modal, Row, Badge } from 'react-bootstrap';
 import { Card, CardContent, CardMedia, Typography, CardActionArea, CardHeader, Avatar, Button, Tooltip } from '@mui/material'
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import CategoryIcon from '@mui/icons-material/Category';
+import SquareFootIcon from '@mui/icons-material/SquareFoot';
+import NewReleasesIcon from '@mui/icons-material/NewReleases';
+import CarpenterIcon from '@mui/icons-material/Carpenter';
+import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
+import PaidIcon from '@mui/icons-material/Paid';
+import IconButton from '@mui/material/IconButton';
+import SendIcon from '@mui/icons-material/Send';
 import 'react-slideshow-image/dist/styles.css'
 import { Zoom } from 'react-slideshow-image';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
@@ -8,6 +18,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import axios from 'axios';
 import ProductsOffers from './ProductsOffers'
+
 
 const ProductCard = (props) => {
     // Manejadores para cerrar o mostrar el modal del detalle del producto
@@ -131,14 +142,16 @@ const ProductCard = (props) => {
     const showSlider = (detImages, principal) => {
         if (detImages.length >= 1) {
             return (
+                    <div className="modal-image-body-container">
                 <Zoom scale={0.4}>
-                    <img style={{ width: "100%", height: "auto", border: 5 }} src={`\\${principal.filePath}`} alt={principal.nameProduct} />
-                    {
-                        detImages.map(((im, index) => {
-                            return <img key={index} style={{ width: "100%", height: "auto" }} src={`\\${im.filePath}`} alt={index} />
-                        }))
-                    }
+                        <img className='modal-image' src={`\\${principal.filePath}`} alt={principal.nameProduct} />
+                        {
+                            detImages.map(((im, index) => {
+                                return <img key={index} className='modal-image' src={`\\${im.filePath}`} alt={index} />
+                            }))
+                        }
                 </Zoom>
+                    </div>
             );
         } else {
             return <img style={{ width: "100%", height: "auto", border: 5 }} src={`\\${principal.filePath}`} alt={principal.nameProduct} />
@@ -177,22 +190,22 @@ const ProductCard = (props) => {
                         <Row className='my-2'>
                             <Col>
                                 <div className='w-100'>
-                                    <div className='text-center' style={{ minHeight: "4rem" }}><Typography component="div" variant="h6" >{product.nameProduct}</Typography></div>
-                                    <div><Typography component="div" ><Badge bg="secondary" style={{ fontSize: "1rem" }}>{product.category}</Badge>  </Typography></div>
+                                    <div className='text-center' style={{ minHeight: "6rem" }}><Typography component="div" variant="h6" >{product.nameProduct}</Typography></div>
+                                    <div><Typography component="div" className="text-center" ><Badge bg="secondary" style={{ fontSize: "1rem" }}>{product.category}</Badge>  </Typography></div>
                                 </div>
                             </Col>
                         </Row>
                         <Row className='my-2'>
                             <Col >
                                 <div className='w-100'>
-                                    <div><Typography component="div" style={{ fontSize: "1rem" }}>Precio inicial: </Typography></div>
-                                    <div><Typography component="div"><Badge bg="success" style={{ fontSize: "1rem" }}><em><b>$</b></em> {product.price.initialP}</Badge> </Typography></div>
+                                    <div><Typography component="div" className="text-center"  style={{ fontSize: "1rem" }}>Precio inicial </Typography></div>
+                                    <div><Typography component="div" className="text-center" ><Badge bg="success" style={{ fontSize: "1rem" }}><em><b>$</b></em> {product.price.initialP}</Badge> </Typography></div>
                                 </div>
                             </Col>
                             <Col >
                                 <div className='w-100'>
-                                    <div><Typography component="div" style={{ fontSize: "1rem" }}>Fecha inicio</Typography></div>
-                                    <div><Typography component="div"><Badge bg="dark" style={{ fontSize: "1rem" }}>{initialDate}</Badge> </Typography></div>
+                                    <div><Typography component="div" className="text-center"  style={{ fontSize: "1rem" }}>Fecha inicio</Typography></div>
+                                    <div><Typography component="div" className="text-center" ><Badge bg="dark" style={{ fontSize: "1rem" }}>{initialDate}</Badge> </Typography></div>
                                 </div>
                             </Col>
                         </Row>
@@ -205,16 +218,16 @@ const ProductCard = (props) => {
                                         </>
                                         :
                                         <>
-                                            <div><Typography component="div" style={{ fontSize: "1rem" }}>Comprar ahora</Typography></div>
-                                            <div><Typography component="div"> <Badge bg="info" style={{ fontSize: "1rem" }}> <em><b>$</b></em>  {product.price.buyNow} </Badge></Typography></div>
+                                            <div><Typography component="div" className="text-center"  style={{ fontSize: "1rem" }}>Comprar ahora</Typography></div>
+                                            <div><Typography component="div" className="text-center" > <Badge bg="info" style={{ fontSize: "1rem" }}> <em><b>$</b></em>  {product.price.buyNow} </Badge></Typography></div>
                                         </>
                                     }
                                 </div>
                             </Col>
                             <Col>
                                 <div className='w-100'>
-                                    <div><Typography component="div" style={{ fontSize: "1rem" }}>Fecha fin</Typography></div>
-                                    <div><Typography component="div"> <Badge bg="dark" style={{ fontSize: "1rem" }}>{finalDate} </Badge></Typography></div>
+                                    <div><Typography component="div" style={{ fontSize: "1rem" }} className="text-center" >Fecha fin</Typography></div>
+                                    <div><Typography component="div" className="text-center" > <Badge bg="dark" style={{ fontSize: "1rem" }}>{finalDate} </Badge></Typography></div>
                                 </div>
                             </Col>
                         </Row>
@@ -239,16 +252,17 @@ const ProductCard = (props) => {
                             </div>
                         </Col>
                         <Col md={6} className="fuente">
-                            <p>Categoria: {product.category}</p>
-                            <p>Material: {product.description.material}</p>
-                            <p>Marca: {product.description.marca}</p>
-                            <p>Condicion: {product.description.actualCondition}</p>
-                            <p>Observaciones: {product.description.observations}</p>
-                            <p>Precio inicial:${product.price.initialP}</p>
-                            <p>Comprar ahora:${product.price.buyNow}</p>
-                            <p>Precio ofertado:${product.price.offered}</p>
-                            <p>Inicio subasta:{initialDate}</p>
-                            <p>Fin de la subasta: {finalDate}</p>
+                            <p><CategoryIcon color="primary" /> Categoria: {product.category}</p>
+                            <p><CarpenterIcon color="primary" /> Material: {product.description.material}</p>
+                            <p><AssignmentTurnedInIcon color="primary" /> Marca: {product.description.marca}</p>
+                            <p><SquareFootIcon color="primary" /> Dimensiones: {product.description.dimensions}</p>
+                            <p><NewReleasesIcon color="primary" /> Condicion: {product.description.actualCondition}</p>
+                            <p><RemoveRedEyeIcon color="primary" /> Observaciones: {product.description.observations}</p>
+                            <p><PaidIcon color="primary" /> Precio inicial:<em><b>$</b></em>{product.price.initialP}</p>
+                            <p><PaidIcon color="primary" /> Comprar ahora:<em><b>$</b></em>{product.price.buyNow}</p>
+                            <p><PaidIcon color="primary" /> Precio ofertado:<em><b>$</b></em>{product.price.offered}</p>
+                            <p><CalendarMonthIcon color="primary" /> Inicio subasta:{initialDate}</p>
+                            <p><CalendarMonthIcon color="primary" />  Fin de la subasta: {finalDate}</p>
                         </Col>
                     </Row>
                 </Modal.Body>
