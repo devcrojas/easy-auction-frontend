@@ -5,10 +5,11 @@ import { SiWebauthn } from 'react-icons/si';
 
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import '@sweetalert2/theme-material-ui/material-ui.css'
-import { Button, TextField } from '@mui/material';
+import { Button, Checkbox, FormControlLabel, TextField, Typography } from '@mui/material';
 
 function Register() {
     const [data, setData] = useState({
+        conditions: false,
         name: '',
         firstName: '',
         email: '',
@@ -20,12 +21,19 @@ function Register() {
     const [errorEmailText, setErrorEmailText] = useState("")
     const [errorPass, setErrorPass] = useState(false)
     const [errorPassText, setErrorPassText] = useState("")
-    const handleInputChange = (event) => {
 
-        setData({
-            ...data,
-            [event.target.name]: event.target.value
-        })
+    const handleInputChange = (event) => {
+        if (event.target.name === 'conditions') {
+            setData({
+                ...data,
+                [event.target.name]: event.target.checked
+            });
+        } else {
+            setData({
+                ...data,
+                [event.target.name]: event.target.value
+            });
+        }
     }
     useEffect(() => {
         if (data.email !== '') {
@@ -53,7 +61,7 @@ function Register() {
             setErrorPass(true);
             setErrorPassText("");
         }
-        if (data.name !== '' && data.firstName !== '' && data.email !== '' && data.password !== '' && data.password2 !== '' && validateEmail(data.email) !== null) {
+        if (data.name !== '' && data.firstName !== '' && data.email !== '' && data.password !== '' && data.password2 !== '' && validateEmail(data.email) !== null && data.conditions === true) {
             setDis(false);
         } else {
             setDis(true);
@@ -66,7 +74,7 @@ function Register() {
                 /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
             );
     };
-    function sendRegister() {
+    async function sendRegister() {
         if (errorPass === false) {
             Swal.fire({
                 icon: 'error',
@@ -80,26 +88,21 @@ function Register() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
             };
-            fetch("/api/user/register", requestOptions)
-                .then((res) => res.json())
-                .then((data) => {
-                    if (data._id !== '') {
-                        sendProfile();
-                        Swal.fire({
-                            icon: 'success',
-                            title: "Usuario registrado",
-                            text: `Bienvenido(a): ${data.name}`,
-                        });
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: data.mssg,
-                            text: 'Error al iniciar sesión!',
-                            footer: '<a href="">¿Quieres registrarte?</a>'
-                        });
-                    }
-                })
-                .catch(error => { console.error("Error", error.message) });
+            let resp = await fetch("/api/user/register", requestOptions);
+            if (resp.status === 200) {
+                sendProfile();
+                Swal.fire({
+                    icon: 'success',
+                    title: "Usuario registrado",
+                    text: `Bienvenido(a): ${data.name}`,
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: data.mssg,
+                    text: 'Error al registrarse!'
+                });
+            }
         }
     }
     function sendProfile() {
@@ -135,6 +138,11 @@ function Register() {
             .catch(error => { console.error("Error in Profile", error.message) });
 
     }
+    const conditions = () => {
+        return (
+            <Typography variant="caption"><a href="/info" target="_blank" >Acepto terminos y condiciones</a></Typography>
+        )
+    }
     return (
         <Container fluid>
             <Row>
@@ -169,7 +177,7 @@ function Register() {
                         required inputProps={{ maxLength: "16", minLength: "8" }}
                         margin="normal" fullWidth
                         error={(errorPass) ? false : true}
-                        helperText={errorPassText} />
+                        helperText={(errorPass === true) ? "8 caracteres como máximo" : errorPassText} />
                 </Col>
             </Row>
             <Row>
@@ -181,6 +189,14 @@ function Register() {
                         error={(errorPass) ? false : true}
                         helperText={errorPassText} />
                 </Col>
+            </Row>
+            <Row className="d-flex justify-content-center">
+                <FormControlLabel className="my-2"
+                    control={
+                        <Checkbox onChange={handleInputChange} name="conditions" />
+                    }
+                    label={conditions()}
+                />
             </Row>
             <Row>
                 <Col className='text-center'>
