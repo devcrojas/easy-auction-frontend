@@ -157,9 +157,9 @@ const ProductCard = (props) => {
                         </>
                         :
                         <>
-                            <CardHeader avatar={<Avatar src={product.email.file.filePath} />}
-                                title={product.email.firstName + " " + product.email.lastName}
-                                subheader={product.email.email}
+                            <CardHeader avatar={<Avatar src={producto.email.file.filePath} />}
+                                title={producto.email.firstName + " " + producto.email.lastName}
+                                subheader={producto.email.email}
                                 action={editOptions} />
                         </>
                     }
