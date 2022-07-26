@@ -156,7 +156,7 @@ function Register() {
                 <Col>
                     <TextField id="Email" label="Email" variant="standard"
                         name="email" type="email" onChange={handleInputChange}
-                        required inputProps={{ maxLength: "30" }} margin="normal"
+                        required inputProps={{ maxLength: "50" }} margin="normal"
                         fullWidth
                         error={errorEmail}
                         helperText={errorEmailText} />
@@ -166,7 +166,7 @@ function Register() {
                 <Col>
                     <TextField id="Contraseña" label="Contraseña" variant="standard"
                         name="password" type="password" onChange={handleInputChange}
-                        required inputProps={{ maxLength: "8" }}
+                        required inputProps={{ maxLength: "16", minLength: "8" }}
                         margin="normal" fullWidth
                         error={(errorPass) ? false : true}
                         helperText={errorPassText} />
@@ -177,7 +177,7 @@ function Register() {
                     <TextField id="confirmarContraseña" label="Confirmar Contraseña"
                         variant="standard" name="password2" type="password"
                         onChange={handleInputChange} required
-                        inputProps={{ maxLength: "8" }} margin="normal" fullWidth
+                        inputProps={{ maxLength: "16", minLength: "8" }} margin="normal" fullWidth
                         error={(errorPass) ? false : true}
                         helperText={errorPassText} />
                 </Col>

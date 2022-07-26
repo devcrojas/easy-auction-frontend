@@ -83,7 +83,7 @@ function Profile() {
             body: formData
         }
         let resp = await fetch(`/api/profiles/image/${user.id}`, options)
-        if (resp.status === 200) {
+        if (resp.status === 201) {
             changeImgProf();
             Swal.fire(
                 'Fotografia Actualizado!',
@@ -113,7 +113,7 @@ function Profile() {
             }
             let resp = await fetch(`/api/profiles/${user.id}`, options)
             console.log(resp)
-            if (resp.status === 201) {
+            if (resp.status === 200) {
                 changeImgProf();
                 handleExpandClick()
                 Swal.fire(
