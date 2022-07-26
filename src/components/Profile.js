@@ -56,8 +56,8 @@ function Profile() {
     };
     const handleInputChangeAddress = (event) => {
         switch (event.target.name) {
-            case "cpp":
-                profile.address.cpp = event.target.value
+            case "cp":
+                profile.address.cp = event.target.value
                 break;
             case "street":
                 profile.address.street = event.target.value
@@ -65,8 +65,8 @@ function Profile() {
             case "suburb":
                 profile.address.suburb = event.target.value
                 break;
-            case "municipaly":
-                profile.address.municipaly = event.target.value
+            case "municipality":
+                profile.address.municipality = event.target.value
                 break;
             case "state":
                 profile.address.state = event.target.value
@@ -212,8 +212,8 @@ function Profile() {
                                                                     <Divider textAlign="center">Direccion</Divider>
                                                                     <ListItemText primary="Calle" secondary={profile.address.street} />
                                                                     <ListItemText primary="Colonia" secondary={profile.address.suburb} />
-                                                                    <ListItemText primary="Municipio / Delegacion" secondary={profile.address.municipaly} />
-                                                                    <ListItemText primary="cpp" secondary={profile.address.cpp} />
+                                                                    <ListItemText primary="Municipio / Delegacion" secondary={profile.address.municipality} />
+                                                                    <ListItemText primary="cp" secondary={profile.address.cp} />
                                                                     <ListItemText primary="Entidad Federativa" secondary={profile.address.state} />
                                                                 </List>
                                                             </Typography>
@@ -233,8 +233,8 @@ function Profile() {
                                                                     </Row>
                                                                     <Row>
                                                                         <Col xs={6} className="justify-content-center">
-                                                                            <TextField type="text" name="cpp" label="CPP" variant="outlined" defaultValue={profile.address.cpp} onChange={handleInputChangeAddress} margin="normal" size="small" inputProps={{ maxLength: "5" }} required />
-                                                                            <TextField type="text" name="municipaly" label="Delegación/Municipio" variant="outlined" defaultValue={profile.address.municipaly} onChange={handleInputChangeAddress} margin="normal" size="small" required />
+                                                                            <TextField type="text" name="cp" label="CP" variant="outlined" defaultValue={profile.address.cp} onChange={handleInputChangeAddress} margin="normal" size="small" inputProps={{ maxLength: "5" }} required />
+                                                                            <TextField type="text" name="municipality" label="Delegación/Municipio" variant="outlined" defaultValue={profile.address.municipality} onChange={handleInputChangeAddress} margin="normal" size="small" required />
                                                                         </Col>
                                                                         <Col xs={6} className="justify-content-center">
                                                                             <TextField type="text" name="state" label="Estado" variant="outlined" defaultValue={profile.address.state} onChange={handleInputChangeAddress} margin="normal" size="small" required />

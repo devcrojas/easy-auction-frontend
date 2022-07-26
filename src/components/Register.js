@@ -74,6 +74,23 @@ function Register() {
                 /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
             );
     };
+    async function validarEmailRegistrado() {
+        const requestOptions = {
+            method: 'GET',
+            headers: { 'Content-Type': 'application/json' }
+        };
+        let resp = await fetch(`/api/profiles/${data.email}`, requestOptions);
+        let response = await resp.json();
+        if (response.status === -1) {
+            sendRegister();
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'El correo ya existe!',
+                text: 'Introduce otro correo'
+            });
+        }
+    }
     async function sendRegister() {
         if (errorPass === false) {
             Swal.fire({
@@ -105,17 +122,17 @@ function Register() {
             }
         }
     }
-    function sendProfile() {
+    async function sendProfile() {
         let profile = {
             "_id": data.email,
             "firstName": data.name,
             "lastName": data.firstName,
             "birthday": "",
             "address": {
-                "cpp": "",
+                "cp": "",
                 "street": "",
                 "suburb": "",
-                "municipaly": "",
+                "municipality": "",
                 "state": "",
             },
             "phone": "",
@@ -128,15 +145,12 @@ function Register() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(profile)
         };
-        fetch("/api/profiles/", requestOptions)
-            .then((res) => res.json())
-            .then((data) => {
-                if (data._id !== '') {
-                    console.log("se creo el perfil")
-                }
-            })
-            .catch(error => { console.error("Error in Profile", error.message) });
-
+        let resp = await fetch("/api/profiles/", requestOptions);
+        if (resp.status === 201) {
+            resp.json();
+        } else {
+            console.error("Error in Profile", resp)
+        }
     }
     const conditions = () => {
         return (
@@ -202,7 +216,7 @@ function Register() {
                 <Col className='text-center'>
                     <Button variant="contained" color="success" className='text-center align-items-center justify-content-center' type="button"
                         style={{ borderRadius: "300rem", width: "100%", height: "3rem" }}
-                        onClick={sendRegister} margin="normal" disabled={dis}>
+                        onClick={validarEmailRegistrado} margin="normal" disabled={dis}>
                         Registrate  <i className='d-flex align-items-center justify-content-center m-2' style={{ fontSize: "2rem" }}> <SiWebauthn /></i>
                     </Button>
                 </Col>
