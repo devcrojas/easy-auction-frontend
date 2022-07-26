@@ -30,13 +30,18 @@ const ProductCard = (props) => {
     const [finalDate, setFinalDate] = useState(null);
     const [imag, setImag] = useState(null);
     const [offered, setOffered] = useState();
+    const [minOffered, setMinOffered] = useState();
+    const [pointsUser, setPointsUser] = useState();
 
     useEffect(()=>{
+        //console.log(props);
+        //setPointsUser(props.pointsUser);
         setProduct(props.product);
         setInitialDate(new Date(props.product.auctionDate.initialD).toLocaleDateString() + ' ' + new Date(props.product.auctionDate.final).toLocaleTimeString());
         setFinalDate(new Date(props.product.auctionDate.final).toLocaleDateString() + ' ' + new Date(props.product.auctionDate.final).toLocaleTimeString());
         setImag((props.product.file) ? props.product.file.filePath : 'uploads\\sin.jpg');
         setOffered((typeof props.product.price.offered === "undefined") ? "0" : props.product.price.offered)
+        setMinOffered((typeof props.product.price.offered !== "undefined") ? props.product.price.offered + 1 : props.product.price.initialP);
         //console.log(props.product);
     },[])   
     // Se obtienen los datos necesarios para el card del producto
@@ -85,7 +90,7 @@ const ProductCard = (props) => {
         viewOptions = function (product) {
             return (<> <Row>
                 <Col style={{ paddingRight: "0" }}>
-                    <ProductsOffers setOffered={setOffered} product={product} pointsUser={props.pointsUser} setPoints={props.setPoints}  variant="contained" color="info">Comprar ahora</ProductsOffers>
+                    <ProductsOffers minOffered={minOffered} setMinOffered={setMinOffered} setOffered={setOffered} product={product} pointsUser={props.pointsUser} setPointsUser={props.setPointsUser}  variant="contained" color="info">Comprar ahora</ProductsOffers>
                 </Col>
                 <Col style={{ paddingLeft: "0" }}>
                     <Button style={{ width: "100%", borderRadius: "0"}} variant="contained" color="info">Comprar ahora</Button>

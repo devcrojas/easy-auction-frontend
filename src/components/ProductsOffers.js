@@ -24,14 +24,13 @@ export default function KeepMountedModal(props) {
 
     useEffect(() => {
         //console.log("iniciando por producto...");
-        //console.log(props);
+        console.log(props);
         //Se valida la cantidad de puntos que tiene para ser el tope en la subasta o permitir el max de la subasta
         setMaxOffered((props.product.price.buyNow < props.pointsUser.pts) ? props.product.price.buyNow - (props.product.price.buyNow * .2) : props.pointsUser.pts);
-        let offered = (typeof props.product.price.offered !== "undefined") ? props.product.price.offered : props.product.price.initialP;
         //Valida, si ya hay una oferta, la oferta + 50 se vuelve el valor offermin ya que seria el mas bajo
-        setOfferMin(offered);
+        setOfferMin(props.minOffered);
         //Valida, si ya hay una oferta, la oferta + 50 se vuelve el valor select ya que seria el mas bajo
-        setOfferSelect(offered);
+        setOfferSelect(props.minOffered);
         //Se muestran los puntos del usuario
         setPointsUser(props.pointsUser.pts)
         //Valida si se puede participar, si no bloquea los botones.
@@ -91,10 +90,15 @@ export default function KeepMountedModal(props) {
                     })
                 } else {
                     console.log(resp);
+                    //props.pointsUser = resp.points;
+                    //props.product = resp.product;
                     //props.product.price.offered = offerSelect;
                     props.setOffered(offerSelect);
                     setOfferNow(offerSelect);
-                    console.log(props.product);
+                    //console.log(props.product);
+                    props.setMinOffered(offerSelect + 1);
+                    props.setPointsUser([resp.points]);
+                    //setMaxOffered((resp.product.price.buyNow < resp.points.pts) ? resp.product.price.buyNow - (resp.product.price.buyNow * .2) : resp.points.pts);
                     //Se realiza oferta, insertando atrobuto en producto.price.offered y un log de oferta del producto.
                 }
             }
