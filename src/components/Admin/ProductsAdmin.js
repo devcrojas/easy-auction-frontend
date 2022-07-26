@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Container, Row, Col } from 'react-bootstrap'
-import { ButtonGroup, IconButton } from '@mui/material';
+import { ButtonGroup, IconButton, Tooltip } from '@mui/material';
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
 import HighlightOffOutlinedIcon from '@mui/icons-material/HighlightOffOutlined';
 
@@ -40,12 +40,16 @@ function ProductsAdmin() {
         return (
             <>
                 <ButtonGroup variant="text">
-                    <IconButton aria-label="check" size="large" color="success" onClick={() => { cambiarEstadoSubasta(id, 'active') }} >
-                        <CheckCircleOutlineOutlinedIcon />
-                    </IconButton>
-                    <IconButton aria-label="clear" size="large" color="error" onClick={() => { cambiarEstadoSubasta(id, 'rechazed') }} >
-                        <HighlightOffOutlinedIcon />
-                    </IconButton>
+                    <Tooltip title="Autorizar subasta">
+                        <IconButton aria-label="check" size="large" color="success" onClick={() => { cambiarEstadoSubasta(id, 'active') }} >
+                            <CheckCircleOutlineOutlinedIcon />
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Rechazar subasta">
+                        <IconButton aria-label="clear" size="large" color="error" onClick={() => { cambiarEstadoSubasta(id, 'rechazed') }} >
+                            <HighlightOffOutlinedIcon />
+                        </IconButton>
+                    </Tooltip>
                 </ButtonGroup>
             </>
         );
@@ -54,11 +58,13 @@ function ProductsAdmin() {
     const generateTable = () => {
         if (inactiveProds !== []) {
             return inactiveProds.map(((pro, index) => {
+                let fechaInicio = new Date(pro.auctionDate.create).toLocaleDateString();
                 return (
                     <tr key={index} id={pro._id}>
-                        <td align={"right"} className="table-primary" ><img style={{ width: "100%", height: 100, border: 5 }} className="justify-content-center" src={`\\${pro.file.filePath}`} alt={pro.nameProduct} /></td>
+                        <td align={"center"} className="table-primary" style={{ width: 175, height: 175 , border: 5 }} ><img style={{ width: "100%", height: "100%", border: 5 }} className="justify-content-center" src={`\\${pro.file.filePath}`} alt={pro.nameProduct} /></td>
                         <td align={"center"} >{pro.nameProduct}</td>
                         <td align={"center"} >{pro.category}</td>
+                        <td align={"center"} >{fechaInicio}</td>
                         <td align={"center"} >{pro.price.initialP}</td>
                         <td align={"center"} >{pro.price.buyNow}</td>
                         <td align={"center"} >{buttons(pro._id)}</td>
@@ -124,7 +130,8 @@ function ProductsAdmin() {
 
         return new Promise(async function (resolve, reject) {
             let dateAuthProd = new Date()
-            let options = {
+            console.log(dateAuthProd.toLocaleDateString());
+             let options = {
                 method: "PUT",
                 headers: {
                     'Content-Type': 'application/json', 'Authorization': 'Bearer ' + localStorage.getItem("token")
@@ -150,7 +157,7 @@ function ProductsAdmin() {
             <NavBarMenu view={"Admin"}></NavBarMenu>
             <Container fluid style={{ background: "#F0F2F5" }}>
                 <Row>
-                    <Col xs={3}  className="sidebarEasy">
+                    <Col xs={3} className="sidebarEasy">
                         <MenuLateral view={"productsAdmin"} profileImg={profile.file}></MenuLateral>
                     </Col>
                     <Col xs={9} className="p-2">
@@ -158,16 +165,16 @@ function ProductsAdmin() {
                             <Table striped bordered>
                                 <thead align={"center"} className="table-primary" >
                                     <tr>
-                                        <th align={"center"}  style={{ minWidth: 170 }}>Imagen</th>
-                                        <th align={"center"} style={{ minWidth: 170 }}>Producto</th>
-                                        <th align={"center"} style={{ minWidth: 170 }}>Categoria</th>
-                                        <th align={"center"} style={{ minWidth: 170 }}>Precio inicial</th>
-                                        <th align={"center"} style={{ minWidth: 170 }}>Comprar ahora</th>
-                                        <th align={"center"} style={{ minWidth: 170 }}>Autorizar</th>
+                                        <th align={"center"} style={{ minWidth: 125 }}>Imagen</th>
+                                        <th align={"center"} style={{ minWidth: 125 }}>Producto</th>
+                                        <th align={"center"} style={{ minWidth: 125 }}>Categoria</th>
+                                        <th align={"center"} style={{ minWidth: 125 }}>Fecha creación</th>
+                                        <th align={"center"} style={{ minWidth: 125 }}>Precio inicial</th>
+                                        <th align={"center"} style={{ minWidth: 125 }}>Comprar ahora</th>
+                                        <th align={"center"} style={{ minWidth: 125 }}>Autorizar</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-
                                     {
                                         generateTable()
                                     }

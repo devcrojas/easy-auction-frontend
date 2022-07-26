@@ -148,7 +148,7 @@ const ProductCard = (props) => {
         <>
             <Card sx={{ height: '100%', borderRadius: 5 }}
                 elevation={10} key={product._id} id={product._id}>
-                    {(producto.profile) ?
+                  {(producto.profile) ?
                         <>
                             <CardHeader avatar={<Avatar src={producto.profile.file.filePath} />}
                                 title={producto.profile.firstName + " " + producto.profile.lastName}
@@ -157,9 +157,9 @@ const ProductCard = (props) => {
                         </>
                         :
                         <>
-                            <CardHeader avatar={<Avatar src={product.email.file.filePath} />}
-                                title={product.email.firstName + " " + product.email.lastName}
-                                subheader={product.email.email}
+                            <CardHeader avatar={<Avatar src={producto.email.file.filePath} />}
+                                title={producto.email.firstName + " " + producto.email.lastName}
+                                subheader={producto.email.email}
                                 action={editOptions} />
                         </>
                     }
