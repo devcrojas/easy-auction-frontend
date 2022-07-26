@@ -44,18 +44,6 @@ function ProductsList(props) {
                 awProduc = await products.data;
                 setApis(awProduc);
             break;
-            case 'myShoppings':
-                let profileWin = { profileWin:user.id}
-                let fProducts = await fetch('/api/products/myearnedproducts',
-                    {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(profileWin)
-                    }
-                    );
-                    awProduc = await fProducts.json();
-                    setApis(awProduc);
-            break;
             // Por si no manda ninguna vista o manda una vista que no existe
             default:
                 console.log('Vista no registrada');
@@ -64,11 +52,11 @@ function ProductsList(props) {
         return;
     }
 
-   const cardList = () => {
+    const cardList = () => {
         // Cicla los resultados de la peticion
         let card = apis.map((producto) => {
-            // Si la vista es de mis productos que no muestre los cancelados
-            if(props.actualView === 'myProducts' && producto.status !== 'cancelled'){
+             // Si la vista es de mis productos que no muestre los cancelados
+             if(props.actualView === 'myProducts' && producto.status !== 'cancelled'){
                 return (
                     <Col sx={12} lg={6} key={producto._id} className='mb-5'>
                         <ProductCard product={producto} actualView={props.actualView}></ProductCard>
@@ -78,21 +66,22 @@ function ProductsList(props) {
             // Si la vista es la lista de productos que muestre todo como llega
             else {
                 return (
-                    <Col sx={12} lg={6} key={producto._id} className='mb-5'>
-                        <ProductCard product={producto} actualView={props.actualView}></ProductCard>
+                    <Col sx={12} md={12} lg={6} key={producto._id} className='mb-5'>
+                        <ProductCard product={producto} actualView={props.actualView} pointsUser={pointsUser[0]} setPoints={setPointsUser}></ProductCard>
                     </Col>
                 )
             }
-            
         });
         return card
     }
     return (
         <>
             <Container>
-                <Row md="auto" className='d-flex justify-content-around mt-5'>
+                <Row md="auto" className='d-flex justify-content-around mt-3'>
                     <>
-                        { cardList() }
+                        {
+                            cardList()
+                        }
                     </>
                 </Row>
             </Container>
@@ -101,4 +90,3 @@ function ProductsList(props) {
 }
 
 export default ProductsList;
-
