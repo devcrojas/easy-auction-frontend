@@ -66,7 +66,7 @@ function ProductsList(props) {
             // Si la vista es la lista de productos que muestre todo como llega
             else {
                 //! Nunca usar una pocision estatica de un array sin validar antes, puede ocasionar problemas si este no llega a existir
-                if(pointsUser[0]){
+                if(pointsUser && pointsUser[0]){
                     return (
                         <Col sx={12} md={12} lg={6} key={producto._id} className='mb-5'>
                             <ProductCard product={producto} actualView={props.actualView} pointsUser={pointsUser[0]} setPoints={setPointsUser}></ProductCard>
