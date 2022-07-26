@@ -177,22 +177,22 @@ const ProductCard = (props) => {
                         <Row className='my-2'>
                             <Col>
                                 <div className='w-100'>
-                                    <div className='text-center' style={{ minHeight: "4rem" }}><Typography component="div" variant="h6" >{product.nameProduct}</Typography></div>
-                                    <div><Typography component="div" ><Badge bg="secondary" style={{ fontSize: "1rem" }}>{product.category}</Badge>  </Typography></div>
+                                    <div className='text-center' style={{ minHeight: "6rem" }}><Typography component="div" variant="h6" >{product.nameProduct}</Typography></div>
+                                    <div><Typography component="div" className="text-center" ><Badge bg="secondary" style={{ fontSize: "1rem" }}>{product.category}</Badge>  </Typography></div>
                                 </div>
                             </Col>
                         </Row>
                         <Row className='my-2'>
                             <Col >
                                 <div className='w-100'>
-                                    <div><Typography component="div" style={{ fontSize: "1rem" }}>Precio inicial: </Typography></div>
-                                    <div><Typography component="div"><Badge bg="success" style={{ fontSize: "1rem" }}><em><b>$</b></em> {product.price.initialP}</Badge> </Typography></div>
+                                    <div><Typography component="div" className="text-center"  style={{ fontSize: "1rem" }}>Precio inicial </Typography></div>
+                                    <div><Typography component="div" className="text-center" ><Badge bg="success" style={{ fontSize: "1rem" }}><em><b>$</b></em> {product.price.initialP}</Badge> </Typography></div>
                                 </div>
                             </Col>
                             <Col >
                                 <div className='w-100'>
-                                    <div><Typography component="div" style={{ fontSize: "1rem" }}>Fecha inicio</Typography></div>
-                                    <div><Typography component="div"><Badge bg="dark" style={{ fontSize: "1rem" }}>{initialDate}</Badge> </Typography></div>
+                                    <div><Typography component="div" className="text-center"  style={{ fontSize: "1rem" }}>Fecha inicio</Typography></div>
+                                    <div><Typography component="div" className="text-center" ><Badge bg="dark" style={{ fontSize: "1rem" }}>{initialDate}</Badge> </Typography></div>
                                 </div>
                             </Col>
                         </Row>
@@ -205,16 +205,16 @@ const ProductCard = (props) => {
                                         </>
                                         :
                                         <>
-                                            <div><Typography component="div" style={{ fontSize: "1rem" }}>Comprar ahora</Typography></div>
-                                            <div><Typography component="div"> <Badge bg="info" style={{ fontSize: "1rem" }}> <em><b>$</b></em>  {product.price.buyNow} </Badge></Typography></div>
+                                            <div><Typography component="div" className="text-center"  style={{ fontSize: "1rem" }}>Comprar ahora</Typography></div>
+                                            <div><Typography component="div" className="text-center" > <Badge bg="info" style={{ fontSize: "1rem" }}> <em><b>$</b></em>  {product.price.buyNow} </Badge></Typography></div>
                                         </>
                                     }
                                 </div>
                             </Col>
                             <Col>
                                 <div className='w-100'>
-                                    <div><Typography component="div" style={{ fontSize: "1rem" }}>Fecha fin</Typography></div>
-                                    <div><Typography component="div"> <Badge bg="dark" style={{ fontSize: "1rem" }}>{finalDate} </Badge></Typography></div>
+                                    <div><Typography component="div" style={{ fontSize: "1rem" }} className="text-center" >Fecha fin</Typography></div>
+                                    <div><Typography component="div" className="text-center" > <Badge bg="dark" style={{ fontSize: "1rem" }}>{finalDate} </Badge></Typography></div>
                                 </div>
                             </Col>
                         </Row>
