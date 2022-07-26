@@ -252,7 +252,7 @@ const ProductCard = (props) => {
                 <Modal.Body>
                     <Row>
                         <Col md={6}>
-                            <div className="slide-container" sx={{ width: '75%', height: 'auto' }}>
+                            <div className="slide-container text-center" sx={{  height: 'auto' }}>
                                 {showSlider(product.files, product.file)}
                             </div>
                         </Col>
