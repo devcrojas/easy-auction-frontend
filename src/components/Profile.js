@@ -27,7 +27,6 @@ function Profile() {
     useEffect(() => {
         changeImgProf();
     }, []) // eslint-disable-line react-hooks/exhaustive-deps
-
     const handleInputChange = (event) => {
         setProfile({
             ...profile,
@@ -145,6 +144,7 @@ function Profile() {
         let response = await resp.json();
         setProfile(response)
     }
+
     let imageProfile = profile.file;
     return (
         <>
