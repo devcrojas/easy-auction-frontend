@@ -142,6 +142,7 @@ function Profile() {
         }
         let resp = await fetch(`/api/profiles/${user.id}`, options);
         let response = await resp.json();
+        console.log(response.perfil)
         setProfile(response.perfil)
     }
 
@@ -207,7 +208,7 @@ function Profile() {
                                                             <Typography component="div" variant="caption" hidden={expanded}>
                                                                 <List dense={true} sx={{ marginTop: 2, padding: 1 }}>
                                                                     <Divider textAlign="center">Info. Personal</Divider>
-                                                                    <ListItemText primary="Fecha de Nacimiento" secondary={(profile.birthday !== undefined || profile.birthday !== null) ? profile.birthday.split('T')[0] : ""} />
+                                                                    <ListItemText primary="Fecha de Nacimiento" secondary={(profile.birthday) ? profile.birthday.split('T')[0] : ""} />
                                                                     <ListItemText primary="Num. Telefonico" secondary={profile.phone} />
                                                                     <Divider textAlign="center">Direccion</Divider>
                                                                     <ListItemText primary="Calle" secondary={profile.address.street} />
