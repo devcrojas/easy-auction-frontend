@@ -115,6 +115,10 @@ code {
   height: 200px;
   width: 200px;
 }
+.modal-image-body-container {
+  height: 300px;
+  width: auto;
+}
 /* Estilos para motores Webkit y blink (Chrome, Safari, Opera... )*/
 /* Estilo para el scroll con mejor presentacion*/
 .prettyScroll::-webkit-scrollbar {
