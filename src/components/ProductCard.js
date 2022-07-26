@@ -220,7 +220,15 @@ const ProductCard = (props) => {
                         </Row>
                         <Row>
                             <Col>
-                                <Typography component="div" variant='h5' color='success' className='text-center'>Ofertado<em className='text-success'><b>${offered}</b></em></Typography>
+                                {(props.actualView === 'myShoppings') ? 
+                                    <>
+                                        <Typography component="div" variant='h5' color='success' className='text-center'>Comprado por: <em className='text-success'><b>$366</b></em></Typography>
+                                    </>
+                                    :
+                                    <>
+                                        <Typography component="div" variant='h5' color='success' className='text-center'>Ofertado<em className='text-success'><b>${offered}</b></em></Typography>
+                                    </>
+                                    }
                             </Col>
                         </Row>
                     </CardContent>
