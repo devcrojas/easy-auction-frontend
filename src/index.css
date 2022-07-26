@@ -116,7 +116,7 @@ code {
   width: 200px;
 }
 .modal-image-body-container {
-  height: 300px;
+  height: auto;
   width: auto;
 }
 /* Estilos para motores Webkit y blink (Chrome, Safari, Opera... )*/
