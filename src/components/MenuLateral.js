@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { Button, Col, Container, Image, Row } from 'react-bootstrap'
+import React, { useState, useEffect} from 'react'
+import { Button, Col, Image, Row } from 'react-bootstrap'
 import { ReactComponent as ProductIco } from "../images/new_products_nav.svg"
 import { ReactComponent as ComprasIco } from "../images/compras_nav.svg"
 import { ReactComponent as OfertasIco } from "../images/ofertas_nav.svg"
@@ -8,12 +8,27 @@ import { ReactComponent as ProfileIco } from "../images/profile_nav.svg"
 import { ReactComponent as BuysIco } from "../images/buysMenu.svg"
 
 import AuthService from '../services/auth.service'
+import PointsService from '../services/points.service'
 
 
 function MenuLateral(params) {
   const [view] = useState(params.view);
   const [user] = useState(AuthService.getCurrentUser());
   let imgProfile = user.profile.file;
+
+  useEffect(() => {
+    createPoints();
+  }, [])// eslint-disable-line react-hooks/exhaustive-deps
+  
+
+  async function createPoints() {
+    let actualUrl = window.location.href;
+    let path = actualUrl.split('/').reverse()[0];
+    if (path === 'productos') {
+      let pointsUpdate = await PointsService.updatePointsByUserId({ userId: user.id, pts: parseInt(0) });
+    }
+  }
+
 
   return (
     <Col>
@@ -74,7 +89,7 @@ function MenuLateral(params) {
       <Row>
         <Col className="text-center">
           <hr></hr>
-          <label style={{fontSize:".9rem"}}>EasySoft © 2022</label>
+          <label style={{ fontSize: ".9rem" }}>EasySoft © 2022</label>
         </Col>
       </Row>
     </Col >

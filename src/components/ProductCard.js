@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Col, Modal, Row, Badge } from 'react-bootstrap';
 import { Card, CardContent, CardMedia, Typography, CardActionArea, CardHeader, Avatar, Button, Tooltip } from '@mui/material'
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import CategoryIcon from '@mui/icons-material/Category';
+import SquareFootIcon from '@mui/icons-material/SquareFoot';
+import NewReleasesIcon from '@mui/icons-material/NewReleases';
+import CarpenterIcon from '@mui/icons-material/Carpenter';
+import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
+import PaidIcon from '@mui/icons-material/Paid';
+import IconButton from '@mui/material/IconButton';
+import SendIcon from '@mui/icons-material/Send';
 import 'react-slideshow-image/dist/styles.css'
 import { Zoom } from 'react-slideshow-image';
 import BorderColorIcon from '@mui/icons-material/BorderColor';
@@ -8,6 +18,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import axios from 'axios';
 import ProductsOffers from './ProductsOffers'
+
 
 const ProductCard = (props) => {
     // Manejadores para cerrar o mostrar el modal del detalle del producto
@@ -19,13 +30,18 @@ const ProductCard = (props) => {
     const [finalDate, setFinalDate] = useState(null);
     const [imag, setImag] = useState(null);
     const [offered, setOffered] = useState();
+    const [minOffered, setMinOffered] = useState();
+    const [pointsUser, setPointsUser] = useState();
 
     useEffect(()=>{
+        //console.log(props);
+        //setPointsUser(props.pointsUser);
         setProduct(props.product);
         setInitialDate(new Date(props.product.auctionDate.initialD).toLocaleDateString() + ' ' + new Date(props.product.auctionDate.final).toLocaleTimeString());
         setFinalDate(new Date(props.product.auctionDate.final).toLocaleDateString() + ' ' + new Date(props.product.auctionDate.final).toLocaleTimeString());
         setImag((props.product.file) ? props.product.file.filePath : 'uploads\\sin.jpg');
         setOffered((typeof props.product.price.offered === "undefined") ? "0" : props.product.price.offered)
+        setMinOffered((typeof props.product.price.offered !== "undefined") ? props.product.price.offered + 1 : props.product.price.initialP);
         //console.log(props.product);
     },[])   
     // Se obtienen los datos necesarios para el card del producto
@@ -74,7 +90,7 @@ const ProductCard = (props) => {
         viewOptions = function (product) {
             return (<> <Row>
                 <Col style={{ paddingRight: "0" }}>
-                    <ProductsOffers setOffered={setOffered} product={product} pointsUser={props.pointsUser} setPoints={props.setPoints}  variant="contained" color="info">Comprar ahora</ProductsOffers>
+                    <ProductsOffers minOffered={minOffered} setMinOffered={setMinOffered} setOffered={setOffered} product={product} pointsUser={props.pointsUser} setPointsUser={props.setPointsUser}  variant="contained" color="info">Comprar ahora</ProductsOffers>
                 </Col>
                 <Col style={{ paddingLeft: "0" }}>
                     <Button style={{ width: "100%", borderRadius: "0"}} variant="contained" color="info">Comprar ahora</Button>
@@ -131,14 +147,16 @@ const ProductCard = (props) => {
     const showSlider = (detImages, principal) => {
         if (detImages.length >= 1) {
             return (
+                    <div className="modal-image-body-container">
                 <Zoom scale={0.4}>
-                    <img style={{ width: "100%", height: "auto", border: 5 }} src={`\\${principal.filePath}`} alt={principal.nameProduct} />
-                    {
-                        detImages.map(((im, index) => {
-                            return <img key={index} style={{ width: "100%", height: "auto" }} src={`\\${im.filePath}`} alt={index} />
-                        }))
-                    }
+                        <img className='modal-image' src={`\\${principal.filePath}`} alt={principal.nameProduct} />
+                        {
+                            detImages.map(((im, index) => {
+                                return <img key={index} className='modal-image' src={`\\${im.filePath}`} alt={index} />
+                            }))
+                        }
                 </Zoom>
+                    </div>
             );
         } else {
             return <img style={{ width: "100%", height: "auto", border: 5 }} src={`\\${principal.filePath}`} alt={principal.nameProduct} />
@@ -148,7 +166,7 @@ const ProductCard = (props) => {
         <>
             <Card sx={{ height: '100%', borderRadius: 5 }}
                 elevation={10} key={product._id} id={product._id}>
-                    {(producto.profile) ?
+                  {(producto.profile) ?
                         <>
                             <CardHeader avatar={<Avatar src={producto.profile.file.filePath} />}
                                 title={producto.profile.firstName + " " + producto.profile.lastName}
@@ -242,21 +260,22 @@ const ProductCard = (props) => {
                 <Modal.Body>
                     <Row>
                         <Col md={6}>
-                            <div className="slide-container" sx={{ width: '75%', height: 'auto' }}>
+                            <div className="slide-container text-center" sx={{  height: 'auto' }}>
                                 {showSlider(product.files, product.file)}
                             </div>
                         </Col>
                         <Col md={6} className="fuente">
-                            <p>Categoria: {product.category}</p>
-                            <p>Material: {product.description.material}</p>
-                            <p>Marca: {product.description.marca}</p>
-                            <p>Condicion: {product.description.actualCondition}</p>
-                            <p>Observaciones: {product.description.observations}</p>
-                            <p>Precio inicial:${product.price.initialP}</p>
-                            <p>Comprar ahora:${product.price.buyNow}</p>
-                            <p>Precio ofertado:${product.price.offered}</p>
-                            <p>Inicio subasta:{initialDate}</p>
-                            <p>Fin de la subasta: {finalDate}</p>
+                            <p><CategoryIcon color="primary" /> Categoria: {product.category}</p>
+                            <p><CarpenterIcon color="primary" /> Material: {product.description.material}</p>
+                            <p><AssignmentTurnedInIcon color="primary" /> Marca: {product.description.marca}</p>
+                            <p><SquareFootIcon color="primary" /> Dimensiones: {product.description.dimensions}</p>
+                            <p><NewReleasesIcon color="primary" /> Condicion: {product.description.actualCondition}</p>
+                            <p><RemoveRedEyeIcon color="primary" /> Observaciones: {product.description.observations}</p>
+                            <p><PaidIcon color="primary" /> Precio inicial:<em><b>$</b></em>{product.price.initialP}</p>
+                            <p><PaidIcon color="primary" /> Comprar ahora:<em><b>$</b></em>{product.price.buyNow}</p>
+                            <p><PaidIcon color="primary" /> Precio ofertado:<em><b>$</b></em>{product.price.offered}</p>
+                            <p><CalendarMonthIcon color="primary" /> Inicio subasta:{initialDate}</p>
+                            <p><CalendarMonthIcon color="primary" />  Fin de la subasta: {finalDate}</p>
                         </Col>
                     </Row>
                 </Modal.Body>
