@@ -37,7 +37,7 @@ const ProductCard = (props) => {
         //console.log(props);
         //setPointsUser(props.pointsUser);
         setProduct(props.product);
-        setInitialDate(new Date(props.product.auctionDate.initialD).toLocaleDateString() + ' ' + new Date(props.product.auctionDate.final).toLocaleTimeString());
+        setInitialDate(new Date(props.product.auctionDate.initialD).toLocaleDateString() + ' ' + new Date(props.product.auctionDate.initialD).toLocaleTimeString());
         setFinalDate(new Date(props.product.auctionDate.final).toLocaleDateString() + ' ' + new Date(props.product.auctionDate.final).toLocaleTimeString());
         setImag((props.product.file) ? props.product.file.filePath : 'uploads\\sin.jpg');
         setOffered((typeof props.product.price.offered === "undefined") ? "0" : props.product.price.offered)
