@@ -21,10 +21,20 @@ export default function KeepMountedModal(props) {
     const [pointsUser, setPointsUser] = useState(0);
     const [maxOffered, setMaxOffered] = useState(0);
     const [disabledButtons, setDisabledButtons] = useState(null);
+    const [mssgDisabledButtons, setMssgDisabledButtons] = useState(null);
 
     useEffect(() => {
         //console.log("iniciando por producto...");
-        console.log(props);
+        //console.log(props);
+        if(typeof props.product.price.winOffered !== "undefined" && props.product.price.winOffered === props.user.id){
+            setDisabledButtons(true);      
+            setMssgDisabledButtons("Vas ganando la subasta.");      
+        }else if(props.pointsUser.pts < props.product.price.initialP){
+            //Valida si se puede participar por el saldo, si no bloquea los botones.
+            setDisabledButtons(true);
+            setMssgDisabledButtons("No tienes fondos suficientes."); 
+        }
+
         //Se valida la cantidad de puntos que tiene para ser el tope en la subasta o permitir el max de la subasta
         setMaxOffered((props.product.price.buyNow < props.pointsUser.pts) ? props.product.price.buyNow - (props.product.price.buyNow * .2) : props.pointsUser.pts);
         //Valida, si ya hay una oferta, la oferta + 50 se vuelve el valor offermin ya que seria el mas bajo
@@ -33,8 +43,6 @@ export default function KeepMountedModal(props) {
         setOfferSelect(props.minOffered);
         //Se muestran los puntos del usuario
         setPointsUser(props.pointsUser.pts)
-        //Valida si se puede participar, si no bloquea los botones.
-        setDisabledButtons((props.pointsUser.pts >= props.product.price.initialP) ? false : true);
         //console.log(props);
     }, [props]);
 
@@ -89,7 +97,7 @@ export default function KeepMountedModal(props) {
                         text: resp.mssg
                     })
                 } else {
-                    console.log(resp);
+                    //console.log(resp);
                     //props.pointsUser = resp.points;
                     //props.product = resp.product;
                     //props.product.price.offered = offerSelect;
@@ -98,6 +106,9 @@ export default function KeepMountedModal(props) {
                     //console.log(props.product);
                     props.setMinOffered(offerSelect + 1);
                     props.setPointsUser([resp.points]);
+                    props.setWinOffered(resp.points.user);
+                    setDisabledButtons(true);      
+                    setMssgDisabledButtons("Vas ganando la subasta."); 
                     //setMaxOffered((resp.product.price.buyNow < resp.points.pts) ? resp.product.price.buyNow - (resp.product.price.buyNow * .2) : resp.points.pts);
                     //Se realiza oferta, insertando atrobuto en producto.price.offered y un log de oferta del producto.
                 }
@@ -140,7 +151,7 @@ export default function KeepMountedModal(props) {
                     </Typography>
                     <Typography id="keep-mounted-modal-description" sx={{ mt: 2 }} className="text-center">
                         <Button disabled={disabledButtons} style={{ width: "100%" }} variant="contained" color="info" onClick={(e) => offerNowTransaction(e)}>Ofertar ahora</Button>
-                        <label className={(disabledButtons === true) ? "text-danger" : "d-none"} >No tienes fondos suficientes.</label>
+                        <label className={(disabledButtons === true) ? "text-danger" : "d-none"} >{mssgDisabledButtons}</label>
                     </Typography>
                 </Box>
             </Modal>

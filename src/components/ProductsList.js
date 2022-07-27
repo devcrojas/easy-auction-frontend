@@ -90,7 +90,7 @@ function ProductsList(props) {
                 if(pointsUser && pointsUser[0]){
                     return (
                         <Col sx={12} md={12} lg={6} key={producto._id} className='mb-5'>
-                            <ProductCard product={producto} actualView={props.actualView} pointsUser={pointsUser[0]} setPointsUser={setPointsUser}></ProductCard>
+                            <ProductCard product={producto} actualView={props.actualView} pointsUser={pointsUser[0]} setPointsUser={setPointsUser} user={user}></ProductCard>
                         </Col>
                     )
                 }else{
