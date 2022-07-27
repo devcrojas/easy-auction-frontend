@@ -13,7 +13,7 @@ import offersService from '../services/offers.service';
 
 export default function KeepMountedModal(props) {
     const [open, setOpen] = React.useState(false);
-    const handleOpen = () => setOpen(true);
+    const handleOpen = () => {setOpen(true)}
     const handleClose = () => setOpen(false);
     const [offerSelect, setOfferSelect] = useState(0);
     const [offerNow, setOfferNow] = useState(0);
@@ -26,15 +26,9 @@ export default function KeepMountedModal(props) {
     useEffect(() => {
         //console.log("iniciando por producto...");
         //console.log(props);
-        if(typeof props.product.price.winOffered !== "undefined" && props.product.price.winOffered === props.user.id){
-            setDisabledButtons(true);      
-            setMssgDisabledButtons("Vas ganando la subasta.");      
-        }else if(props.pointsUser.pts < props.product.price.initialP){
-            //Valida si se puede participar por el saldo, si no bloquea los botones.
-            setDisabledButtons(true);
-            setMssgDisabledButtons("No tienes fondos suficientes."); 
-        }
-
+        setDisabledButtons(props.disabledButtons);
+        setMssgDisabledButtons(props.mssgDisabledButtons);
+        setOfferNow(props.offerNow)
         //Se valida la cantidad de puntos que tiene para ser el tope en la subasta o permitir el max de la subasta
         setMaxOffered((props.product.price.buyNow < props.pointsUser.pts) ? props.product.price.buyNow - (props.product.price.buyNow * .2) : props.pointsUser.pts);
         //Valida, si ya hay una oferta, la oferta + 50 se vuelve el valor offermin ya que seria el mas bajo
@@ -96,6 +90,8 @@ export default function KeepMountedModal(props) {
                         title: '¡Error al subastar!',
                         text: resp.mssg
                     })
+                    setDisabledButtons(true);
+                    setMssgDisabledButtons(resp.mssg)
                 } else {
                     //console.log(resp);
                     //props.pointsUser = resp.points;
@@ -107,8 +103,8 @@ export default function KeepMountedModal(props) {
                     props.setMinOffered(offerSelect + 1);
                     props.setPointsUser([resp.points]);
                     props.setWinOffered(resp.points.user);
-                    setDisabledButtons(true);      
-                    setMssgDisabledButtons("Vas ganando la subasta."); 
+                    props.setDisabledButtons(true);
+                    props.setMssgDisabledButtons("Vas ganando la subasta.");
                     //setMaxOffered((resp.product.price.buyNow < resp.points.pts) ? resp.product.price.buyNow - (resp.product.price.buyNow * .2) : resp.points.pts);
                     //Se realiza oferta, insertando atrobuto en producto.price.offered y un log de oferta del producto.
                 }
@@ -117,6 +113,7 @@ export default function KeepMountedModal(props) {
     }
 
     return (
+        <>
         <div>
             <Button onClick={handleOpen} style={{ width: "100%", borderRadius: "0" }} variant="contained" color="success">Ofertar</Button>
             <Modal
@@ -156,5 +153,6 @@ export default function KeepMountedModal(props) {
                 </Box>
             </Modal>
         </div>
+        </>
     );
 }

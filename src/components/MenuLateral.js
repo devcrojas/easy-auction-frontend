@@ -16,20 +16,6 @@ function MenuLateral(params) {
   const [user] = useState(AuthService.getCurrentUser());
   let imgProfile = user.profile.file;
 
-  useEffect(() => {
-    createPoints();
-  }, [])// eslint-disable-line react-hooks/exhaustive-deps
-  
-
-  async function createPoints() {
-    let actualUrl = window.location.href;
-    let path = actualUrl.split('/').reverse()[0];
-    if (path === 'productos') {
-      let pointsUpdate = await PointsService.updatePointsByUserId({ userId: user.id, pts: parseInt(0) });
-    }
-  }
-
-
   return (
     <Col>
       <Row className='p-2 d-flex align-items-center justify-content-center '>
