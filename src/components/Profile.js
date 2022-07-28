@@ -4,9 +4,9 @@ import {
     Fade, Divider, FormGroup,
     List, ListItem, ListItemText,
     Rating, TextField, Typography,
-    Input, IconButton, Badge
+    Input, IconButton, Badge, Avatar
 } from '@mui/material';
-import { Container, Row, Col, Image, Form } from 'react-bootstrap';
+import { Container, Row, Col, Form } from 'react-bootstrap';
 
 import AuthService from '../services/auth.service';
 
@@ -24,6 +24,8 @@ function Profile() {
     const [expanded, setExpanded] = useState(false);
     const [errorEmail, setErrorEmail] = useState(false);
     const [errorEmailText, setErrorEmailText] = useState("");
+    const [errorText, setErrorText] = useState({});
+
     useEffect(() => {
         changeImgProf();
     }, []) // eslint-disable-line react-hooks/exhaustive-deps
@@ -101,17 +103,16 @@ function Profile() {
         setExpanded(!expanded);
     };
     async function sendUpProfile() {
-        if (!errorEmail) {
-            let token = localStorage.getItem('token');
+        if (validateError()) {
             let options = {
                 method: "PUT",
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem("token")
                 },
                 body: JSON.stringify({ "profile": profile })
             }
             let resp = await fetch(`/api/profiles/${user.id}`, options)
-            console.log(resp)
             if (resp.status === 200) {
                 changeImgProf();
                 handleExpandClick()
@@ -127,14 +128,7 @@ function Profile() {
                     'error'
                 );
             }
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: "Revisa tu correo electronico",
-                text: 'El correo debe tener un formato valido'
-            });
         }
-
     }
     async function changeImgProf() {
         let options = {
@@ -142,24 +136,92 @@ function Profile() {
         }
         let resp = await fetch(`/api/profiles/${user.id}`, options);
         let response = await resp.json();
-        console.log(response.perfil)
         setProfile(response.perfil)
     }
+    function validateText(event) {
+        let regex = new RegExp("^[a-zA-ZÀ-ÿ ]+$");
+        if (regex.test(event.target.value)) {
+            setErrorText({
+                ...errorText,
+                [event.target.name]: {
+                    "name": event.target.name,
+                    "error": false,
+                    "text": ""
+                }
+            });
+            handleInputChange(event);
+        } else {
+            setErrorText({
+                ...errorText,
+                [event.target.name]: {
+                    "name": event.target.name,
+                    "error": true,
+                    "text": "Introduce solo letras"
+                }
+            });
 
+        }
+    }
+    function validateNums(event) {
+        let nums = new RegExp("^[0-9]+$");
+        let tel = new RegExp("^[+]?[(]?[0-9]{3}[)]?[0-9]{3}[0-9]{4,6}$")
+        let regex = (event.target.name === "phone") ? tel : nums;
+        if (regex.test(event.target.value)) {
+            setErrorText({
+                ...errorText,
+                [event.target.name]: {
+                    "name": event.target.name,
+                    "error": false,
+                    "text": ""
+                }
+            });
+            handleInputChange(event);
+        } else {
+            let texto = (event.target.name === "phone") ? "introduce un numero de telefono valido" : "introduce solo numeros";
+            setErrorText({
+                ...errorText,
+                [event.target.name]: {
+                    "name": event.target.name,
+                    "error": true,
+                    "text": texto
+                }
+            });
+        }
+    }
+    function validateError() {
+        if (!errorEmail && errorText !== {}) {
+            let arr = Object.keys(errorText).map(function (key) { return errorText[key]; });
+            if (arr.every((r) => { return r.error === false })) {
+                return true;
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: "Revisa que tus datos sean coprrectos."
+                });
+                return false;
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: "Revisa que tus datos sean coprrectos."
+            });
+            return false;
+        }
+    }
     let imageProfile = profile.file;
     return (
         <>
             <NavBarMenu view={""} user={user.profile}></NavBarMenu>
-            <Container fluid style={{ background: "#F0F2F5", minHeight: "100vh"  }}>
+            <Container fluid style={{ background: "#F0F2F5", minHeight: "100vh" }}>
                 <Row>
-                    <Col xs={3} id="sidebarEasy" className="sidebarEasy" style={{position:"fixed", width:"25%"}}>
+                    <Col xs={3} id="sidebarEasy" className="sidebarEasy" style={{ position: "fixed", width: "25%" }}>
                         <MenuLateral view={"MyProfile"} profileImg={imageProfile}></MenuLateral>
                     </Col>
-                    <Col xs={9} style={{width:"75%", marginLeft:"25%"}}>
+                    <Col xs={9} style={{ width: "75%", marginLeft: "25%" }}>
                         <Container fluid>
-                            <Row className="mt-5">
+                            <Row className="my-3">
                                 <Col xs={12}>
-                                    <Card elevation={10} sx={{ borderRadius: 5 }}>
+                                    <Card elevation={10} sx={{ borderRadius: 5}}>
                                         <CardContent>
                                             <Row>
                                                 <Col md={7}>
@@ -176,7 +238,7 @@ function Profile() {
                                                                         </IconButton>
                                                                     </label>
                                                                 }>
-                                                                <Image roundedCircle src={(imageProfile !== undefined)?`\\${imageProfile.filePath}` : ""} style={{ width: '8rem' }}></Image>
+                                                                <Avatar src={(imageProfile !== undefined) ? `\\${imageProfile.filePath}` : ""} sx={{ width: 150, height: 150 }}></Avatar>
                                                             </Badge>
                                                         </Col>
                                                         <Rating name="disabled" value={4} disabled sx={{ justifyContent: "center" }} />
@@ -222,27 +284,77 @@ function Profile() {
                                                         <Fade in={expanded} hidden={!expanded}>
                                                             <Form encType="multipart/form-data">
                                                                 <FormGroup>
-                                                                    <TextField name="firstName" label="Nombre" variant="outlined" defaultValue={profile.firstName} onChange={handleInputChange} inputProps={{ maxLength: "30" }} margin="normal" size="small" required />
-                                                                    <TextField name="lastName" label="Apellidos" variant="outlined" defaultValue={profile.lastName} onChange={handleInputChange} inputProps={{ maxLength: "30" }} margin="normal" size="small" required />
+                                                                    <TextField name="firstName" label="Nombre" variant="outlined"
+                                                                        defaultValue={profile.firstName} onChange={(event) => { validateText(event) }}
+                                                                        inputProps={{ maxLength: "30" }} margin="normal" size="small"
+                                                                        required error={(errorText.firstName) ? errorText.firstName.error : false}
+                                                                        helperText={(errorText.firstName) ? errorText.firstName.text : ""}
+                                                                    />
+                                                                    <TextField name="lastName" label="Apellidos" variant="outlined"
+                                                                        defaultValue={profile.lastName} onChange={(event) => { validateText(event) }}
+                                                                        inputProps={{ maxLength: "30" }} margin="normal"
+                                                                        size="small" required
+                                                                        error={(errorText.lastName) ? errorText.lastName.error : false}
+                                                                        helperText={(errorText.lastName) ? errorText.lastName.text : ""}
+                                                                    />
                                                                     <Row>
                                                                         <Col xs={6} className="justify-content-center">
-                                                                            <TextField name="phone" label="Telefono" variant="outlined" defaultValue={profile.phone} onChange={handleInputChange} inputProps={{ maxLength: "12" }} margin="normal" size="small" required />
+                                                                            <TextField type="tel" name="phone" label="Telefono" variant="outlined" defaultValue={profile.phone} onChange={(event) => { handleInputChange(event); validateNums(event) }}
+                                                                                inputProps={{ maxLength: "16" }}
+                                                                                margin="normal" size="small" required
+                                                                                error={(errorText.phone) ? errorText.phone.error : false}
+                                                                                helperText={(errorText.phone) ? errorText.phone.text : ""}
+                                                                            />
                                                                         </Col>
                                                                         <Col xs={6} className="justify-content-center">
                                                                             <TextField name="birthday" type="date" id="edad" variant="outlined" defaultValue={(profile.birthday) ? profile.birthday.split('T')[0] : ""} onChange={handleInputChange} margin="normal" size="small" required />
                                                                         </Col>
                                                                     </Row>
                                                                     <Row>
-                                                                        <Col xs={6} className="justify-content-center">
-                                                                            <TextField type="text" name="cp" label="CP" variant="outlined" defaultValue={profile.address.cp} onChange={handleInputChangeAddress} margin="normal" size="small" inputProps={{ maxLength: "5" }} required />
-                                                                            <TextField type="text" name="municipality" label="Delegación/Municipio" variant="outlined" defaultValue={profile.address.municipality} onChange={handleInputChangeAddress} margin="normal" size="small" required />
+                                                                        <Col xs={12} className="justify-content-center">
+                                                                            <TextField type="text" name="state" label="Estado" variant="outlined"
+                                                                                defaultValue={profile.address.state} sx={{ width: "47%", marginRight: 3 }}
+                                                                                onChange={(event) => { handleInputChangeAddress(event); validateText(event) }}
+                                                                                margin="normal" size="small" required
+                                                                                error={(errorText.state) ? errorText.state.error : false}
+                                                                                helperText={(errorText.state) ? errorText.state.text : ""}
+                                                                            />
+                                                                            <TextField type="text" name="cp" label="CP" variant="outlined"
+                                                                                defaultValue={profile.address.cp} sx={{ width: "43%" }}
+                                                                                onChange={(event) => { handleInputChangeAddress(event); validateNums(event) }}
+                                                                                margin="normal" size="small" inputProps={{ maxLength: "5" }} required
+                                                                                error={(errorText.cp) ? errorText.cp.error : false}
+                                                                                helperText={(errorText.cp) ? errorText.cp.text : ""}
+                                                                            />
+
                                                                         </Col>
-                                                                        <Col xs={6} className="justify-content-center">
-                                                                            <TextField type="text" name="state" label="Estado" variant="outlined" defaultValue={profile.address.state} onChange={handleInputChangeAddress} margin="normal" size="small" required />
-                                                                            <TextField type="text" name="suburb" label="Colonia/Barrio" variant="outlined" defaultValue={profile.address.suburb} onChange={handleInputChangeAddress} margin="normal" size="small" required />
+                                                                    </Row>
+                                                                    <Row>
+                                                                        <Col xs={12} className="justify-content-center">
+                                                                            <TextField type="text" name="municipality" label="Delegación/Municipio"
+                                                                                variant="outlined" defaultValue={profile.address.municipality}
+                                                                                sx={{ width: "47%", marginRight: 3 }} inputProps={{ maxLength: "50" }}
+                                                                                onChange={(event) => { handleInputChangeAddress(event); validateText(event) }}
+                                                                                margin="normal" size="small" required
+                                                                                error={(errorText.municipality) ? errorText.municipality.error : false}
+                                                                                helperText={(errorText.municipality) ? errorText.municipality.text : ""}
+                                                                            />
+
+                                                                            <TextField type="text" name="suburb" label="Colonia/Barrio"
+                                                                                variant="outlined" defaultValue={profile.address.suburb} sx={{ width: "43%" }}
+                                                                                inputProps={{ maxLength: "50" }}
+                                                                                onChange={(event) => { handleInputChangeAddress(event); validateText(event) }}
+                                                                                margin="normal" size="small" required
+                                                                                error={(errorText.suburb) ? errorText.suburb.error : false}
+                                                                                helperText={(errorText.suburb) ? errorText.suburb.text : ""}
+                                                                            />
                                                                         </Col>
                                                                         <Col xs={12}>
-                                                                            <TextField type="text" name="street" label="Calle y numero" variant="outlined" defaultValue={profile.address.street} onChange={handleInputChangeAddress} margin="normal" size="small" sx={{ width: "100%" }} required />
+                                                                            <TextField type="text" name="street" label="Calle y numero"
+                                                                                variant="outlined" defaultValue={profile.address.street}
+                                                                                onChange={handleInputChangeAddress}
+                                                                                margin="normal" size="small" sx={{ width: "100%" }} required
+                                                                            />
                                                                         </Col>
                                                                     </Row>
                                                                     <Row>

@@ -24,7 +24,7 @@ export default function KeepMountedModal(props) {
 
     useEffect(() => {
         //console.log("iniciando por producto...");
-        console.log(props);
+        // console.log(props);
         //Se valida la cantidad de puntos que tiene para ser el tope en la subasta o permitir el max de la subasta
         setMaxOffered((props.product.price.buyNow < props.pointsUser.pts) ? props.product.price.buyNow - (props.product.price.buyNow * .2) : props.pointsUser.pts);
         //Valida, si ya hay una oferta, la oferta + 50 se vuelve el valor offermin ya que seria el mas bajo
