@@ -18,6 +18,8 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import axios from 'axios';
 import ProductsOffers from './ProductsOffers'
+import socketIOClient from "socket.io-client";
+const ENDPOINT = "/";
 
 
 const ProductCard = (props) => {
@@ -25,20 +27,63 @@ const ProductCard = (props) => {
     const [show, setShow] = useState(false);
     const handleShow = () => setShow(true);
     const handleClose = () => setShow(false);
-    const [product, setProduct] = useState({email:{file:{ filePath: null }}, price:{}, files:[], file: {filePath: null }, description: {}});
+    const [product, setProduct] = useState({ email: { file: { filePath: null } }, price: {}, files: [], file: { filePath: null }, description: {} });
     const [initialDate, setInitialDate] = useState(null);
     const [finalDate, setFinalDate] = useState(null);
     const [imag, setImag] = useState(null);
     const [offered, setOffered] = useState();
+    const [minOffered, setMinOffered] = useState();
+    const [winOffered, setWinOffered] = useState();
+    const [disabledButtons, setDisabledButtons] = useState(null);
+    const [mssgDisabledButtons, setMssgDisabledButtons] = useState(null);
+    const [offerNow, setOfferNow] = useState(0);
 
-    useEffect(()=>{
+
+    useEffect(() => {
+        //console.log(props);
+        //setPointsUser(props.pointsUser);
         setProduct(props.product);
+        setOfferNow((typeof props.product.price.offered !== "undefined") ? props.product.price.offered : 0)
+        setWinOffered((typeof props.product.price.winOffered !== "undefined" && props.product.price.winOffered !== "") ? props.product.price.winOffered : "");
         setInitialDate(new Date(props.product.auctionDate.initialD).toLocaleDateString() + ' ' + new Date(props.product.auctionDate.final).toLocaleTimeString());
         setFinalDate(new Date(props.product.auctionDate.final).toLocaleDateString() + ' ' + new Date(props.product.auctionDate.final).toLocaleTimeString());
         setImag((props.product.file) ? props.product.file.filePath : 'uploads\\sin.jpg');
         setOffered((typeof props.product.price.offered === "undefined") ? "0" : props.product.price.offered)
-        //console.log(props.product);
-    },[])   
+        setMinOffered((typeof props.product.price.offered !== "undefined") ? props.product.price.offered + 1 : props.product.price.initialP);
+
+        if(typeof props.product.price.winOffered !== "undefined" && props.product.price.winOffered === props.user.id){
+            setDisabledButtons(true);      
+            setMssgDisabledButtons("Vas ganando la subasta.");      
+        }else if(props.pointsUser.pts < props.product.price.initialP){
+            //Valida si se puede participar por el saldo, si no bloquea los botones.
+            setDisabledButtons(true);
+            setMssgDisabledButtons("No tienes fondos suficientes."); 
+        }
+
+        //console.log(props);
+        const socket = socketIOClient(ENDPOINT);
+        socket.on("FromAPI", data => {
+            console.log("socket send ...");
+            //console.log(data);
+            let x = data.find(arr => arr._id === props.product._id);
+            //console.log(x);
+            setWinOffered((typeof x.price.winOffered !== "undefined" && x.price.winOffered !== "") ? x.price.winOffered : "");
+            setOffered((typeof x.price.offered === "undefined") ? "0" : x.price.offered)
+            setMinOffered((typeof x.price.offered !== "undefined") ? x.price.offered + 1 : x.price.initialP);
+            //console.log(props.pointsUser.pts);
+            if(typeof x.price.winOffered !== "undefined" && x.price.winOffered === props.user.id){
+                setDisabledButtons(true);      
+                setMssgDisabledButtons("Vas ganando la subasta.");      
+            }else if(typeof x.price.offered !== "undefined" && props.pointsUser.pts < x.price.offered + 1){
+                //Valida si se puede participar por el saldo, si no bloquea los botones.
+                setDisabledButtons(true);
+                setMssgDisabledButtons("No tienes fondos suficientes."); 
+            }else{
+                setDisabledButtons(null);
+                setMssgDisabledButtons(null);    
+            }
+        });
+    }, [])
     // Se obtienen los datos necesarios para el card del producto
     const producto = props.product;
 
@@ -81,14 +126,15 @@ const ProductCard = (props) => {
         }
     }
     if (props.actualView === 'productsList') {
-       
+
         viewOptions = function (product) {
+            
             return (<> <Row>
                 <Col style={{ paddingRight: "0" }}>
-                    <ProductsOffers setOffered={setOffered} product={product} pointsUser={props.pointsUser} setPoints={props.setPoints}  variant="contained" color="info">Comprar ahora</ProductsOffers>
+                    <ProductsOffers minOffered={minOffered} setMinOffered={setMinOffered} setOffered={setOffered} product={product} pointsUser={props.pointsUser} setPointsUser={props.setPointsUser} setWinOffered={setWinOffered} user={props.user} disabledButtons={disabledButtons} setDisabledButtons={setDisabledButtons} mssgDisabledButtons={mssgDisabledButtons} setMssgDisabledButtons={setMssgDisabledButtons} offerNow={offerNow} setOfferNow={setOfferNow} variant="contained" color="info">Comprar ahora</ProductsOffers>
                 </Col>
                 <Col style={{ paddingLeft: "0" }}>
-                    <Button style={{ width: "100%", borderRadius: "0"}} variant="contained" color="info">Comprar ahora</Button>
+                    <Button style={{ width: "100%", borderRadius: "0" }} variant="contained" color="info">Comprar ahora</Button>
                 </Col>
             </Row>
             </>);
@@ -142,16 +188,16 @@ const ProductCard = (props) => {
     const showSlider = (detImages, principal) => {
         if (detImages.length >= 1) {
             return (
-                    <div className="modal-image-body-container">
-                <Zoom scale={0.4}>
+                <div className="modal-image-body-container">
+                    <Zoom scale={0.4}>
                         <img className='modal-image' src={`\\${principal.filePath}`} alt={principal.nameProduct} />
                         {
                             detImages.map(((im, index) => {
                                 return <img key={index} className='modal-image' src={`\\${im.filePath}`} alt={index} />
                             }))
                         }
-                </Zoom>
-                    </div>
+                    </Zoom>
+                </div>
             );
         } else {
             return <img style={{ width: "100%", height: "auto", border: 5 }} src={`\\${principal.filePath}`} alt={principal.nameProduct} />
@@ -161,21 +207,21 @@ const ProductCard = (props) => {
         <>
             <Card sx={{ height: '100%', borderRadius: 5 }}
                 elevation={10} key={product._id} id={product._id}>
-                  {(producto.profile) ?
-                        <>
-                            <CardHeader avatar={<Avatar src={producto.profile.file.filePath} />}
-                                title={producto.profile.firstName + " " + producto.profile.lastName}
-                                subheader={producto.profile.email}
-                                action={editOptions} />
-                        </>
-                        :
-                        <>
-                            <CardHeader avatar={<Avatar src={producto.email.file.filePath} />}
-                                title={producto.email.firstName + " " + producto.email.lastName}
-                                subheader={producto.email.email}
-                                action={editOptions} />
-                        </>
-                    }
+                {(producto.profile) ?
+                    <>
+                        <CardHeader avatar={<Avatar src={producto.profile.file.filePath} />}
+                            title={producto.profile.firstName + " " + producto.profile.lastName}
+                            subheader={producto.profile.email}
+                            action={editOptions} />
+                    </>
+                    :
+                    <>
+                        <CardHeader avatar={<Avatar src={producto.email.file.filePath} />}
+                            title={producto.email.firstName + " " + producto.email.lastName}
+                            subheader={producto.email.email}
+                            action={editOptions} />
+                    </>
+                }
                 <CardActionArea onClick={() => { handleShow(); }}>
                     <Row className="justify-content-center my-2">
                         <div className="modal-image-container">
@@ -198,13 +244,13 @@ const ProductCard = (props) => {
                         <Row className='my-2'>
                             <Col >
                                 <div className='w-100'>
-                                    <div><Typography component="div" className="text-center"  style={{ fontSize: "1rem" }}>Precio inicial </Typography></div>
+                                    <div><Typography component="div" className="text-center" style={{ fontSize: "1rem" }}>Precio inicial </Typography></div>
                                     <div><Typography component="div" className="text-center" ><Badge bg="success" style={{ fontSize: "1rem" }}><em><b>$</b></em> {product.price.initialP}</Badge> </Typography></div>
                                 </div>
                             </Col>
                             <Col >
                                 <div className='w-100'>
-                                    <div><Typography component="div" className="text-center"  style={{ fontSize: "1rem" }}>Fecha inicio</Typography></div>
+                                    <div><Typography component="div" className="text-center" style={{ fontSize: "1rem" }}>Fecha inicio</Typography></div>
                                     <div><Typography component="div" className="text-center" ><Badge bg="dark" style={{ fontSize: "1rem" }}>{initialDate}</Badge> </Typography></div>
                                 </div>
                             </Col>
@@ -218,7 +264,7 @@ const ProductCard = (props) => {
                                         </>
                                         :
                                         <>
-                                            <div><Typography component="div" className="text-center"  style={{ fontSize: "1rem" }}>Comprar ahora</Typography></div>
+                                            <div><Typography component="div" className="text-center" style={{ fontSize: "1rem" }}>Comprar ahora</Typography></div>
                                             <div><Typography component="div" className="text-center" > <Badge bg="info" style={{ fontSize: "1rem" }}> <em><b>$</b></em>  {product.price.buyNow} </Badge></Typography></div>
                                         </>
                                     }
@@ -234,6 +280,12 @@ const ProductCard = (props) => {
                         <Row>
                             <Col>
                                 <Typography component="div" variant='h5' color='success' className='text-center'>Ofertado<em className='text-success'><b>${offered}</b></em></Typography>
+                                {(winOffered !== "") ?
+                                    <div><Typography component="div" style={{ fontSize: "1rem" }} className="text-center text-success" >Ganando: {winOffered}</Typography></div>
+                                    :
+                                    <div><Typography component="div" style={{ fontSize: "1rem" }} className="text-center text-danger" >Nadie a ofertado</Typography></div>
+                                }
+
                             </Col>
                         </Row>
                     </CardContent>
@@ -247,7 +299,7 @@ const ProductCard = (props) => {
                 <Modal.Body>
                     <Row>
                         <Col md={6}>
-                            <div className="slide-container" sx={{ width: '75%', height: 'auto' }}>
+                            <div className="slide-container text-center" sx={{ height: 'auto' }}>
                                 {showSlider(product.files, product.file)}
                             </div>
                         </Col>
