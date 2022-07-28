@@ -54,10 +54,10 @@ const ProductCard = (props) => {
 
     const [offerNow, setOfferNow] = useState((typeof props.product.price.offered !== "undefined") ? props.product.price.offered : 0);
 
-    //const socket = socketIOClient(ENDPOINT);
+    const socket = socketIOClient(ENDPOINT);
 
 
-    /*/
+    
     useEffect(() => {
         
         //console.log(props);
@@ -85,7 +85,7 @@ const ProductCard = (props) => {
             setOfferNow((typeof x.price.offered !== "undefined") ? x.price.offered : 0)
 
         });
-    }, [])/*/
+    }, [])
     // Se obtienen los datos necesarios para el card del producto
     const producto = props.product;
 
