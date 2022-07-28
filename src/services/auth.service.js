@@ -34,23 +34,11 @@ const getUserByEmail = async (body) => {
     });
 }
 
-const  getProducts = async () => {
-    return new Promise (async (resolve, reject) =>{
-        const requestOptions = {
-            method: 'GET',
-            headers: { 'Content-Type': 'application/json' }
-        };
-      let productsQuery = await fetch("/api/products", requestOptions);
-      resolve(await productsQuery.json());
-    })
-  } 
-
 const AuthService = {
     login,
     logout,
     getCurrentUser,
-    getUserByEmail,
-    getProducts
+    getUserByEmail
 }
 
 export default AuthService;

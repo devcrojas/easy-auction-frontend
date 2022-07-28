@@ -34,7 +34,6 @@
     "react-slideshow-image": "^3.7.5",
     "react-star-rating": "^1.4.2",
     "reactstrap": "^9.1.2",
-    "socket.io-client": "^4.5.1",
     "sweetalert2": "^11.4.18",
     "web-vitals": "^2.1.4"
   },
