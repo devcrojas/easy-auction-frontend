@@ -27,44 +27,43 @@ const ProductCard = (props) => {
     const [show, setShow] = useState(false);
     const handleShow = () => setShow(true);
     const handleClose = () => setShow(false);
-    const [product, setProduct] = useState({ email: { file: { filePath: null } }, price: {}, files: [], file: { filePath: null }, description: {} });
-    const [initialDate, setInitialDate] = useState(null);
-    const [finalDate, setFinalDate] = useState(null);
-    const [imag, setImag] = useState(null);
-    const [offered, setOffered] = useState();
-    const [minOffered, setMinOffered] = useState();
-    const [winOffered, setWinOffered] = useState();
-    const [disabledButtons, setDisabledButtons] = useState(null);
-    const [mssgDisabledButtons, setMssgDisabledButtons] = useState(null);
-    const [offerNow, setOfferNow] = useState(0);
+    const [product, setProduct] = useState(props.product);
+    const [initialDate, setInitialDate] = useState(new Date(props.product.auctionDate.initialD).toLocaleDateString() + ' ' + new Date(props.product.auctionDate.final).toLocaleTimeString());
+    const [finalDate, setFinalDate] = useState(new Date(props.product.auctionDate.final).toLocaleDateString() + ' ' + new Date(props.product.auctionDate.final).toLocaleTimeString());
+    const [imag, setImag] = useState((props.product.file) ? props.product.file.filePath : 'uploads\\sin.jpg');
+    const [offered, setOffered] = useState((typeof props.product.price.offered === "undefined") ? "0" : props.product.price.offered);
+    const [minOffered, setMinOffered] = useState((typeof props.product.price.offered !== "undefined") ? props.product.price.offered + 1 : props.product.price.initialP);
+    const [winOffered, setWinOffered] = useState((typeof props.product.price.winOffered !== "undefined" && props.product.price.winOffered !== "") ? props.product.price.winOffered : "");
+    //Primer validacion, revisa que el usuario vaya ganando la subasta. Segunda revisa que tenga saldo suficiente para ofertar.
+    
+    const [disabledButtons, setDisabledButtons] = useState(((typeof props.product.price.winOffered !== "undefined" && props.product.price.winOffered === props.user.id)
+        || (props.pointsUser.pts < props.product.price.initialP) || (typeof props.product.price.offered !== "undefined" && props.pointsUser.pts <= props.product.price.offered))
+        ? true : null);
+
+    const [mssgDisabledButtons, setMssgDisabledButtons] = useState(
+        () => {
+            if (typeof props.product.price.winOffered !== "undefined" && props.product.price.winOffered === props.user.id) {
+                return "Vas ganando la subasta."
+            } else if ((props.pointsUser.pts < props.product.price.initialP) || (typeof props.product.price.offered !== "undefined" && props.pointsUser.pts <= props.product.price.offered)) {
+                return "No tienes fondos suficientes."
+            }
+            else {
+                return null
+            }
+        });
+
+    const [offerNow, setOfferNow] = useState((typeof props.product.price.offered !== "undefined") ? props.product.price.offered : 0);
+
+    //const socket = socketIOClient(ENDPOINT);
 
 
+    /*/
     useEffect(() => {
+        
         //console.log(props);
-        //setPointsUser(props.pointsUser);
-        setProduct(props.product);
-        setOfferNow((typeof props.product.price.offered !== "undefined") ? props.product.price.offered : 0)
-        setWinOffered((typeof props.product.price.winOffered !== "undefined" && props.product.price.winOffered !== "") ? props.product.price.winOffered : "");
-        setInitialDate(new Date(props.product.auctionDate.initialD).toLocaleDateString() + ' ' + new Date(props.product.auctionDate.final).toLocaleTimeString());
-        setFinalDate(new Date(props.product.auctionDate.final).toLocaleDateString() + ' ' + new Date(props.product.auctionDate.final).toLocaleTimeString());
-        setImag((props.product.file) ? props.product.file.filePath : 'uploads\\sin.jpg');
-        setOffered((typeof props.product.price.offered === "undefined") ? "0" : props.product.price.offered)
-        setMinOffered((typeof props.product.price.offered !== "undefined") ? props.product.price.offered + 1 : props.product.price.initialP);
-
-        if(typeof props.product.price.winOffered !== "undefined" && props.product.price.winOffered === props.user.id){
-            setDisabledButtons(true);      
-            setMssgDisabledButtons("Vas ganando la subasta.");      
-        }else if(props.pointsUser.pts < props.product.price.initialP){
-            //Valida si se puede participar por el saldo, si no bloquea los botones.
-            setDisabledButtons(true);
-            setMssgDisabledButtons("No tienes fondos suficientes."); 
-        }
-
-        //console.log(props);
-        const socket = socketIOClient(ENDPOINT);
         socket.on("FromAPI", data => {
             console.log("socket send ...");
-            //console.log(data);
+            console.log(data);
             let x = data.find(arr => arr._id === props.product._id);
             //console.log(x);
             setWinOffered((typeof x.price.winOffered !== "undefined" && x.price.winOffered !== "") ? x.price.winOffered : "");
@@ -74,7 +73,7 @@ const ProductCard = (props) => {
             if(typeof x.price.winOffered !== "undefined" && x.price.winOffered === props.user.id){
                 setDisabledButtons(true);      
                 setMssgDisabledButtons("Vas ganando la subasta.");      
-            }else if(typeof x.price.offered !== "undefined" && props.pointsUser.pts < x.price.offered + 1){
+            }else if((typeof x.price.offered !== "undefined" && props.pointsUser.pts < x.price.offered + 1) || (typeof x.price.offered === "undefined" && props.pointsUser.pts < x.price.initialP)){
                 //Valida si se puede participar por el saldo, si no bloquea los botones.
                 setDisabledButtons(true);
                 setMssgDisabledButtons("No tienes fondos suficientes."); 
@@ -82,8 +81,11 @@ const ProductCard = (props) => {
                 setDisabledButtons(null);
                 setMssgDisabledButtons(null);    
             }
+
+            setOfferNow((typeof x.price.offered !== "undefined") ? x.price.offered : 0)
+
         });
-    }, [])
+    }, [])/*/
     // Se obtienen los datos necesarios para el card del producto
     const producto = props.product;
 
@@ -128,7 +130,7 @@ const ProductCard = (props) => {
     if (props.actualView === 'productsList') {
 
         viewOptions = function (product) {
-            
+
             return (<> <Row>
                 <Col style={{ paddingRight: "0" }}>
                     <ProductsOffers minOffered={minOffered} setMinOffered={setMinOffered} setOffered={setOffered} product={product} pointsUser={props.pointsUser} setPointsUser={props.setPointsUser} setWinOffered={setWinOffered} user={props.user} disabledButtons={disabledButtons} setDisabledButtons={setDisabledButtons} mssgDisabledButtons={mssgDisabledButtons} setMssgDisabledButtons={setMssgDisabledButtons} offerNow={offerNow} setOfferNow={setOfferNow} variant="contained" color="info">Comprar ahora</ProductsOffers>
