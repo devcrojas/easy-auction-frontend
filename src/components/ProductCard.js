@@ -18,7 +18,8 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import axios from 'axios';
 import ProductsOffers from './ProductsOffers'
-import { Link } from 'react-router-dom';
+import socketIOClient from "socket.io-client";
+const ENDPOINT = "/";
 
 
 const ProductCard = (props) => {
@@ -33,18 +34,55 @@ const ProductCard = (props) => {
     const [offered, setOffered] = useState();
     const [minOffered, setMinOffered] = useState();
     const [winOffered, setWinOffered] = useState();
+    const [disabledButtons, setDisabledButtons] = useState(null);
+    const [mssgDisabledButtons, setMssgDisabledButtons] = useState(null);
+    const [offerNow, setOfferNow] = useState(0);
+
 
     useEffect(() => {
-        //console.log(props.user);
+        //console.log(props);
         //setPointsUser(props.pointsUser);
         setProduct(props.product);
+        setOfferNow((typeof props.product.price.offered !== "undefined") ? props.product.price.offered : 0)
         setWinOffered((typeof props.product.price.winOffered !== "undefined" && props.product.price.winOffered !== "") ? props.product.price.winOffered : "");
         setInitialDate(new Date(props.product.auctionDate.initialD).toLocaleDateString() + ' ' + new Date(props.product.auctionDate.final).toLocaleTimeString());
         setFinalDate(new Date(props.product.auctionDate.final).toLocaleDateString() + ' ' + new Date(props.product.auctionDate.final).toLocaleTimeString());
         setImag((props.product.file) ? props.product.file.filePath : 'uploads\\sin.jpg');
         setOffered((typeof props.product.price.offered === "undefined") ? "0" : props.product.price.offered)
         setMinOffered((typeof props.product.price.offered !== "undefined") ? props.product.price.offered + 1 : props.product.price.initialP);
-        //console.log(props.product);
+
+        if(typeof props.product.price.winOffered !== "undefined" && props.product.price.winOffered === props.user.id){
+            setDisabledButtons(true);      
+            setMssgDisabledButtons("Vas ganando la subasta.");      
+        }else if(props.pointsUser.pts < props.product.price.initialP){
+            //Valida si se puede participar por el saldo, si no bloquea los botones.
+            setDisabledButtons(true);
+            setMssgDisabledButtons("No tienes fondos suficientes."); 
+        }
+
+        //console.log(props);
+        const socket = socketIOClient(ENDPOINT);
+        socket.on("FromAPI", data => {
+            console.log("socket send ...");
+            //console.log(data);
+            let x = data.find(arr => arr._id === props.product._id);
+            //console.log(x);
+            setWinOffered((typeof x.price.winOffered !== "undefined" && x.price.winOffered !== "") ? x.price.winOffered : "");
+            setOffered((typeof x.price.offered === "undefined") ? "0" : x.price.offered)
+            setMinOffered((typeof x.price.offered !== "undefined") ? x.price.offered + 1 : x.price.initialP);
+            //console.log(props.pointsUser.pts);
+            if(typeof x.price.winOffered !== "undefined" && x.price.winOffered === props.user.id){
+                setDisabledButtons(true);      
+                setMssgDisabledButtons("Vas ganando la subasta.");      
+            }else if(typeof x.price.offered !== "undefined" && props.pointsUser.pts < x.price.offered + 1){
+                //Valida si se puede participar por el saldo, si no bloquea los botones.
+                setDisabledButtons(true);
+                setMssgDisabledButtons("No tienes fondos suficientes."); 
+            }else{
+                setDisabledButtons(null);
+                setMssgDisabledButtons(null);    
+            }
+        });
     }, [])
     // Se obtienen los datos necesarios para el card del producto
     const producto = props.product;
@@ -52,8 +90,6 @@ const ProductCard = (props) => {
     // Se obtienen las opciones por vista
     let editOptions;
     let viewOptions;
-    let buttonReviews;
-    let phaseProd;
     // Opciones dependiendo de la vista
     if (props.actualView === 'myProducts') {
         switch (producto.status) {
@@ -84,12 +120,6 @@ const ProductCard = (props) => {
                         <h5 className='text-danger'>CANCELADA</h5>
                     </>
                 break;
-            case 'bought':
-                editOptions =
-                    <>
-                        <h5 className='text-success'>PRODUCTO COMPRADO</h5>
-                    </>
-                break;
 
             default:
                 break;
@@ -98,104 +128,16 @@ const ProductCard = (props) => {
     if (props.actualView === 'productsList') {
 
         viewOptions = function (product) {
-
+            
             return (<> <Row>
                 <Col style={{ paddingRight: "0" }}>
-                    <ProductsOffers minOffered={minOffered} setMinOffered={setMinOffered} setOffered={setOffered} product={product} pointsUser={props.pointsUser} setPointsUser={props.setPointsUser} setWinOffered={setWinOffered} user={props.user} variant="contained" color="info">Comprar ahora</ProductsOffers>
+                    <ProductsOffers minOffered={minOffered} setMinOffered={setMinOffered} setOffered={setOffered} product={product} pointsUser={props.pointsUser} setPointsUser={props.setPointsUser} setWinOffered={setWinOffered} user={props.user} disabledButtons={disabledButtons} setDisabledButtons={setDisabledButtons} mssgDisabledButtons={mssgDisabledButtons} setMssgDisabledButtons={setMssgDisabledButtons} offerNow={offerNow} setOfferNow={setOfferNow} variant="contained" color="info">Comprar ahora</ProductsOffers>
                 </Col>
                 <Col style={{ paddingLeft: "0" }}>
                     <Button style={{ width: "100%", borderRadius: "0" }} variant="contained" color="info">Comprar ahora</Button>
                 </Col>
             </Row>
             </>);
-        }
-    }
-
-    if (props.actualView === 'myShoppings') {
-        if (producto.status === 'bought') {
-            switch (producto.phase) {
-                case 'packing':
-                    phaseProd = <>
-                        <Row>
-                            <Col style={{ paddingRight: "0", paddingLeft: "0" }}>
-                                <Badge bg="info" style={{ fontSize: "1rem", width: "100%", borderRadius: "0" }}>PRODUCTO COMPRADO</Badge>
-                            </Col>
-                        </Row>
-                    </>
-                    buttonReviews = <>
-                        <Row>
-                            <Col style={{ paddingRight: "0", paddingLeft: "0" }}>
-                                <Tooltip title="Cancelar pedido">
-                                    <Button variant="contained" style={{ width: "100%", borderRadius: "0", backgroundColor: "coral" }} onClick={() => { window.location.href = "/resenas" }}>
-                                        Cancelar pedido
-                                    </Button>
-                                </Tooltip>
-                            </Col>
-                        </Row>
-                    </>
-                    break;
-                case 'transporting':
-                    phaseProd = <>
-                        <Row>
-                            <Col style={{ paddingRight: "0", paddingLeft: "0" }}>
-                                <Badge bg="primary" style={{ fontSize: "1rem", width: "100%", borderRadius: "0" }}>PRODUCTO EN ENVIO</Badge>
-                            </Col>
-                        </Row>
-                    </>
-                    buttonReviews = <>
-                        <Row>
-                            <Col style={{ paddingRight: "0", paddingLeft: "0" }}>
-                                <Tooltip title="Cancelar pedido">
-                                    <Button variant="contained" style={{ width: "100%", borderRadius: "0", backgroundColor: "coral" }} onClick={() => { window.location.href = "/resenas" }}>
-                                        Cancelar pedido
-                                    </Button>
-                                </Tooltip>
-                            </Col>
-                        </Row>
-                    </>
-                    break;
-                case 'delivered':
-                    phaseProd = <>
-                        <Row>
-                            <Col style={{ paddingRight: "0", paddingLeft: "0" }}>
-                                <Badge bg="warning" style={{ fontSize: "1rem", width: "100%", borderRadius: "0" }}>PRODUCTO RECIBIDO</Badge>
-                            </Col>
-                        </Row>
-                    </>
-                    buttonReviews = <>
-                        <Row>
-                            <Col style={{ paddingRight: "0", paddingLeft: "0" }}>
-                                <Tooltip title="Reseñar producto">
-                                    <Link to={'/resenas'} state={producto._id} style={{ textDecoration: "none" }}>
-                                        <Button variant="contained" style={{ width: "100%", borderRadius: "0", backgroundColor: "#00BFFF" }}>
-                                            Hacer una reseña
-                                        </Button>
-                                    </Link>
-                                </Tooltip>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col style={{ paddingRight: "0", paddingLeft: "0" }}>
-                                <Tooltip title="Devolver producto">
-                                    <Button color="error" style={{ width: "100%", borderRadius: "0" }}>
-                                        Devolver producto
-                                    </Button>
-                                </Tooltip>
-                            </Col>
-                        </Row>
-                    </>
-                    break;
-
-                default:
-                    phaseProd = <>
-                        <Row>
-                            <Col style={{ paddingRight: "0", paddingLeft: "0" }}>
-                                <Badge bg="secondary" style={{ fontSize: "1rem", width: "100%", borderRadius: "0" }}>COMPRADO</Badge>
-                            </Col>
-                        </Row>
-                    </>
-                    break;
-            }
         }
     }
 
@@ -265,7 +207,6 @@ const ProductCard = (props) => {
         <>
             <Card sx={{ height: '100%', borderRadius: 5 }}
                 elevation={10} key={product._id} id={product._id}>
-                {(props.actualView === 'myShoppings') ? phaseProd : ""}
                 {(producto.profile) ?
                     <>
                         <CardHeader avatar={<Avatar src={producto.profile.file.filePath} />}
@@ -338,26 +279,18 @@ const ProductCard = (props) => {
                         </Row>
                         <Row>
                             <Col>
-                                {(props.actualView === 'myShoppings') ?
-                                    <>
-                                        <Typography component="div" variant='h5' color='success' className='text-center'>Comprado por <em className='text-success'><b>${offered}</b></em></Typography>
-                                    </>
+                                <Typography component="div" variant='h5' color='success' className='text-center'>Ofertado<em className='text-success'><b>${offered}</b></em></Typography>
+                                {(winOffered !== "") ?
+                                    <div><Typography component="div" style={{ fontSize: "1rem" }} className="text-center text-success" >Ganando: {winOffered}</Typography></div>
                                     :
-                                    <>
-                                        <Typography component="div" variant='h5' color='success' className='text-center'>Ofertado<em className='text-success'><b>${offered}</b></em></Typography>
-                                        {(winOffered !== "") ?
-                                            <div><Typography component="div" style={{ fontSize: "1rem" }} className="text-center text-success" >Ganando: {winOffered}</Typography></div>
-                                            :
-                                            <div><Typography component="div" style={{ fontSize: "1rem" }} className="text-center text-danger" >Nadie a ofertado</Typography></div>
-                                        }
-                                    </>
+                                    <div><Typography component="div" style={{ fontSize: "1rem" }} className="text-center text-danger" >Nadie a ofertado</Typography></div>
                                 }
+
                             </Col>
                         </Row>
                     </CardContent>
                 </CardActionArea>
                 {(props.actualView === 'productsList') ? viewOptions(product) : ""}
-                {(props.actualView === 'myShoppings') ? buttonReviews : ""}
             </Card>
             <Modal show={show} size="xl" centered onHide={handleClose} >
                 <Modal.Header closeButton>

@@ -4,10 +4,15 @@ import ProductsList from './ProductsList';
 import { Col, Container, Row } from 'react-bootstrap';
 import MenuLateral from './MenuLateral';
 import AuthService from '../services/auth.service';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 function Productos() {
   const [profile] = useState(AuthService.getCurrentUser().profile);
   const [user] = useState(AuthService.getCurrentUser());
+  const [products, setProducts] = useState(null);
+  const [productListX, setproductListX] = useState("");
+
+
+
   return (
     <>
       <NavBarMenu view={"Products"} user={user.profile} ></NavBarMenu>
@@ -17,7 +22,7 @@ function Productos() {
             <MenuLateral view={""} imgProfile={profile.file}></MenuLateral>
           </Col>
           <Col xs={9} style={{width:"75%", marginLeft:"25%"}}>
-            <ProductsList filter={true} filterField={'status'} filterValue={'active'}  actualView={'productsList'}></ProductsList>
+            <ProductsList filter={true} filterField={'status'} filterValue={'active'}  actualView='productsList' ></ProductsList>
           </Col>
         </Row>
       </Container>
