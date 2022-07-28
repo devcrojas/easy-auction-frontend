@@ -27,8 +27,8 @@ function Views() {
         let respReviews = await fetch("/api/reviews/myreviews",
             {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ emailU: user.id })
+                headers: { 'Authorization':'Bearer '+ localStorage.getItem("token"), "Content-Type": "application/json" },
+                body: JSON.stringify({ userLog: user.id })
             });
         if (respReviews.status === 200) {
             let response = await respReviews.json();
@@ -56,6 +56,7 @@ function Views() {
         let options = {
             method: 'PUT',
             headers: {
+                'Authorization':'Bearer '+ localStorage.getItem("token"),
                 'Content-type': 'application/json'
             },
             body: JSON.stringify({ 'status': 'delet' })
@@ -70,7 +71,7 @@ function Views() {
             confirmButtonText: 'Si, Eliminar!'
         }).then(async (result) => {
             if (result.isConfirmed) {
-                let resp = await fetch(`/api/reviews/${id}`, options);
+                let resp = await fetch(`/api/reviews/status/${id}`, options);
                 if (resp.status === 201) {
                     getReviews()
                     Swal.fire(
@@ -99,7 +100,7 @@ function Views() {
                         <Row >
                             <Col md={6}>
                                 <CardHeader sx={{ width: '100%', height: "100%" }}
-                                    title={`${review.emailP.firstName} ${review.emailP.lastName}`}
+                                    title={`${review.profile.firstName} ${review.profile.lastName}`}
                                     subheader={"Vendedor"}
                                 />
                             </Col>
@@ -133,7 +134,7 @@ function Views() {
                                     primaryTypographyProps={{ component: "div" }}
                                     primary={<h5><Badge bg="primary" variant="string">Producto comprado:</Badge></h5>}
                                     secondaryTypographyProps={{ component: "div" }}
-                                    secondary={<h5 style={{ textAlign: "justify" }}>{review.productId.nameProduct}</h5>}
+                                    secondary={<h5 style={{ textAlign: "justify" }}>{review.product.nameProduct}</h5>}
                                 />
                                 <ListItemText
                                     primaryTypographyProps={{ component: "div" }}
@@ -159,14 +160,30 @@ function Views() {
     }
 
     async function updateResena(id) {
-        if (parseInt(resena.stars) < 3) {
-            resena.type = "Pesimo servicio"
-        } else {
-            resena.type = "Excelente servicio"
+        switch (parseInt(resena.stars)) {
+            case 1:
+                resena.type ="Pésimo producto"
+                break;
+            case 2:
+                resena.type ="No me gusto el producto"
+                break;
+            case 3:
+                resena.type ="Buen producto"
+                break;
+            case 4:
+                resena.type ="Me gusto el producto"
+                break;
+            case 5:
+                resena.type ="Excelente producto"
+                break;
+            default:
+                resena.type ="No se pudo leer la calificacion"
+                break;
         }
         let options = {
             method: 'PUT',
             headers: {
+                'Authorization':'Bearer '+ localStorage.getItem("token"),
                 'Content-type': 'application/json'
             },
             body: JSON.stringify(resena)
@@ -182,6 +199,12 @@ function Views() {
              )
          }
 
+    }
+
+    const validateButton = () => {
+        if (resena.stars === '' || resena.comment === '') {
+            return true;
+        }
     }
     return (
         <>
@@ -237,7 +260,7 @@ function Views() {
                                         <Button className="mx-2" variant="contained" size="large" color="error" onClick={handleClose}>
                                             Cancelar
                                         </Button>
-                                        <Button className="mx-2" variant="contained" size="large" color="success" onClick={() => { updateResena(review._id) }}>
+                                        <Button className="mx-2" variant="contained" size="large" color="success" onClick={() => { updateResena(review._id) }} disabled={validateButton()}>
                                             Actualizar
                                         </Button>
                                     </Modal.Footer>

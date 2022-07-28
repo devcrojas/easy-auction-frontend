@@ -50,7 +50,7 @@ function ProductsList(props) {
                 let fProducts = await fetch('/api/products/myearnedproducts',
                     {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: { 'Authorization':'Bearer '+ localStorage.getItem("token"), 'Content-Type': 'application/json' },
                         body: JSON.stringify(profileWin)
                     }
                     );
