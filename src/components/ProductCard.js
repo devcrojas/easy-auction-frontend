@@ -35,7 +35,7 @@ const ProductCard = (props) => {
     const [minOffered, setMinOffered] = useState((typeof props.product.price.offered !== "undefined") ? props.product.price.offered + 1 : props.product.price.initialP);
     const [winOffered, setWinOffered] = useState((typeof props.product.price.winOffered !== "undefined" && props.product.price.winOffered !== "") ? props.product.price.winOffered : "");
     //Primer validacion, revisa que el usuario vaya ganando la subasta. Segunda revisa que tenga saldo suficiente para ofertar.
-    
+
     const [disabledButtons, setDisabledButtons] = useState(((typeof props.product.price.winOffered !== "undefined" && props.product.price.winOffered === props.user.id)
         || (props.pointsUser.pts < props.product.price.initialP) || (typeof props.product.price.offered !== "undefined" && props.pointsUser.pts <= props.product.price.offered))
         ? true : null);
@@ -54,37 +54,34 @@ const ProductCard = (props) => {
 
     const [offerNow, setOfferNow] = useState((typeof props.product.price.offered !== "undefined") ? props.product.price.offered : 0);
 
-    const socket = socketIOClient(ENDPOINT);
-
-
-    
     useEffect(() => {
-        
-        //console.log(props);
-        socket.on("FromAPI", data => {
+        const socket = socketIOClient(ENDPOINT);
+        const handlerSocket = (data) => {
             console.log("socket send ...");
-            console.log(data);
+            //console.log(data);
             let x = data.find(arr => arr._id === props.product._id);
             //console.log(x);
             setWinOffered((typeof x.price.winOffered !== "undefined" && x.price.winOffered !== "") ? x.price.winOffered : "");
             setOffered((typeof x.price.offered === "undefined") ? "0" : x.price.offered)
             setMinOffered((typeof x.price.offered !== "undefined") ? x.price.offered + 1 : x.price.initialP);
             //console.log(props.pointsUser.pts);
-            if(typeof x.price.winOffered !== "undefined" && x.price.winOffered === props.user.id){
-                setDisabledButtons(true);      
-                setMssgDisabledButtons("Vas ganando la subasta.");      
-            }else if((typeof x.price.offered !== "undefined" && props.pointsUser.pts < x.price.offered + 1) || (typeof x.price.offered === "undefined" && props.pointsUser.pts < x.price.initialP)){
+            if (typeof x.price.winOffered !== "undefined" && x.price.winOffered === props.user.id) {
+                setDisabledButtons(true);
+                setMssgDisabledButtons("Vas ganando la subasta.");
+            } else if ((typeof x.price.offered !== "undefined" && props.pointsUser.pts < x.price.offered + 1) || (typeof x.price.offered === "undefined" && props.pointsUser.pts < x.price.initialP)) {
                 //Valida si se puede participar por el saldo, si no bloquea los botones.
                 setDisabledButtons(true);
-                setMssgDisabledButtons("No tienes fondos suficientes."); 
-            }else{
+                setMssgDisabledButtons("No tienes fondos suficientes.");
+            } else {
                 setDisabledButtons(null);
-                setMssgDisabledButtons(null);    
+                setMssgDisabledButtons(null);
             }
 
             setOfferNow((typeof x.price.offered !== "undefined") ? x.price.offered : 0)
-
-        });
+        }
+        //console.log(props);
+        socket.on("FromAPI",handlerSocket);
+        return () => socket.off('FromAPI', handlerSocket);
     }, [])
     // Se obtienen los datos necesarios para el card del producto
     const producto = props.product;

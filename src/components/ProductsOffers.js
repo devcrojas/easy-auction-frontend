@@ -84,14 +84,15 @@ export default function KeepMountedModal(props) {
                 swalWithBootstrapButtons.fire('Ofertado!', '', 'success');
                 let body = { offered: offerSelect, product: props.product };
                 let resp = await offersService.offerApply(body);
+                console.log(resp);
                 if (resp.status === -1) {
                     swalWithBootstrapButtons.fire({
                         icon: 'error',
                         title: '¡Error al subastar!',
                         text: resp.mssg
                     })
-                    setDisabledButtons(true);
-                    setMssgDisabledButtons(resp.mssg)
+                    props.setDisabledButtons(true);
+                    props.setMssgDisabledButtons(resp.mssg)
                 } else {
                     //console.log(resp);
                     //props.pointsUser = resp.points;
