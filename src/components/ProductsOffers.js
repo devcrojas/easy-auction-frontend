@@ -36,7 +36,7 @@ export default function KeepMountedModal(props) {
         //Valida, si ya hay una oferta, la oferta + 50 se vuelve el valor select ya que seria el mas bajo
         setOfferSelect(props.minOffered);
         //Se muestran los puntos del usuario
-        setPointsUser(props.pointsUser.pts)
+        //setPointsUser(props.pointsUser.pts)
         //console.log(props);
     }, [props]);
 
@@ -84,27 +84,28 @@ export default function KeepMountedModal(props) {
                 swalWithBootstrapButtons.fire('Ofertado!', '', 'success');
                 let body = { offered: offerSelect, product: props.product };
                 let resp = await offersService.offerApply(body);
+                console.log(resp);
                 if (resp.status === -1) {
                     swalWithBootstrapButtons.fire({
                         icon: 'error',
                         title: '¡Error al subastar!',
                         text: resp.mssg
                     })
-                    setDisabledButtons(true);
-                    setMssgDisabledButtons(resp.mssg)
+                    props.setDisabledButtons(true);
+                    props.setMssgDisabledButtons(resp.mssg)
                 } else {
                     //console.log(resp);
                     //props.pointsUser = resp.points;
                     //props.product = resp.product;
                     //props.product.price.offered = offerSelect;
                     props.setOffered(offerSelect);
-                    setOfferNow(offerSelect);
                     //console.log(props.product);
                     props.setMinOffered(offerSelect + 1);
-                    props.setPointsUser([resp.points]);
+                    props.setPointsUser(resp.points);
                     props.setWinOffered(resp.points.user);
                     props.setDisabledButtons(true);
                     props.setMssgDisabledButtons("Vas ganando la subasta.");
+                    props.setOfferNow(offerSelect)
                     //setMaxOffered((resp.product.price.buyNow < resp.points.pts) ? resp.product.price.buyNow - (resp.product.price.buyNow * .2) : resp.points.pts);
                     //Se realiza oferta, insertando atrobuto en producto.price.offered y un log de oferta del producto.
                 }
@@ -144,7 +145,7 @@ export default function KeepMountedModal(props) {
                     </Typography>
                     <hr></hr>
                     <Typography id="keep-mounted-modal-description" sx={{ mt: 2 }}>
-                        Tu saldo es: <strong className="text-success">${pointsUser}</strong>
+                        Tu saldo es: <strong className="text-success">${props.pointsUser.pts}</strong>
                     </Typography>
                     <Typography id="keep-mounted-modal-description" sx={{ mt: 2 }} className="text-center">
                         <Button disabled={disabledButtons} style={{ width: "100%" }} variant="contained" color="info" onClick={(e) => offerNowTransaction(e)}>Ofertar ahora</Button>
