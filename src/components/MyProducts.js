@@ -31,15 +31,7 @@ return (
                     </Card>
                 </Row>
                 <Row>
-                    <ProductsList filter={true}
-                                  filterField={'_id'}
-                                  filterValue={user.id}
-                                  isSubObject={true}
-                                  subObject={'email'}
-                                  actualView={'myProducts'}
-                                  
-                                  />
-
+                    <ProductsList actualView={'myProducts'}/>
                 </Row>
             </Col>
         </Row>
