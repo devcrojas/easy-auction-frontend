@@ -15,7 +15,7 @@ function Productos() {
   const [products, setProducts] = useState(null);
   const [productListX, setproductListX] = useState("");
   const [pointsUser, setPointsUser] = useState();
-  const socket = socketIOClient(ENDPOINT ,{'connect timeout': 1000});
+  //const socket = socketIOClient(ENDPOINT ,{'connect timeout': 1000});
 
   useEffect(() => {
     const getPoints = async function () {
@@ -25,7 +25,7 @@ function Productos() {
     }
     getPoints();
     console.log("useEffect");
-    socket.on("points-" + user.id, data => {
+    /*/socket.on("points-" + user.id, data => {
       console.log("socket send ...");  
       console.log(data);
       setPointsUser(data);
@@ -35,8 +35,8 @@ function Productos() {
     socket.off('connect');
       socket.off('disconnect');
       socket.off("points-" + user.id)
-    }
-  },[user, socket]);
+    }/*/
+  },[user]);
 
 
   return (
