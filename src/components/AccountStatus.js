@@ -25,7 +25,8 @@ function AccountStatus(params) {
           chart: {
             id: 'area-datetime',
             type: 'area',
-            height: 350,
+            height: '100%',
+            width: '100%',
             zoom: {
               autoScaleYaxis: true
             }
@@ -132,14 +133,14 @@ function AccountStatus(params) {
   const insertDataTable = () => {
     let rows = <></>
     if(dataTable){
-      rows = dataTable.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row,index) => {
+      rows = dataTable.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
         return (
-          <TableRow key={row.index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }} style={(row.type === 'Incremental') ? {backgroundColor: "#ADFFA0"}:{backgroundColor: "#FFA0A0"}}>
-            <TableCell align="center">{row.date.toLocaleString()} </TableCell>
+          <TableRow key={row.date.getTime()} sx={{ '&:last-child td, &:last-child th': { border: 0 } }} style={(row.type === 'Incremental') ? {backgroundColor: "#ADFFA0"}:{backgroundColor: "#FFA0A0"}}>
+            <TableCell align="center">{row.date.toLocaleString()}</TableCell>
             <TableCell align="center">{row.type}</TableCell>
-            <TableCell align="center">{row.pointsChanged +' Pts.'}</TableCell>
-            <TableCell align="center">{row.pointsBefore +' Pts.'}</TableCell>
-            <TableCell align="center">{row.pointsAfter +' Pts.'}</TableCell>
+            <TableCell align="center">{row.pointsChanged}</TableCell>
+            <TableCell align="center">{row.pointsBefore}</TableCell>
+            <TableCell align="center">{row.pointsAfter}</TableCell>
           </TableRow> 
         )
       })
@@ -165,9 +166,9 @@ function AccountStatus(params) {
                       </div>
                     </Col>
                   </Row>
-                  <Row xs={12} className='mt-2'>
+                  <Row className='mt-2'>
                     <Col className='d-flex justify-content-center'>
-                      <Chart options={chartData.options} series={chartData.series} type="line" width={500} height={320} />
+                      <Chart options={chartData.options} series={chartData.series} type="line" width={'100%'} height={300} />
                     </Col>
                   </Row>
                   <Row>
@@ -200,7 +201,7 @@ function AccountStatus(params) {
                             </TableRow>
                           </TableHead>
                           <TableBody>
-                             <> { insertDataTable() } </>
+                             <>{ insertDataTable() }</>
                           </TableBody>
                         </Table>
                       </TableContainer>
