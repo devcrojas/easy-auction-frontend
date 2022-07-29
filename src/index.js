@@ -11,11 +11,14 @@ import ResetPassword from './components/ResetPassword';
 import Points from './components/Points/Points';
 import Reviews from './components/Reviews';
 import Views from './components/Views';
+import ProductsPurchasedAdmin from './components/Admin/ProductsPurchased';
 import CreateProduct from './components/CreateProduct';
 import { Home } from '@mui/icons-material';
 import ProductsAdmin from './components/Admin/ProductsAdmin';
 import MyProducts from './components/MyProducts';
 import MyShoppings from './components/MyShoppings';
+import AccountStatus from './components/AccountStatus';
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 const ProtectedRoute = ({ children }) => {
@@ -51,6 +54,7 @@ root.render(
       <Route exact path="/" element={ <ProtectedRouteLogin >  <Welcome /> </ProtectedRouteLogin>}></Route>
       <Route exact path='/ejemploDeIntegracion' element={ <ProtectedRoute >  <Home /> </ProtectedRoute> }></Route>
       <Route exact path="/profile" element={ <ProtectedRoute >  <Profile /> </ProtectedRoute>}></Route>
+      <Route exact path="/accountStatus" element={ <ProtectedRoute >  <AccountStatus /> </ProtectedRoute>}></Route>
       <Route exact path="/resetPassword/:jwtoken" element={  <ResetPassword /> }></Route>
       <Route exact path="/productos" element={ <ProtectedRoute > <Products /> </ProtectedRoute>}></Route>
       <Route exact path="/resenas" element={<ProtectedRoute> <Reviews /> </ProtectedRoute>}></Route>
@@ -62,6 +66,8 @@ root.render(
       <Route exact path="/misresenas" element={<ProtectedRoute> <Views /> </ProtectedRoute>}></Route>
       <Route exact path="/admin" element={<ProtectedRouteAdmin> <Admin /> </ProtectedRouteAdmin>}></Route>
       <Route exact path="/admin/productos" element={ <ProtectedRouteAdmin > <ProductsAdmin /> </ProtectedRouteAdmin>}></Route>
+      <Route exact path="/admin/comprasAdmin" element={ <ProtectedRouteAdmin > <ProductsPurchasedAdmin /> </ProtectedRouteAdmin>}></Route>
+
     </Routes>
   </Router>
 );
