@@ -1,7 +1,7 @@
 /* eslint-disable no-useless-computed-key */
 import React, { useEffect, useState } from 'react'
 import { Container, Row, Col } from 'react-bootstrap'
-import { Card, CardContent, Button, Paper, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, TablePagination } from '@mui/material';
+import { Card, CardContent, Paper, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, TablePagination } from '@mui/material';
 import NavBarMenu from './NavBarMenu';
 import MenuLateral from './MenuLateral';
 import AuthService from '../services/auth.service'

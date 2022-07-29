@@ -17,7 +17,6 @@ import MyProducts from './components/MyProducts';
 import Views from './components/Views';
 import Info from './components/Info';
 import AccountStatus from './components/AccountStatus';
-import DocumentAccountStatus from './components/DocumentAccountStatus';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 const ProtectedRoute = ({ children }) => {
@@ -54,7 +53,6 @@ root.render(
       <Route exact path='/ejemploDeIntegracion' element={ <ProtectedRoute >  <Home /> </ProtectedRoute> }></Route>
       <Route exact path="/profile" element={ <ProtectedRoute >  <Profile /> </ProtectedRoute>}></Route>
       <Route exact path="/accountStatus" element={ <ProtectedRoute >  <AccountStatus /> </ProtectedRoute>}></Route>
-      <Route exact path="/documentAccountStatus" element={ <ProtectedRoute >  <DocumentAccountStatus /> </ProtectedRoute>}></Route>
       <Route exact path="/resetPassword/:jwtoken" element={  <ResetPassword /> }></Route>
       <Route exact path="/productos" element={ <ProtectedRoute > <Products /> </ProtectedRoute>}></Route>
       <Route exact path="/resenas" element={<ProtectedRoute> <Reviews /> </ProtectedRoute>}></Route>

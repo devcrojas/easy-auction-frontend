@@ -4,7 +4,6 @@ import AuthService from '../services/auth.service'
 import 'react-slideshow-image/dist/styles.css'
 import ProductCard from './ProductCard';
 import axios from 'axios';
-import PointsService from '../services/points.service'
 
 
 function ProductsList(props) {
@@ -12,8 +11,6 @@ function ProductsList(props) {
     const [apis, setApis] = useState([]);
     const [user, setUser] = useState(AuthService.getCurrentUser());
     //const [pointsUser, setPointsUser] = useState(null);
-    const [response, setResponse] = useState("");
-    const [cards, setCards] = useState();
 
     useEffect(() => {
         let getProductos = async function () {
