@@ -37,6 +37,31 @@ function ProductsList(props) {
                     awProduc = await products.data;
                     setApis(awProduc);
                     break;
+                // Vista de mis compras
+                case 'myShoppings':
+                    let profileWin = { profileWin:user.id}
+                    let fProducts = await fetch('/api/products/myearnedproducts',
+                        {
+                            method: 'POST',
+                            headers: { 'Authorization':'Bearer '+ localStorage.getItem("token"), 'Content-Type': 'application/json' },
+                            body: JSON.stringify(profileWin)
+                        }
+                        );
+                        awProduc = await fProducts.json();
+                        setApis(awProduc);
+                    break;
+                case 'adminShoppings':
+                    let bodyAdminShop = { status: "purchased"}
+                    let adminProducts = await fetch('/api/products/getProductByStatus',
+                        {
+                            method: 'POST',
+                            headers: { 'Authorization':'Bearer '+ localStorage.getItem("token"), 'Content-Type': 'application/json' },
+                            body: JSON.stringify(bodyAdminShop)
+                        }
+                        );
+                        adminProducts = await adminProducts.json();
+                        setApis(adminProducts);
+                    break;
                 // Por si no manda ninguna vista o manda una vista que no existe
                 default:
                     console.log('Vista no registrada');
@@ -62,13 +87,23 @@ function ProductsList(props) {
             // Si la vista es de mis productos que no muestre los cancelados
             if (props.actualView === 'myProducts' && producto.status !== 'cancelled') {
                 return (
-                    <Col sx={12} lg={6} key={producto._id} className='mb-5'>
+                    <Col sx={12} md={12} lg={6} key={producto._id} className='mb-5'>
                         <ProductCard product={producto} actualView={props.actualView} user={user} pointsUser={props.pointsUser} setPointsUser={props.setPointsUser}></ProductCard>
                     </Col>
                 )
             }
+            // Si la vista es de mis compras
+            if(props.actualView === 'myShoppings' || props.actualView ===  'adminShoppings'){
+                return (
+                    <Col sx={12} md={12} lg={6} key={producto._id} className='mb-5'>
+                        <ProductCard product={producto} actualView={props.actualView} user={user} pointsUser={props.pointsUser} setPointsUser={props.setPointsUser}></ProductCard>
+                    </Col>
+                )
+            }
+            
             // Si la vista es la lista de productos que muestre todo como llega
             else {
+                //! Nunca usar una pocision estatica de un array sin validar antes, puede ocasionar problemas si este no llega a existir
                 if (props.pointsUser !== null) {
                     return (
                         <Col sx={12} md={12} lg={6} key={producto._id} className='mb-5'>

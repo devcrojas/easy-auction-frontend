@@ -56,8 +56,6 @@ function NavBarMenu(params) {
                                 </Navbar.Text>
                             
                             <NavDropdown title={user.profile.firstName + " " + user.profile.lastName} id="collasible-nav-dropdown">
-                                <NavDropdown.Item href="/accountStatus">Ver estado de cuenta</NavDropdown.Item>
-                                <NavDropdown.Divider />
                                 <NavDropdown.Item href="#action/3.1">Reiniciar Password</NavDropdown.Item>
                                 <NavDropdown.Divider />
                                 <NavDropdown.Item onClick={event => authService.logout(navigate)}>
@@ -71,7 +69,6 @@ function NavBarMenu(params) {
                                     : ""
                             }
                         </Nav>
-                        
                     </Navbar.Collapse>
                 </Container>
             </Navbar>

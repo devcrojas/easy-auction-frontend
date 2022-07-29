@@ -3,13 +3,14 @@ import { FaStar } from "react-icons/fa";
 import { Container, Button, Row, Card, Form, Col } from "react-bootstrap";
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import '@sweetalert2/theme-material-ui/material-ui.css'
-import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { FormControl, Typography, Tooltip } from '@mui/material';
 
 import AuthService from '../services/auth.service'
 
 import "../nav.css"
 import NavBarMenu from './NavBarMenu'
 import MenuLateral from './MenuLateral';
+import { useLocation } from 'react-router-dom';
 
 const colors = {
     yellow: "#ECFF00",
@@ -27,35 +28,74 @@ function Reviews() {
     const stars = Array(5).fill(0);
     const [estrellas, setEstrellas] = useState(0);
     const [hoverValue, setHoverValue] = useState();
-    const [product, setProduct] = useState([]);
+    const [product, setProduct] = useState({});
     const [comentario, setComentario] = useState("");
     const [tipo, setTipo] = useState("");
     const [user] = useState(AuthService.getCurrentUser());
-    const [selectProducts, setSelectProducts] = useState('');
+    const [review, setReview] = useState({})
+    //const [selectProducts, setSelectProducts] = useState('');
 
+    const location = useLocation();
+    //console.log(location.state);
+
+    let getProducts;
+    let getReview;
     useEffect(() => {
         getProducts()
+    }, [])
+    useEffect(() => {
+        getReview()
     }, [])// eslint-disable-line react-hooks/exhaustive-deps
-
-    let getProducts = async function () {
-        let prod = await fetch('/api/products',
-            {
-                method: 'GET'
-            });
-        let awProduc = await prod.json();
-        setProduct(awProduc);
+    if (location.state) {
+        getProducts = async function () {
+            let prod = await fetch('/api/products/' + location.state,
+                {
+                    method: 'GET',
+                    headers: { 'Authorization': 'Bearer ' + localStorage.getItem("token") },
+                });
+            let awProduc = await prod.json();
+            setProduct(awProduc);
+        }
+        getReview = async function () {
+            let rew = await fetch('/api/reviews/' + location.state,
+                {
+                    method: 'GET',
+                    headers: { 'Authorization': 'Bearer ' + localStorage.getItem("token") },
+                });
+            let oneRew = await rew.json();
+            setReview(oneRew);
+        }
+    } else {
+        getProducts = async function () { }
+        getReview = async function () { }
     }
 
-    const handleChange = (event) => {
+
+
+    /* const handleChange = (event) => {
         setSelectProducts(event.target.value)
-    }
+    } */
     const handleClick = value => {
         setEstrellas(value)
-        if (value <= 2) {
-            setTipo("Pésimo Servicio")
-        }
-        else {
-            setTipo("Excelente servicio")
+        switch (value) {
+            case 1:
+                setTipo("Pésimo producto")
+                break;
+            case 2:
+                setTipo("No me gusto el producto")
+                break;
+            case 3:
+                setTipo("Buen producto")
+                break;
+            case 4:
+                setTipo("Me gusto el producto")
+                break;
+            case 5:
+                setTipo("Excelente producto")
+                break;
+            default:
+                setTipo("No se pudo leer la calificacion")
+                break;
         }
     };
     const handleMouseOver = value => {
@@ -64,22 +104,21 @@ function Reviews() {
     const handleMouseLeave = () => {
         setHoverValue(undefined)
     }
-    const sendReview = async () => {
 
-        let emailSeller = product.filter((e) => e._id === selectProducts);
+    const sendReview = async () => {
         const resena = {
-            emailU: user.profile.email,
-            productId: selectProducts,
+            userLog: user.id,
             comment: comentario,
             stars: estrellas,
             type: tipo,
-            emailP: emailSeller[0].sellerData.email
-
+            product: product._id,
+            profile: product.profile,
+            status: 'active'
         }
         let resp = await fetch('/api/reviews/',
             {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Authorization': 'Bearer ' + localStorage.getItem("token"), 'Content-Type': 'application/json' },
                 body: JSON.stringify(resena)
             })
         if (resp.status === 201) {
@@ -91,8 +130,8 @@ function Reviews() {
                     if (result.isConfirmed) {
                         setEstrellas(0);
                         setComentario("");
-                        setTipo("");
-                        setSelectProducts('');
+                        setTipo("");/* 
+                        setSelectProducts(''); */
                     }
                 })
         }
@@ -103,6 +142,31 @@ function Reviews() {
             })
         }
 
+    }
+
+    //Funcion para validar si el boton se bloquea o no
+    const validateButton = () => {
+        if (estrellas === '' || comentario === '' || tipo === '' || location.state === null) {
+            return true;
+        }
+    }
+
+    if (review.stars) {
+        Swal.fire({
+            title: 'Ya reseñaste este producto',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: 'blueish',
+            confirmButtonText: 'Ver mis reseñas',
+            cancelButtonText: 'Regresar a mis compras',
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                window.location.href = "/misresenas"
+            } else {
+                window.location.href = "/miscompras"
+            }
+        })
     }
 
     return (
@@ -116,7 +180,7 @@ function Reviews() {
                     <Col xs={9}>
                         <Row className="justify-content-center align-items-center">
                             <Card style={{ width: '50%', padding: "0" }} className="m-3">
-                                <Card.Header className='text-center bg-dark text-white' style={{ width: "100%" }}>Cuéntanos como te fue</Card.Header>
+                                <Card.Header className='text-center bg-dark text-white' style={{ width: "100%" }}>Qué te parecio el producto</Card.Header>
                                 <Card.Body>
                                     <Form className='text-center'>
                                         <Form.Group className="mb-3" controlId="stars">
@@ -135,8 +199,8 @@ function Reviews() {
                                                                     color={(hoverValue || estrellas) > index ? colors.yellow : colors.grey}
                                                                     onClick={() => handleClick(index + 1)}
                                                                     onMouseOver={() => handleMouseOver(index + 1)}
+                                                                    className="justify-content-end me-3"
                                                                     onMouseLeave={handleMouseLeave}
-
                                                                 />
                                                             )
                                                         })}
@@ -145,35 +209,43 @@ function Reviews() {
                                             </Row>
                                             <Row>&nbsp;</Row>
                                             <Row>
-                                                <Form.Group>
-                                                    <Form.Control className='text-center bg-danger text-white' value={tipo} onChange={(handleClick) => setTipo()} disabled />
-                                                </Form.Group>
+                                                {(estrellas <= 2) ?
+                                                    <Form.Group>
+                                                        <Form.Control className='text-center bg-danger text-white' value={tipo} onChange={(handleClick) => setTipo()} disabled />
+                                                    </Form.Group>
+                                                    :
+                                                    <Form.Group>
+                                                        <Form.Control className='text-center bg-success text-white' value={tipo} onChange={(handleClick) => setTipo()} disabled />
+                                                    </Form.Group>
+                                                }
                                             </Row>
                                             <Row>&nbsp;</Row>
                                             <Row>
-                                                <FormControl className='w-100 my-2'>
-                                                    <InputLabel id="productos">Productos</InputLabel>
-                                                    <Select onChange={handleChange} displayEmpty labelId="productos" value={selectProducts}>
-
-                                                        {
-                                                            product.map((product) => {
-                                                                return <MenuItem value={product._id} key={product._id}>{product.nameProduct}</MenuItem>
-                                                            }
-                                                            )
-                                                        }
-
-                                                    </Select>
-                                                </FormControl>
+                                                {(location.state) ?
+                                                    <FormControl className='w-100 my-2'>
+                                                        <div><Typography component="div" className="text-center" style={{ fontSize: "1rem" }}>Producto:</Typography></div>
+                                                        <div className='text-center' style={{ backgroundColor: "grey", color: "white", borderRadius: "10px" }}><Typography component="div" variant="h6" style={{ fontWeight: "600" }}>{product.nameProduct}</Typography></div>
+                                                    </FormControl>
+                                                    :
+                                                    <FormControl className='w-100 my-2' style={{ paddingBottom: '1rem' }}>
+                                                        <div><Typography component="div" className="text-center" style={{ fontSize: "1rem" }}>Seleccione un producto de sus compras que ya le hayan entregado.</Typography></div>
+                                                        <Tooltip title="Mis compras">
+                                                            <Button variant="contained" type="button" className='btn btn-info text-center' onClick={() => { window.location.href = "/miscompras" }} style={{ color: 'white' }}>
+                                                                Ir a Mis Compras
+                                                            </Button>
+                                                        </Tooltip>
+                                                    </FormControl>
+                                                }
                                             </Row>
                                             <Row>
                                                 <Form.Group className="mb-3" controlId="comentario">
-                                                    <Form.Label>¿Qué te parecio la subasta?</Form.Label>
+                                                    <Form.Label>¿Qué te parecio el producto?</Form.Label>
                                                     <Form.Control as="textarea" rows="3" value={comentario} onChange={(event) => setComentario(event.target.value)} />
                                                 </Form.Group>
                                             </Row>
                                             <Row>&nbsp;</Row>
                                         </Form.Group>
-                                        <Button variant="primary" type="button" className='btn btn-success text-center' onClick={sendReview}>
+                                        <Button variant="primary" type="button" className='btn btn-success text-center' onClick={sendReview} disabled={validateButton()}>
                                             Enviar
                                         </Button>
                                     </Form>

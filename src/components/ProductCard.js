@@ -18,7 +18,9 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import axios from 'axios';
 import ProductsOffers from './ProductsOffers'
+import { Link } from 'react-router-dom';
 import socketIOClient from "socket.io-client";
+import OffersService from '../services/offers.service';
 const ENDPOINT = "/";
 
 
@@ -56,65 +58,91 @@ const ProductCard = (props) => {
     const [display, setDisplay] = useState();
 
     useEffect(() => {
-        const socket = socketIOClient(ENDPOINT);
-        const handlerSocket = (data) => {
-            console.log("socket send ...");
-            //console.log(data);
-            let x = data.find(arr => arr._id === props.product._id);
-            //console.log(x);
-            setWinOffered((typeof x.price.winOffered !== "undefined" && x.price.winOffered !== "") ? x.price.winOffered : "");
-            setOffered((typeof x.price.offered === "undefined") ? "0" : x.price.offered)
-            setMinOffered((typeof x.price.offered !== "undefined") ? x.price.offered + 1 : x.price.initialP);
-            //console.log(props.pointsUser.pts);
-            if (typeof x.price.winOffered !== "undefined" && x.price.winOffered === props.user.id) {
-                setDisabledButtons(true);
-                setMssgDisabledButtons("Vas ganando la subasta.");
-            } else if ((typeof x.price.offered !== "undefined" && props.pointsUser.pts < x.price.offered + 1) || (typeof x.price.offered === "undefined" && props.pointsUser.pts < x.price.initialP)) {
-                //Valida si se puede participar por el saldo, si no bloquea los botones.
-                setDisabledButtons(true);
-                setMssgDisabledButtons("No tienes fondos suficientes.");
-            } else {
-                setDisabledButtons(null);
-                setMssgDisabledButtons(null);
-            }
-
-            setOfferNow((typeof x.price.offered !== "undefined") ? x.price.offered : 0);
-        }
         //console.log(product);
-        const interval = setInterval(() => {
+        if (props.actualView === "productsList") {
+            const socket = socketIOClient(ENDPOINT);
             var date1 = new Date();
             var date2 = new Date(product.auctionDate.final);
+            const handlerSocket = (data) => {
+                console.log("socket send ...");
+                //console.log(data);
+                let x = data.find(arr => arr._id === props.product._id);
+                //console.log(x);
+                setWinOffered((typeof x.price.winOffered !== "undefined" && x.price.winOffered !== "") ? x.price.winOffered : "");
+                setOffered((typeof x.price.offered === "undefined") ? "0" : x.price.offered)
+                setMinOffered((typeof x.price.offered !== "undefined") ? x.price.offered + 1 : x.price.initialP);
+                //console.log(props.pointsUser.pts);
+                if (typeof x.price.winOffered !== "undefined" && x.price.winOffered === props.user.id) {
+                    setDisabledButtons(true);
+                    setMssgDisabledButtons("Vas ganando la subasta.");
+                } else if ((typeof x.price.offered !== "undefined" && props.pointsUser.pts < x.price.offered + 1) || (typeof x.price.offered === "undefined" && props.pointsUser.pts < x.price.initialP)) {
+                    //Valida si se puede participar por el saldo, si no bloquea los botones.
+                    setDisabledButtons(true);
+                    setMssgDisabledButtons("No tienes fondos suficientes.");
+                } else {
+                    setDisabledButtons(null);
+                    setMssgDisabledButtons(null);
+                }
 
-            if (date2 < date1) {
-                setDisplay("Subasta Finalizada");
-                //Update status, and update phase
-            } else {
-                // get total seconds between the times
-                var delta = Math.abs(date2 - date1) / 1000;
-                // calculate (and subtract) whole days
-                var days = Math.floor(delta / 86400);
-                delta -= days * 86400;
-
-                // calculate (and subtract) whole hours
-                var hours = Math.floor(delta / 3600) % 24;
-                delta -= hours * 3600;
-
-                // calculate (and subtract) whole minutes
-                var minutes = Math.floor(delta / 60) % 60;
-                delta -= minutes * 60;
-
-                // what's left is seconds
-                var seconds = Math.floor(delta % 60);
-                console.log(hours + ":" + minutes + ":" + seconds);
-                setDisplay(((days > 9) ? days : "0" + days) + ":" + ((hours > 9) ? hours : "0" + hours) + ":" + ((minutes > 9) ? minutes : "0" + minutes) + ":" + ((seconds > 9) ? seconds : "0" + seconds));
+                setOfferNow((typeof x.price.offered !== "undefined") ? x.price.offered : 0);
+                if (date2 < date1) {
+                    const closeAuction = async () => {
+                        let resultClose = await OffersService.auctionClose(product);
+                        console.log(resultClose);
+                        return resultClose;
+                    };
+                    closeAuction();
+                    console.log("Cerrar subasta");
+                }
             }
-            //console.log(Date.now() - date2);
-        }, 1000);
+            
+            if (date2 < date1) {
+                const closeAuction = async () => {
+                    let resultClose = await OffersService.auctionClose(product);
+                    console.log(resultClose);
+                    return resultClose;
+                };
+                closeAuction();
+                console.log("Cerrar subasta");
+
+            }
+            const interval = setInterval(() => {
+                date1 = new Date()
+                if (date2 < date1) {
+                    setDisplay("Subasta Finalizada");
+                } else {
+                    // get total seconds between the times
+                    var delta = Math.abs(date2 - date1) / 1000;
+                    // calculate (and subtract) whole days
+                    var days = Math.floor(delta / 86400);
+                    delta -= days * 86400;
+
+                    // calculate (and subtract) whole hours
+                    var hours = Math.floor(delta / 3600) % 24;
+                    delta -= hours * 3600;
+
+                    // calculate (and subtract) whole minutes
+                    var minutes = Math.floor(delta / 60) % 60;
+                    delta -= minutes * 60;
+
+                    // what's left is seconds
+                    var seconds = Math.floor(delta % 60);
+                    console.log(hours + ":" + minutes + ":" + seconds);
+                    setDisplay(((days > 9) ? days : "0" + days) + ":" + ((hours > 9) ? hours : "0" + hours) + ":" + ((minutes > 9) ? minutes : "0" + minutes) + ":" + ((seconds > 9) ? seconds : "0" + seconds));
+                }
+                //console.log(Date.now() - date2);
+            }, 1000);
+            socket.on("FromAPI", handlerSocket);
+            return () => {
+                socket.off('FromAPI', handlerSocket);
+                clearInterval(interval);
+            };
+        }
+
         //Validar que la fecha ya haya expirado para que se considere vendido el producto.
         //clearInterval(interval)
         //console.log(props);
-        socket.on("FromAPI", handlerSocket);
-        return () => { socket.off('FromAPI', handlerSocket); clearInterval(interval); };
+
     }, [])
     // Se obtienen los datos necesarios para el card del producto
     const producto = props.product;
@@ -122,6 +150,8 @@ const ProductCard = (props) => {
     // Se obtienen las opciones por vista
     let editOptions;
     let viewOptions;
+    let buttonReviews;
+    let phaseProd;
     // Opciones dependiendo de la vista
     if (props.actualView === 'myProducts') {
         switch (producto.status) {
@@ -150,6 +180,12 @@ const ProductCard = (props) => {
                 editOptions =
                     <>
                         <h5 className='text-danger'>CANCELADA</h5>
+                    </>
+                break;
+            case 'purchased':
+                editOptions =
+                    <>
+                        <h5 className='text-success'>PRODUCTO COMPRADO</h5>
                     </>
                 break;
 
@@ -194,7 +230,7 @@ const ProductCard = (props) => {
                 //Realiza la peticion
                 let resp = await axios.put('/api/products/status/' + producto._id, JSON.stringify(cancelObject), {
                     headers: {
-                        'Authorization':'Bearer '+ localStorage.getItem("token"),
+                        'Authorization': 'Bearer ' + localStorage.getItem("token"),
                         'Content-Type': 'application/json'
                     }
                 });
@@ -216,37 +252,218 @@ const ProductCard = (props) => {
         });
 
     }
+
+    if (props.actualView === 'myShoppings') {
+        if (producto.status === 'purchased') {
+            switch (producto.phase) {
+                case 'packing':
+                    phaseProd = <>
+                        <Row>
+                            <Col style={{ paddingRight: "0", paddingLeft: "0" }}>
+                                <Badge bg="info" style={{ fontSize: "1rem", width: "100%", borderRadius: "0" }}>PRODUCTO COMPRADO</Badge>
+                            </Col>
+                        </Row>
+                    </>
+                    buttonReviews = <>
+                        <Row>
+                            <Col style={{ paddingRight: "0", paddingLeft: "0" }}>
+                                <Tooltip title="Cancelar pedido">
+                                    <Button variant="contained" style={{ width: "100%", borderRadius: "0", backgroundColor: "coral" }} onClick={() => { window.location.href = "/resenas" }}>
+                                        Cancelar pedido
+                                    </Button>
+                                </Tooltip>
+                            </Col>
+                        </Row>
+                    </>
+                    break;
+                case 'transporting':
+                    phaseProd = <>
+                        <Row>
+                            <Col style={{ paddingRight: "0", paddingLeft: "0" }}>
+                                <Badge bg="primary" style={{ fontSize: "1rem", width: "100%", borderRadius: "0" }}>PRODUCTO EN ENVIO</Badge>
+                            </Col>
+                        </Row>
+                    </>
+                    buttonReviews = <>
+                        <Row>
+                            <Col style={{ paddingRight: "0", paddingLeft: "0" }}>
+                                <Tooltip title="Cancelar pedido">
+                                    <Button variant="contained" style={{ width: "100%", borderRadius: "0", backgroundColor: "coral" }} onClick={() => { window.location.href = "/resenas" }}>
+                                        Cancelar pedido
+                                    </Button>
+                                </Tooltip>
+                            </Col>
+                        </Row>
+                    </>
+                    break;
+                case 'delivered':
+                    phaseProd = <>
+                        <Row>
+                            <Col style={{ paddingRight: "0", paddingLeft: "0" }}>
+                                <Badge bg="warning" style={{ fontSize: "1rem", width: "100%", borderRadius: "0" }}>PRODUCTO RECIBIDO</Badge>
+                            </Col>
+                        </Row>
+                    </>
+                    buttonReviews = <>
+                        <Row>
+                            <Col style={{ paddingRight: "0", paddingLeft: "0" }}>
+                                <Tooltip title="Reseñar producto">
+                                    <Link to={'/resenas'} state={producto._id} style={{ textDecoration: "none" }}>
+                                        <Button variant="contained" style={{ width: "100%", borderRadius: "0", backgroundColor: "#00BFFF" }}>
+                                            Hacer una reseña
+                                        </Button>
+                                    </Link>
+                                </Tooltip>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col style={{ paddingRight: "0", paddingLeft: "0" }}>
+                                <Tooltip title="Devolver producto">
+                                    <Button color="error" style={{ width: "100%", borderRadius: "0" }}>
+                                        Devolver producto
+                                    </Button>
+                                </Tooltip>
+                            </Col>
+                        </Row>
+                    </>
+                    break;
+
+                default:
+                    phaseProd = <>
+                        <Row>
+                            <Col style={{ paddingRight: "0", paddingLeft: "0" }}>
+                                <Badge bg="secondary" style={{ fontSize: "1rem", width: "100%", borderRadius: "0" }}>COMPRADO</Badge>
+                            </Col>
+                        </Row>
+                    </>
+                    break;
+            }
+        }
+    }
+
+    if (props.actualView === 'adminShoppings') {
+        if (producto.status === 'purchased') {
+            switch (producto.phase) {
+                case 'packing':
+                    phaseProd = <>
+                        <Row>
+                            <Col style={{ paddingRight: "0", paddingLeft: "0" }}>
+                                <Badge bg="info" style={{ fontSize: "1rem", width: "100%", borderRadius: "0" }}>PRODUCTO COMPRADO</Badge>
+                            </Col>
+                        </Row>
+                    </>
+                    buttonReviews = <>
+                        <Row>
+                            <Col style={{ paddingRight: "0", paddingLeft: "0" }}>
+                                <Tooltip title="Cancelar pedido">
+                                    <Button variant="contained" style={{ width: "100%", borderRadius: "0", backgroundColor: "coral" }} onClick={() => { window.location.href = "/resenas" }}>
+                                        Cancelar pedido
+                                    </Button>
+                                </Tooltip>
+                            </Col>
+                        </Row>
+                    </>
+                    break;
+                case 'transporting':
+                    phaseProd = <>
+                        <Row>
+                            <Col style={{ paddingRight: "0", paddingLeft: "0" }}>
+                                <Badge bg="primary" style={{ fontSize: "1rem", width: "100%", borderRadius: "0" }}>PRODUCTO EN ENVÍO</Badge>
+                            </Col>
+                        </Row>
+                    </>
+                    buttonReviews = <>
+                        <Row>
+                            <Col style={{ paddingRight: "0", paddingLeft: "0" }}>
+                                <Tooltip title="Entregar Producto">
+                                    <Button color="info" variant="contained" style={{ width: "100%", borderRadius: "0" }} onClick={() => { window.location.href = "/resenas" }}>
+                                        Entregar Producto
+                                    </Button>
+                                </Tooltip>
+                            </Col>
+                        </Row>
+                    </>
+                    break;
+                case 'delivered':
+                    phaseProd = <>
+                        <Row>
+                            <Col style={{ paddingRight: "0", paddingLeft: "0" }}>
+                                <Badge bg="warning" style={{ fontSize: "1rem", width: "100%", borderRadius: "0" }}>PRODUCTO RECIBIDO</Badge>
+                            </Col>
+                        </Row>
+                    </>
+                    buttonReviews = <>
+                        <Row>
+                            <Col style={{ paddingRight: "0", paddingLeft: "0" }}>
+                                <Tooltip title="Reseñar producto">
+                                    <Link to={'/resenas'} state={producto._id} style={{ textDecoration: "none" }}>
+                                        <Button variant="contained" style={{ width: "100%", borderRadius: "0", backgroundColor: "#00BFFF" }}>
+                                            Hacer una reseña
+                                        </Button>
+                                    </Link>
+                                </Tooltip>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col style={{ paddingRight: "0", paddingLeft: "0" }}>
+                                <Tooltip title="Devolver producto">
+                                    <Button color="error" style={{ width: "100%", borderRadius: "0" }}>
+                                        Devolver producto
+                                    </Button>
+                                </Tooltip>
+                            </Col>
+                        </Row>
+                    </>
+                    break;
+
+                default:
+                    phaseProd = <>
+                        <Row>
+                            <Col style={{ paddingRight: "0", paddingLeft: "0" }}>
+                                <Badge bg="secondary" style={{ fontSize: "1rem", width: "100%", borderRadius: "0" }}>COMPRADO</Badge>
+                            </Col>
+                        </Row>
+                    </>
+                    buttonReviews = <>
+                        <Row>
+                            <Col style={{ paddingRight: "0", paddingLeft: "0" }}>
+                                <Tooltip title="Envíar Producto">
+                                    <Button variant="contained" style={{ width: "100%", borderRadius: "0" }} color="success" onClick={() => { window.location.href = "/resenas" }}>
+                                        Envíar Producto
+                                    </Button>
+                                </Tooltip>
+                            </Col>
+                        </Row>
+                    </>
+                    break;
+            }
+        }
+    }
+
     // Funcion para mostrar el slider con las fotos del producto
     const showSlider = (detImages, principal) => {
         if (detImages.length >= 1) {
             return (
                 <div className="modal-image-body-container">
-                    <center>
-                        <Zoom scale={0.4}>
-                            <img className='modal-image' src={`\\${principal.filePath}`} alt={principal.nameProduct} />
-                            {
-                                detImages.map(((im, index) => {
-                                    return <img key={index} className='modal-image' src={`\\${im.filePath}`} alt={index} />
-                                }))
-                            }
-                        </Zoom>
-                    </center>
+                    <Zoom scale={0.4}>
+                        <img className='modal-image' src={`\\${principal.filePath}`} alt={principal.nameProduct} />
+                        {
+                            detImages.map(((im, index) => {
+                                return <img key={index} className='modal-image' src={`\\${im.filePath}`} alt={index} />
+                            }))
+                        }
+                    </Zoom>
                 </div>
             );
         } else {
-            return(
-                <div className="modal-image-body-container">
-                    <center>
-                        <img className='modal-image' src={`\\${principal.filePath}`} alt={principal.nameProduct} />
-                    </center>
-                </div>
-                ); 
+            return <img style={{ width: "100%", height: "auto", border: 5 }} src={`\\${principal.filePath}`} alt={principal.nameProduct} />
         }
     }
     return (
         <>
             <Card sx={{ height: '100%', borderRadius: 5 }}
                 elevation={10} key={product._id} id={product._id}>
+                {(props.actualView === 'myShoppings' || props.actualView === 'adminShoppings') ? phaseProd : ""}
                 {(producto.profile) ?
                     <>
                         <CardHeader avatar={<Avatar src={producto.profile.file.filePath} />}
@@ -299,16 +516,10 @@ const ProductCard = (props) => {
                         <Row className='my-2'>
                             <Col>
                                 <div className='w-100'>
-                                    {(props.actualView === 'myShoppings') ?
-                                        <>
-                                            <div><Typography component="div">En posesion</Typography></div>
-                                        </>
-                                        :
-                                        <>
-                                            <div><Typography component="div" className="text-center" style={{ fontSize: "1rem" }}>Comprar ahora</Typography></div>
-                                            <div><Typography component="div" className="text-center" > <Badge bg="info" style={{ fontSize: "1rem" }}> <em><b>$</b></em>  {product.price.buyNow} </Badge></Typography></div>
-                                        </>
-                                    }
+
+                                    <div><Typography component="div" className="text-center" style={{ fontSize: "1rem" }}>Comprar ahora</Typography></div>
+                                    <div><Typography component="div" className="text-center" > <Badge bg="info" style={{ fontSize: "1rem" }}> <em><b>$</b></em>  {product.price.buyNow} </Badge></Typography></div>
+
                                 </div>
                             </Col>
                             <Col>
@@ -320,11 +531,19 @@ const ProductCard = (props) => {
                         </Row>
                         <Row>
                             <Col>
-                                <Typography component="div" variant='h5' color='success' className='text-center'>Ofertado<em className='text-success'><b>${offered}</b></em></Typography>
-                                {(winOffered !== "") ?
-                                    <div><Typography component="div" style={{ fontSize: "1rem" }} className="text-center text-success" >Ganando: {winOffered}</Typography></div>
+                                {(props.actualView === 'myShoppings' || props.actualView === 'adminShoppings') ?
+                                    <>
+                                        <Typography component="div" variant='h5' color='success' className='text-center'>Comprado por: <em className='text-success'><b>${offered}</b></em></Typography>
+                                    </>
                                     :
-                                    <div><Typography component="div" style={{ fontSize: "1rem" }} className="text-center text-danger" >Nadie a ofertado</Typography></div>
+                                    <>
+                                        <Typography component="div" variant='h5' color='success' className='text-center'>Ofertado<em className='text-success'><b>${offered}</b></em></Typography>
+                                        {(winOffered !== "") ?
+                                            <div><Typography component="div" style={{ fontSize: "1rem" }} className="text-center text-success" >Ganando: {winOffered}</Typography></div>
+                                            :
+                                            <div><Typography component="div" style={{ fontSize: "1rem" }} className="text-center text-danger" >Nadie a ofertado</Typography></div>
+                                        }
+                                    </>
                                 }
 
                             </Col>
@@ -332,6 +551,7 @@ const ProductCard = (props) => {
                     </CardContent>
                 </CardActionArea>
                 {(props.actualView === 'productsList') ? viewOptions(product) : ""}
+                {(props.actualView === 'myShoppings' || props.actualView === 'adminShoppings') ? buttonReviews : ""}
             </Card>
             <Modal show={show} size="xl" centered onHide={handleClose} >
                 <Modal.Header closeButton>
