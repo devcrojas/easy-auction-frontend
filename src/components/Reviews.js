@@ -32,20 +32,18 @@ function Reviews() {
     const [comentario, setComentario] = useState("");
     const [tipo, setTipo] = useState("");
     const [user] = useState(AuthService.getCurrentUser());
-    const [review, setReview] = useState({})
     //const [selectProducts, setSelectProducts] = useState('');
 
     const location = useLocation();
     //console.log(location.state);
 
     let getProducts;
-    let getReview;
     useEffect(() => {
         getProducts()
     }, [])
-    useEffect(() => {
-        getReview()
-    }, [])// eslint-disable-line react-hooks/exhaustive-deps
+    /* useEffect(() => {
+        
+    }, []) */// eslint-disable-line react-hooks/exhaustive-deps
     if (location.state) {
         getProducts = async function () {
             let prod = await fetch('/api/products/' + location.state,
@@ -56,18 +54,8 @@ function Reviews() {
             let awProduc = await prod.json();
             setProduct(awProduc);
         }
-        getReview = async function () {
-            let rew = await fetch('/api/reviews/' + location.state,
-                {
-                    method: 'GET',
-                    headers: { 'Authorization': 'Bearer ' + localStorage.getItem("token") },
-                });
-            let oneRew = await rew.json();
-            setReview(oneRew);
-        }
     } else {
         getProducts = async function () { }
-        getReview = async function () { }
     }
 
 
@@ -105,59 +93,63 @@ function Reviews() {
         setHoverValue(undefined)
     }
 
-    const sendReview = async () => {
-        const resena = {
-            userLog: user.id,
-            comment: comentario,
-            stars: estrellas,
-            type: tipo,
-            product: product._id,
-            profile: product.profile,
-            status: 'active'
-        }
-        let resp = await fetch('/api/reviews/',
-            {
-                method: 'POST',
-                headers: { 'Authorization': 'Bearer ' + localStorage.getItem("token"), 'Content-Type': 'application/json' },
-                body: JSON.stringify(resena)
-            })
-        if (resp.status === 201) {
-            Swal.fire({
-                icon: 'success',
-                title: '¡Tu Comentario se envió con éxito!',
-            })
-                .then((result) => {
-                    if (result.isConfirmed) {
-                        setEstrellas(0);
-                        setComentario("");
-                        setTipo("");/* 
-                        setSelectProducts(''); */
-                    }
+    let sendReview;
+    if (product.review !== 'ocuped') {
+        sendReview = async () => {
+            const resena = {
+                userLog: user.id,
+                comment: comentario,
+                stars: estrellas,
+                type: tipo,
+                product: product._id,
+                profile: product.profile,
+                status: 'active'
+            }
+            const rewprod = {
+                review: 'ocuped'
+            }
+            let resp = await fetch('/api/reviews/',
+                {
+                    method: 'POST',
+                    headers: { 'Authorization': 'Bearer ' + localStorage.getItem("token"), 'Content-Type': 'application/json' },
+                    body: JSON.stringify(resena)
                 })
-        }
-        else {
-            Swal.fire({
-                icon: 'error',
-                title: '¡Ah ocurrido un error inesperado!',
-            })
-        }
+            let resprp = await fetch('/api/products/review/' + product._id,
+                {
+                    method: 'PUT',
+                    headers: { 'Authorization': 'Bearer ' + localStorage.getItem("token"), 'Content-Type': 'application/json' },
+                    body: JSON.stringify(rewprod)
+                })
+            if (resp.status === 201 && resprp.status === 200) {
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Tu Comentario se envió con éxito!',
+                })
+                    .then((result) => {
+                        if (result.isConfirmed) {
+                            setEstrellas(0);
+                            setComentario("");
+                            setTipo("");
+                            window.location.href = "/misresenas"
+                            /* setSelectProducts(''); */
+                        }
+                    })
+            }
+            else {
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡Ah ocurrido un error inesperado!',
+                })
+            }
 
-    }
-
-    //Funcion para validar si el boton se bloquea o no
-    const validateButton = () => {
-        if (estrellas === '' || comentario === '' || tipo === '' || location.state === null) {
-            return true;
         }
-    }
-
-    if (review.stars) {
+    } else {
         Swal.fire({
             title: 'Ya reseñaste este producto',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
-            cancelButtonColor: 'blueish',
+            cancelButtonColor: '#00BFFF',
             confirmButtonText: 'Ver mis reseñas',
             cancelButtonText: 'Regresar a mis compras',
         }).then(async (result) => {
@@ -167,6 +159,13 @@ function Reviews() {
                 window.location.href = "/miscompras"
             }
         })
+    }
+
+    //Funcion para validar si el boton se bloquea o no
+    const validateButton = () => {
+        if (estrellas === '' || comentario === '' || tipo === '' || location.state === null) {
+            return true;
+        }
     }
 
     return (

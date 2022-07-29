@@ -46,7 +46,7 @@ function MenuLateral(params) {
             <ComprasIco className="ico-sidebar"></ComprasIco>
             <label className='m-2'>Mis compras</label>
           </Button>
-          <Button variant="link" onClick={() => { window.location.href = "/resenas" }} className={(view === "MyShops") ? "btn-sidebar nav-activate d-lg-none d-xl-block d-xl-none text-center" : "btn-sidebar d-lg-none d-xl-block d-xl-none text-center"}>
+          <Button variant="link" onClick={() => { window.location.href = "/miscompras" }} className={(view === "MyShops") ? "btn-sidebar nav-activate d-lg-none d-xl-block d-xl-none text-center" : "btn-sidebar d-lg-none d-xl-block d-xl-none text-center"}>
             <ComprasIco className="ico-sidebar"></ComprasIco>
           </Button>
         </Col>
@@ -64,11 +64,11 @@ function MenuLateral(params) {
       </Row>
       <Row>
         <Col style={{ paddingRight: "0" }}>
-          <Button variant="link" onClick={() => { window.location.href = "/vistas" }} className={(view === "MyReviews") ? "btn-sidebar nav-activate d-none d-sm-block d-sm-none d-md-block d-md-none d-lg-block" : "btn-sidebar d-none d-sm-block d-sm-none d-md-block d-md-none d-lg-block"}>
+          <Button variant="link" onClick={() => { window.location.href = "/misresenas" }} className={(view === "MyReviews") ? "btn-sidebar nav-activate d-none d-sm-block d-sm-none d-md-block d-md-none d-lg-block" : "btn-sidebar d-none d-sm-block d-sm-none d-md-block d-md-none d-lg-block"}>
             <ResenasIco className="ico-sidebar"></ResenasIco>
             <label className='m-2'>Mis Reseñas</label>
           </Button>
-          <Button variant="link" onClick={() => { window.location.href = "/vistas" }} className={(view === "MyReviews") ? "btn-sidebar nav-activate d-lg-none d-xl-block d-xl-none text-center" : "btn-sidebar d-lg-none d-xl-block d-xl-none text-center"}>
+          <Button variant="link" onClick={() => { window.location.href = "/misresenas" }} className={(view === "MyReviews") ? "btn-sidebar nav-activate d-lg-none d-xl-block d-xl-none text-center" : "btn-sidebar d-lg-none d-xl-block d-xl-none text-center"}>
             <ResenasIco className="ico-sidebar"></ResenasIco>
           </Button>
         </Col>

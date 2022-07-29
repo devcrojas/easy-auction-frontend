@@ -52,7 +52,7 @@ function Views() {
             [event.target.name]: event.target.value
         })
     }
-    function eliminarResena(id) {
+    function eliminarResena(id, idP) {
         let options = {
             method: 'PUT',
             headers: {
@@ -60,6 +60,14 @@ function Views() {
                 'Content-type': 'application/json'
             },
             body: JSON.stringify({ 'status': 'delet' })
+        }
+        let optionsP = {
+            method: 'PUT',
+            headers: {
+                'Authorization':'Bearer '+ localStorage.getItem("token"),
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify({ 'review': '' })
         }
         Swal.fire({
             title: 'Quieres Eliminar esta reseña?',
@@ -72,14 +80,17 @@ function Views() {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 let resp = await fetch(`/api/reviews/status/${id}`, options);
-                if (resp.status === 201) {
+                let respP = await fetch(`/api/products/review/${idP}`, optionsP);
+                if (resp.status === 201 || respP.status === 200) {
                     getReviews()
                     Swal.fire(
                         'Eliminada!',
                         'Tu reseña ha sido eliminada.',
-                        'success'
+                        'success',
                     )
+                    
                 }
+                /* window.location.href = "/productos" */
 
             }
         })
@@ -145,7 +156,7 @@ function Views() {
                             </List>
                         </CardContent>
                         <CardActions className='mx-3 my-2 justify-content-end'>
-                            <Button variant="contained" size="large" color="error" onClick={() => { eliminarResena(review._id) }}>
+                            <Button variant="contained" size="large" color="error" onClick={() => { eliminarResena(review._id, review.product._id) }}>
                                 Eliminar
                             </Button>
                             <Button name='showModal' variant="contained" size="large" color="success" onClick={(event) => { handleClick(event, review._id) }} >
