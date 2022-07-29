@@ -81,10 +81,16 @@ function Profile() {
         formData.append("file", event.target.files[0]);
         let options = {
             method: "PUT",
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem("token")
+            },
             body: formData
         }
-        let resp = await fetch(`/api/profiles/image/${user.id}`, options)
+        let resp = await fetch(`/api/profiles/image/${user.id}`, options);
+        
         if (resp.status === 201) {
+            let response = await resp.json();
+            localStorage.setItem('token', response.token);
             changeImgProf();
             Swal.fire(
                 'Fotografia Actualizado!',
@@ -132,7 +138,11 @@ function Profile() {
     }
     async function changeImgProf() {
         let options = {
-            method: "GET"
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem("token")
+            }
         }
         let resp = await fetch(`/api/profiles/${user.id}`, options);
         let response = await resp.json();
