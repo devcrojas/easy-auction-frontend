@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Document, Page, Text, View, StyleSheet, PDFViewer, Image } from "@react-pdf/renderer";
 import AuthService from '../services/auth.service'
-import { TableHeader, Table, TableCell, TableBody, DataTableCell } from '@david.kucsai/react-pdf-table';
 import pointsService from '../services/points.service';
-
 
 function DocumentAccountStatus(){
   
@@ -66,8 +64,36 @@ function DocumentAccountStatus(){
     // Asigno la informacion a la data de la tabla
     setFullLogData(fullData);
   }
+  // Genero la informacion de la tabla
+  const dataTable = () => {
+    let rows = <></>
+    if(fullLogData){
+      rows = fullLogData.map((row) => {
+        return (
+          <View style={(row.type === 'Incremental') ? styles.tableRowIncrement : styles.tableRowDecrement}> 
+            <View style={styles.tableCol}> 
+              <Text style={styles.tableCell}>{row.date.toLocaleString()}</Text> 
+            </View> 
+            <View style={styles.tableCol}> 
+              <Text style={styles.tableCell}>{row.type}</Text> 
+            </View> 
+            <View style={styles.tableCol}> 
+              <Text style={styles.tableCell}>{row.pointsChanged}</Text> 
+            </View> 
+            <View style={styles.tableCol}> 
+              <Text style={styles.tableCell}>{row.pointsBefore}</Text> 
+            </View>
+            <View style={styles.tableCol}> 
+              <Text style={styles.tableCell}>{row.pointsAfter}</Text> 
+            </View> 
+          </View> 
+        )
+      })
+    }
+    return rows;
+  }
 
-  // Create styles
+  // Crea los estilos para el pdf
   const styles = StyleSheet.create({
       body: {
         paddingTop: 35,
@@ -77,11 +103,6 @@ function DocumentAccountStatus(){
       title: {
         fontSize: 24,
         textAlign: 'center'
-      },
-      table: {
-        paddingTop: 35,
-        marginVertical: 15,
-        marginHorizontal: 100,
       },
       viewer: {
         width: window.innerWidth, //the pdf viewer will take up all of the width and height
@@ -125,12 +146,47 @@ function DocumentAccountStatus(){
       rowText: {
         fontSize: 15
       },
+
+      table: { 
+        display: "table", 
+        width: "auto", 
+        borderStyle: "solid", 
+        borderWidth: 1, 
+        borderRightWidth: 0, 
+        borderBottomWidth: 0 
+      }, 
+      tableRow: { 
+        margin: "auto", 
+        flexDirection: "row" 
+      },
+      tableRowIncrement: { 
+        backgroundColor: "#B6FFA4",
+        margin: "auto", 
+        flexDirection: "row" 
+      },
+      tableRowDecrement: { 
+        backgroundColor: "#FFA4A4",
+        margin: "auto", 
+        flexDirection: "row" 
+      }, 
+      tableCol: { 
+        width: "20%", 
+        borderStyle: "solid", 
+        borderWidth: 1, 
+        borderLeftWidth: 0, 
+        borderTopWidth: 0 
+      }, 
+      tableCell: { 
+        margin: "auto", 
+        marginTop: 5, 
+        fontSize: 10 
+      }
   });
 
   return (
     <PDFViewer style={styles.viewer}>
       {/* Start of the document*/}
-      <Document title={'Detalle de cuenta del usuario '+user.name}>
+      <Document title={'Estado de cuenta del usuario '+user.name}>
         {/*render a single page*/}
         <Page size="A4" style={styles.body}>
           {/* Detalle del usuario */}
@@ -150,34 +206,32 @@ function DocumentAccountStatus(){
               </View>
             </View>
           </View>
-          {/* Tabla con datos */}
           <Text style={styles.title}>Estado de cuenta</Text>
-          <Table data={fullLogData} style={styles.table}>
-            <TableHeader textAlign={"center"}>
-                <TableCell>
-                    Fecha
-                </TableCell>
-                <TableCell>
-                    Tipo
-                </TableCell>
-                <TableCell>
-                    Cambio de pts.
-                </TableCell>
-                <TableCell>
-                    Pts.Antes
-                </TableCell>
-                <TableCell>
-                    Pts.Despues
-                </TableCell>
-            </TableHeader>
-            <TableBody textAlign={"center"}>
-                <DataTableCell getContent={(r) => r.date.toLocaleString()}/>
-                <DataTableCell getContent={(r) => r.type}/>
-                <DataTableCell getContent={(r) => r.pointsChanged}/>
-                <DataTableCell getContent={(r) => r.pointsBefore}/>
-                <DataTableCell getContent={(r) => r.pointsAfter}/>
-            </TableBody>
-          </Table>
+
+          {/* Tabla con datos */}
+          <View style={styles.table}> 
+            {/* TableHeader */} 
+            <View style={styles.tableRow}> 
+              <View style={styles.tableCol}> 
+                <Text style={styles.tableCell}>Fecha</Text> 
+              </View> 
+              <View style={styles.tableCol}> 
+                <Text style={styles.tableCell}>Tipo</Text> 
+              </View> 
+              <View style={styles.tableCol}> 
+                <Text style={styles.tableCell}>Cambio de pts.</Text> 
+              </View> 
+              <View style={styles.tableCol}> 
+                <Text style={styles.tableCell}>Pts.Antes</Text> 
+              </View>
+              <View style={styles.tableCol}> 
+                <Text style={styles.tableCell}>Pts.Despues</Text> 
+              </View> 
+            </View> 
+            {/* TableContent */} 
+            <> { dataTable() } </>
+          </View>
+
         </Page>
       </Document>
     </PDFViewer>
