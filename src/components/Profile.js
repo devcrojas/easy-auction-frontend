@@ -25,7 +25,6 @@ function Profile() {
     const [errorEmail, setErrorEmail] = useState(false);
     const [errorEmailText, setErrorEmailText] = useState("");
     const [errorText, setErrorText] = useState({});
-
     useEffect(() => {
         changeImgProf();
     }, []) // eslint-disable-line react-hooks/exhaustive-deps
