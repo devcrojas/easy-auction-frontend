@@ -206,14 +206,14 @@ function Profile() {
             } else {
                 Swal.fire({
                     icon: 'error',
-                    title: "Revisa que tus datos sean coprrectos."
+                    title: "Revisa que tus datos sean correctos."
                 });
                 return false;
             }
         } else {
             Swal.fire({
                 icon: 'error',
-                title: "Revisa que tus datos sean coprrectos."
+                title: "Revisa que tus datos sean correctos."
             });
             return false;
         }
