@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Document, Page, Text, View, StyleSheet, PDFViewer, Image } from "@react-pdf/renderer";
 import AuthService from '../services/auth.service'
 import { TableHeader, Table, TableCell, TableBody, DataTableCell } from '@david.kucsai/react-pdf-table';
-import axios from 'axios';
+import pointsService from '../services/points.service';
 
 
 function DocumentAccountStatus(){
@@ -13,17 +13,12 @@ function DocumentAccountStatus(){
  
   useEffect(() => {
     getPoints()
-  }, [])
+  }, [])// eslint-disable-line react-hooks/exhaustive-deps
 
   // Funcion para obtener los puntos del usuario
   const getPoints = async() => {
-    let resp;
-    resp = await axios.get("/api/points/"+user.id,{
-              headers: { 'Content-Type': 'application/json',"Authorization": "Bearer " + localStorage.getItem("token")}
-    });
-    if(resp.status === 200){
-      await createStatusData(resp.data[0]);
-    }
+    const puntos = await pointsService.getPointsByUserId(user.id)
+    createStatusData(puntos[0]);
   }
 
   // Funcion para obtener el status de los puntos del usuario
@@ -31,7 +26,6 @@ function DocumentAccountStatus(){
     const dataIncrement = [];
     const dataDecrement = [];
     let fullData = [];
-    // console.log('userPoints',userPoints)
     // Obtengo los puntos actuales del usuario
     setActualUserPoints(userPoints.pts);
     // Si existen logs increments
@@ -104,6 +98,10 @@ function DocumentAccountStatus(){
         width: '80pt',
         border:'5pt',
         borderWidth:'5pt'
+      },
+      imageLogo: {
+        width: '80pt',
+        marginLeft: 5
       },
       userDetails: {
         display: "flex",

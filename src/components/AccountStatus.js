@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-computed-key */
 import React, { useEffect, useState } from 'react'
 import { Container, Row, Col } from 'react-bootstrap'
 import { Card, CardContent, Button } from '@mui/material';
@@ -5,13 +6,11 @@ import NavBarMenu from './NavBarMenu';
 import MenuLateral from './MenuLateral';
 import AuthService from '../services/auth.service'
 import Chart from 'react-apexcharts'
-import axios from 'axios';
+import pointsService from '../services/points.service';
 
 function AccountStatus(params) {
   const [profile] = useState(AuthService.getCurrentUser().profile);
   const [user] = useState(AuthService.getCurrentUser());
-
-  let graph;
 
   const [chartData, setChartData] = useState({
         series: [{
@@ -54,22 +53,16 @@ function AccountStatus(params) {
             }
           },
         },
-      });
+  });
  
   useEffect(() => {
     getPoints()
-  }, [])
+  }, [])// eslint-disable-line react-hooks/exhaustive-deps
 
   // Funcion para obtener los puntos del usuario
   const getPoints = async() => {
-    let resp;
-    resp = await axios.get("/api/points/"+user.id,{
-              headers: { 'Content-Type': 'application/json',"Authorization": "Bearer " + localStorage.getItem("token")}
-    });
-    console.log('resp',resp);
-    if(resp.status === 200){
-      await createStatusData(resp.data[0]);
-    }
+    const puntos = await pointsService.getPointsByUserId(user.id)
+    createStatusData(puntos[0]);
   }
 
   // Funcion para obtener el status de los puntos del usuario
@@ -77,7 +70,6 @@ function AccountStatus(params) {
     const dataIncrement = [];
     const dataDecrement = [];
     let fullData = [];
-    console.log('userPoints',userPoints)
     // Inserta datos de los incrementos de cuenta
     userPoints.logsIncrement.forEach(element => {
       let row = {}
@@ -107,8 +99,12 @@ function AccountStatus(params) {
       graphData.push([element.date.getTime(),element.pointsAfter])
     });
     // Le paso los datos iniciales
-    chartData.series[0].data = graphData
-
+    setChartData({...chartData,
+    ['series']: [{
+          'name': "Easy Pts.",
+          'data': graphData
+        }]
+    })
   }
 
     return (
