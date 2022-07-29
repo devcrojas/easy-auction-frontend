@@ -74,7 +74,7 @@ function Register() {
                 /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
             );
     };
-    async function validarEmailRegistrado() {
+    /* async function validarEmailRegistrado() {
         const requestOptions = {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
@@ -90,7 +90,7 @@ function Register() {
                 text: 'Introduce otro correo'
             });
         }
-    }
+    } */
     async function sendRegister() {
         if (errorPass === false) {
             Swal.fire({
@@ -216,7 +216,7 @@ function Register() {
                 <Col className='text-center'>
                     <Button variant="contained" color="success" className='text-center align-items-center justify-content-center' type="button"
                         style={{ borderRadius: "300rem", width: "100%", height: "3rem" }}
-                        onClick={validarEmailRegistrado} margin="normal" disabled={dis}>
+                        onClick={sendRegister} margin="normal" disabled={dis}>
                         Registrate  <i className='d-flex align-items-center justify-content-center m-2' style={{ fontSize: "2rem" }}> <SiWebauthn /></i>
                     </Button>
                 </Col>
