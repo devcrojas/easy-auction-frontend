@@ -53,6 +53,7 @@ const ProductCard = (props) => {
         });
 
     const [offerNow, setOfferNow] = useState((typeof props.product.price.offered !== "undefined") ? props.product.price.offered : 0);
+    const [display, setDisplay] = useState();
 
     useEffect(() => {
         const socket = socketIOClient(ENDPOINT);
@@ -77,11 +78,43 @@ const ProductCard = (props) => {
                 setMssgDisabledButtons(null);
             }
 
-            setOfferNow((typeof x.price.offered !== "undefined") ? x.price.offered : 0)
+            setOfferNow((typeof x.price.offered !== "undefined") ? x.price.offered : 0);
         }
+        //console.log(product);
+        const interval = setInterval(() => {
+            var date1 = new Date();
+            var date2 = new Date(product.auctionDate.final);
+
+            if (date2 < date1) {
+                setDisplay("Subasta Finalizada");
+                //Update status, and update phase
+            } else {
+                // get total seconds between the times
+                var delta = Math.abs(date2 - date1) / 1000;
+                // calculate (and subtract) whole days
+                var days = Math.floor(delta / 86400);
+                delta -= days * 86400;
+
+                // calculate (and subtract) whole hours
+                var hours = Math.floor(delta / 3600) % 24;
+                delta -= hours * 3600;
+
+                // calculate (and subtract) whole minutes
+                var minutes = Math.floor(delta / 60) % 60;
+                delta -= minutes * 60;
+
+                // what's left is seconds
+                var seconds = Math.floor(delta % 60);
+                console.log(hours + ":" + minutes + ":" + seconds);
+                setDisplay(((days > 9) ? days : "0" + days) + ":" + ((hours > 9) ? hours : "0" + hours) + ":" + ((minutes > 9) ? minutes : "0" + minutes) + ":" + ((seconds > 9) ? seconds : "0" + seconds));
+            }
+            //console.log(Date.now() - date2);
+        }, 1000);
+        //Validar que la fecha ya haya expirado para que se considere vendido el producto.
+        //clearInterval(interval)
         //console.log(props);
-        socket.on("FromAPI",handlerSocket);
-        return () => socket.off('FromAPI', handlerSocket);
+        socket.on("FromAPI", handlerSocket);
+        return () => { socket.off('FromAPI', handlerSocket); clearInterval(interval); };
     }, [])
     // Se obtienen los datos necesarios para el card del producto
     const producto = props.product;
@@ -236,6 +269,7 @@ const ProductCard = (props) => {
                             <Col>
                                 <div className='w-100'>
                                     <div className='text-center' style={{ minHeight: "6rem" }}><Typography component="div" variant="h6" >{product.nameProduct}</Typography></div>
+                                    <div className="text-center text-primary"><strong>{display}</strong></div>
                                     <div><Typography component="div" className="text-center" ><Badge bg="secondary" style={{ fontSize: "1rem" }}>{product.category}</Badge>  </Typography></div>
                                 </div>
                             </Col>
