@@ -15,13 +15,17 @@ function MenuLateral(params) {
   const [view] = useState(params.view);
   const [user] = useState(AuthService.getCurrentUser());
   const [img, setImg] = useState();
-
-  useEffect(() => {
-
-
-    setImg((params.profileImg) ?params.profileImg.filePath : image.filePath )
-  }, [params])
   let image = user.profile.file
+  useEffect(() => {
+    if(view === "Points"){
+      let url = window.location.href
+      let newUrl = url.replace("/buys/points", "") + "/" + params.profileImg.filePath.split("\\").join('/');
+      setImg((params.profileImg) ? newUrl : image.filePath)
+    }else {
+      setImg((params.profileImg) ? params.profileImg.filePath : image.filePath)
+    }
+    
+  }, [params])
   return (
     <Col>
       <Row className='p-2 d-flex align-items-center justify-content-center '>
