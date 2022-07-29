@@ -32,16 +32,21 @@ function Reviews() {
     const [comentario, setComentario] = useState("");
     const [tipo, setTipo] = useState("");
     const [user] = useState(AuthService.getCurrentUser());
+    const [review, setReview] = useState({})
     //const [selectProducts, setSelectProducts] = useState('');
 
     const location = useLocation();
     //console.log(location.state);
 
     let getProducts;
+    let getReview;
     useEffect(() => {
         getProducts()
+    }, [])
+    useEffect(() => {
+        getReview()
     }, [])// eslint-disable-line react-hooks/exhaustive-deps
-    if(location.state){
+    if (location.state) {
         getProducts = async function () {
             let prod = await fetch('/api/products/' + location.state,
                 {
@@ -51,10 +56,21 @@ function Reviews() {
             let awProduc = await prod.json();
             setProduct(awProduc);
         }
-
+        getReview = async function () {
+            let rew = await fetch('/api/reviews/' + location.state,
+                {
+                    method: 'GET',
+                    headers: { 'Authorization': 'Bearer ' + localStorage.getItem("token") },
+                });
+            let oneRew = await rew.json();
+            setReview(oneRew);
+        }
     } else {
-        getProducts = async function () {}
+        getProducts = async function () { }
+        getReview = async function () { }
     }
+
+
 
     /* const handleChange = (event) => {
         setSelectProducts(event.target.value)
@@ -102,7 +118,7 @@ function Reviews() {
         let resp = await fetch('/api/reviews/',
             {
                 method: 'POST',
-                headers: { 'Authorization':'Bearer '+ localStorage.getItem("token"), 'Content-Type': 'application/json' },
+                headers: { 'Authorization': 'Bearer ' + localStorage.getItem("token"), 'Content-Type': 'application/json' },
                 body: JSON.stringify(resena)
             })
         if (resp.status === 201) {
@@ -127,12 +143,30 @@ function Reviews() {
         }
 
     }
-    
+
     //Funcion para validar si el boton se bloquea o no
     const validateButton = () => {
         if (estrellas === '' || comentario === '' || tipo === '' || location.state === null) {
             return true;
         }
+    }
+
+    if (review.stars) {
+        Swal.fire({
+            title: 'Ya reseñaste este producto',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: 'blueish',
+            confirmButtonText: 'Ver mis reseñas',
+            cancelButtonText: 'Regresar a mis compras',
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                window.location.href = "/misresenas"
+            } else {
+                window.location.href = "/miscompras"
+            }
+        })
     }
 
     return (
@@ -193,7 +227,7 @@ function Reviews() {
                                                         <div className='text-center' style={{ backgroundColor: "grey", color: "white", borderRadius: "10px" }}><Typography component="div" variant="h6" style={{ fontWeight: "600" }}>{product.nameProduct}</Typography></div>
                                                     </FormControl>
                                                     :
-                                                    <FormControl className='w-100 my-2' style={{ paddingBottom: '1rem'}}>
+                                                    <FormControl className='w-100 my-2' style={{ paddingBottom: '1rem' }}>
                                                         <div><Typography component="div" className="text-center" style={{ fontSize: "1rem" }}>Seleccione un producto de sus compras que ya le hayan entregado.</Typography></div>
                                                         <Tooltip title="Mis compras">
                                                             <Button variant="contained" type="button" className='btn btn-info text-center' onClick={() => { window.location.href = "/miscompras" }} style={{ color: 'white' }}>

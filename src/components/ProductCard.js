@@ -18,6 +18,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import axios from 'axios';
 import ProductsOffers from './ProductsOffers'
+import { Link } from 'react-router-dom';
 import socketIOClient from "socket.io-client";
 const ENDPOINT = "/";
 
@@ -89,6 +90,8 @@ const ProductCard = (props) => {
     // Se obtienen las opciones por vista
     let editOptions;
     let viewOptions;
+    let buttonReviews;
+    let phaseProd;
     // Opciones dependiendo de la vista
     if (props.actualView === 'myProducts') {
         switch (producto.status) {
@@ -117,6 +120,12 @@ const ProductCard = (props) => {
                 editOptions =
                     <>
                         <h5 className='text-danger'>CANCELADA</h5>
+                    </>
+                break;
+            case 'purchased':
+                editOptions =
+                    <>
+                        <h5 className='text-success'>PRODUCTO COMPRADO</h5>
                     </>
                 break;
 
@@ -183,6 +192,95 @@ const ProductCard = (props) => {
         });
 
     }
+
+    if (props.actualView === 'myShoppings') {
+        if (producto.status === 'purchased') {
+            switch (producto.phase) {
+                case 'packing':
+                    phaseProd = <>
+                        <Row>
+                            <Col style={{ paddingRight: "0", paddingLeft: "0" }}>
+                                <Badge bg="info" style={{ fontSize: "1rem", width: "100%", borderRadius: "0" }}>PRODUCTO COMPRADO</Badge>
+                            </Col>
+                        </Row>
+                    </>
+                    buttonReviews = <>
+                        <Row>
+                            <Col style={{ paddingRight: "0", paddingLeft: "0" }}>
+                                <Tooltip title="Cancelar pedido">
+                                    <Button variant="contained" style={{ width: "100%", borderRadius: "0", backgroundColor: "coral" }} onClick={() => { window.location.href = "/resenas" }}>
+                                        Cancelar pedido
+                                    </Button>
+                                </Tooltip>
+                            </Col>
+                        </Row>
+                    </>
+                    break;
+                case 'transporting':
+                    phaseProd = <>
+                        <Row>
+                            <Col style={{ paddingRight: "0", paddingLeft: "0" }}>
+                                <Badge bg="primary" style={{ fontSize: "1rem", width: "100%", borderRadius: "0" }}>PRODUCTO EN ENVIO</Badge>
+                            </Col>
+                        </Row>
+                    </>
+                    buttonReviews = <>
+                        <Row>
+                            <Col style={{ paddingRight: "0", paddingLeft: "0" }}>
+                                <Tooltip title="Cancelar pedido">
+                                    <Button variant="contained" style={{ width: "100%", borderRadius: "0", backgroundColor: "coral" }} onClick={() => { window.location.href = "/resenas" }}>
+                                        Cancelar pedido
+                                    </Button>
+                                </Tooltip>
+                            </Col>
+                        </Row>
+                    </>
+                    break;
+                case 'delivered':
+                    phaseProd = <>
+                        <Row>
+                            <Col style={{ paddingRight: "0", paddingLeft: "0" }}>
+                                <Badge bg="warning" style={{ fontSize: "1rem", width: "100%", borderRadius: "0" }}>PRODUCTO RECIBIDO</Badge>
+                            </Col>
+                        </Row>
+                    </>
+                    buttonReviews = <>
+                        <Row>
+                            <Col style={{ paddingRight: "0", paddingLeft: "0" }}>
+                                <Tooltip title="Reseñar producto">
+                                    <Link to={'/resenas'} state={producto._id} style={{ textDecoration: "none" }}>
+                                        <Button variant="contained" style={{ width: "100%", borderRadius: "0", backgroundColor: "#00BFFF" }}>
+                                            Hacer una reseña
+                                        </Button>
+                                    </Link>
+                                </Tooltip>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col style={{ paddingRight: "0", paddingLeft: "0" }}>
+                                <Tooltip title="Devolver producto">
+                                    <Button color="error" style={{ width: "100%", borderRadius: "0" }}>
+                                        Devolver producto
+                                    </Button>
+                                </Tooltip>
+                            </Col>
+                        </Row>
+                    </>
+                    break;
+
+                default:
+                    phaseProd = <>
+                        <Row>
+                            <Col style={{ paddingRight: "0", paddingLeft: "0" }}>
+                                <Badge bg="secondary" style={{ fontSize: "1rem", width: "100%", borderRadius: "0" }}>COMPRADO</Badge>
+                            </Col>
+                        </Row>
+                    </>
+                    break;
+            }
+        }
+    }
+
     // Funcion para mostrar el slider con las fotos del producto
     const showSlider = (detImages, principal) => {
         if (detImages.length >= 1) {
@@ -278,11 +376,19 @@ const ProductCard = (props) => {
                         </Row>
                         <Row>
                             <Col>
-                                <Typography component="div" variant='h5' color='success' className='text-center'>Ofertado<em className='text-success'><b>${offered}</b></em></Typography>
-                                {(winOffered !== "") ?
-                                    <div><Typography component="div" style={{ fontSize: "1rem" }} className="text-center text-success" >Ganando: {winOffered}</Typography></div>
+                                {(props.actualView === 'myShoppings') ?
+                                    <>
+                                        <Typography component="div" variant='h5' color='success' className='text-center'>Comprado por <em className='text-success'><b>${offered}</b></em></Typography>
+                                    </>
                                     :
-                                    <div><Typography component="div" style={{ fontSize: "1rem" }} className="text-center text-danger" >Nadie a ofertado</Typography></div>
+                                    <>
+                                        <Typography component="div" variant='h5' color='success' className='text-center'>Ofertado<em className='text-success'><b>${offered}</b></em></Typography>
+                                        {(winOffered !== "") ?
+                                            <div><Typography component="div" style={{ fontSize: "1rem" }} className="text-center text-success" >Ganando: {winOffered}</Typography></div>
+                                            :
+                                            <div><Typography component="div" style={{ fontSize: "1rem" }} className="text-center text-danger" >Nadie a ofertado</Typography></div>
+                                        }
+                                    </>
                                 }
 
                             </Col>
@@ -290,6 +396,7 @@ const ProductCard = (props) => {
                     </CardContent>
                 </CardActionArea>
                 {(props.actualView === 'productsList') ? viewOptions(product) : ""}
+                {(props.actualView === 'myShoppings') ? buttonReviews : ""}
             </Card>
             <Modal show={show} size="xl" centered onHide={handleClose} >
                 <Modal.Header closeButton>
