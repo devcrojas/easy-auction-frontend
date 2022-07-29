@@ -53,6 +53,18 @@ function ProductsList(props) {
                         awProduc = await fProducts.json();
                         setApis(awProduc);
                     break;
+                case 'adminShoppings':
+                    let bodyAdminShop = { status: "purchased"}
+                    let adminProducts = await fetch('/api/products/getProductByStatus',
+                        {
+                            method: 'POST',
+                            headers: { 'Authorization':'Bearer '+ localStorage.getItem("token"), 'Content-Type': 'application/json' },
+                            body: JSON.stringify(bodyAdminShop)
+                        }
+                        );
+                        adminProducts = await adminProducts.json();
+                        setApis(adminProducts);
+                    break;
                 // Por si no manda ninguna vista o manda una vista que no existe
                 default:
                     console.log('Vista no registrada');
@@ -84,7 +96,7 @@ function ProductsList(props) {
                 )
             }
             // Si la vista es de mis compras
-            if(props.actualView === 'myShoppings'){
+            if(props.actualView === 'myShoppings' || props.actualView ===  'adminShoppings'){
                 return (
                     <Col sx={12} md={12} lg={6} key={producto._id} className='mb-5'>
                         <ProductCard product={producto} actualView={props.actualView} user={user} pointsUser={props.pointsUser} setPointsUser={props.setPointsUser}></ProductCard>

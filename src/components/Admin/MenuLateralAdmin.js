@@ -37,11 +37,11 @@ function MenuLateral(params) {
       </Row>
       <Row>
         <Col style={{ paddingRight: "0" }}>
-          <Button variant="link" onClick={() => { window.location.href = "#/comprasAdmin" }} className={(view === "MyShops") ? "nav-activate btn-sidebar d-none d-sm-block d-sm-none d-md-block d-md-none d-lg-block" : "btn-sidebar d-none d-sm-block d-sm-none d-md-block d-md-none d-lg-block"}>
+          <Button variant="link" onClick={() => { window.location.href = "/admin/comprasAdmin" }} className={(view === "MyShops") ? "nav-activate btn-sidebar d-none d-sm-block d-sm-none d-md-block d-md-none d-lg-block" : "btn-sidebar d-none d-sm-block d-sm-none d-md-block d-md-none d-lg-block"}>
             <ComprasIco className="ico-sidebar"></ComprasIco>
             <label className='m-2'>Compras</label>
           </Button>
-          <Button variant="link" onClick={() => { window.location.href = "#/comprasAdmin" }} className={(view === "MyShops") ? "btn-sidebar nav-activate d-lg-none d-xl-block d-xl-none text-center" : "btn-sidebar d-lg-none d-xl-block d-xl-none text-center"}>
+          <Button variant="link" onClick={() => { window.location.href = "/admin/comprasAdmin" }} className={(view === "MyShops") ? "btn-sidebar nav-activate d-lg-none d-xl-block d-xl-none text-center" : "btn-sidebar d-lg-none d-xl-block d-xl-none text-center"}>
             <ComprasIco className="ico-sidebar"></ComprasIco>
           </Button>
         </Col>

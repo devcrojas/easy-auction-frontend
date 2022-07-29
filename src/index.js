@@ -11,6 +11,7 @@ import ResetPassword from './components/ResetPassword';
 import Points from './components/Points/Points';
 import Reviews from './components/Reviews';
 import Views from './components/Views';
+import ProductsPurchasedAdmin from './components/Admin/ProductsPurchased';
 import CreateProduct from './components/CreateProduct';
 import { Home } from '@mui/icons-material';
 import ProductsAdmin from './components/Admin/ProductsAdmin';
@@ -62,6 +63,8 @@ root.render(
       <Route exact path="/misresenas" element={<ProtectedRoute> <Views /> </ProtectedRoute>}></Route>
       <Route exact path="/admin" element={<ProtectedRouteAdmin> <Admin /> </ProtectedRouteAdmin>}></Route>
       <Route exact path="/admin/productos" element={ <ProtectedRouteAdmin > <ProductsAdmin /> </ProtectedRouteAdmin>}></Route>
+      <Route exact path="/admin/comprasAdmin" element={ <ProtectedRouteAdmin > <ProductsPurchasedAdmin /> </ProtectedRouteAdmin>}></Route>
+
     </Routes>
   </Router>
 );
