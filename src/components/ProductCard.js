@@ -20,6 +20,7 @@ import axios from 'axios';
 import ProductsOffers from './ProductsOffers'
 import { Link } from 'react-router-dom';
 import socketIOClient from "socket.io-client";
+import OffersService from '../services/offers.service';
 const ENDPOINT = "/";
 
 
@@ -83,13 +84,22 @@ const ProductCard = (props) => {
 
                 setOfferNow((typeof x.price.offered !== "undefined") ? x.price.offered : 0);
             }
+            var date1 = new Date();
+            var date2 = new Date(product.auctionDate.final);
+            if (date2 < date1){
+                const closeAuction = async () => {
+                    let resultClose = await OffersService.auctionClose(product);
+                    console.log(resultClose);
+                    return resultClose;
+                };
+                closeAuction();
+                console.log("Cerrar subasta");
+
+            }
             const interval = setInterval(() => {
-                var date1 = new Date();
-                var date2 = new Date(product.auctionDate.final);
 
                 if (date2 < date1) {
                     setDisplay("Subasta Finalizada");
-                    //Update status, and update phase
                 } else {
                     // get total seconds between the times
                     var delta = Math.abs(date2 - date1) / 1000;
