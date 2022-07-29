@@ -1,7 +1,7 @@
 /* eslint-disable no-useless-computed-key */
 import React, { useEffect, useState } from 'react'
 import { Container, Row, Col } from 'react-bootstrap'
-import { Card, CardContent, Button } from '@mui/material';
+import { Card, CardContent, Button, Paper, TableContainer, Table, TableHead, TableRow, TableCell, TableBody, TablePagination } from '@mui/material';
 import NavBarMenu from './NavBarMenu';
 import MenuLateral from './MenuLateral';
 import AuthService from '../services/auth.service'
@@ -11,7 +11,11 @@ import pointsService from '../services/points.service';
 function AccountStatus(params) {
   const [profile] = useState(AuthService.getCurrentUser().profile);
   const [user] = useState(AuthService.getCurrentUser());
-
+  // Variables de la tabla
+  const [dataTable, setDataTable] = useState();
+  const [page, setPage] = useState(0)
+  const [rowsPerPage, setRowsPerPage] = useState(5)
+  // Variable del grafico
   const [chartData, setChartData] = useState({
         series: [{
           name: "Easy Pts.",
@@ -59,6 +63,15 @@ function AccountStatus(params) {
     getPoints()
   }, [])// eslint-disable-line react-hooks/exhaustive-deps
 
+  // Manejadores para la paginacion
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(+event.target.value);
+    setPage(0);
+  };
+
   // Funcion para obtener los puntos del usuario
   const getPoints = async() => {
     const puntos = await pointsService.getPointsByUserId(user.id)
@@ -74,6 +87,9 @@ function AccountStatus(params) {
     userPoints.logsIncrement.forEach(element => {
       let row = {}
       row.date = new Date(element.timestamp)
+      row.type = "Incremental"
+      row.pointsChanged = element.qty
+      row.pointsBefore = (element.qtyFinal - element.qty)
       row.pointsAfter = element.qtyFinal
       dataIncrement.push(row)
     });
@@ -81,6 +97,9 @@ function AccountStatus(params) {
     userPoints.logsDecrement.forEach(element => {
       let row = {}
       row.date = new Date(element.date)
+      row.type = "Decremental"
+      row.pointsChanged = element.decrement
+      row.pointsBefore = element.beforeDecrement
       row.pointsAfter = element.afterDecrement
       dataDecrement.push(row)
     });
@@ -105,6 +124,27 @@ function AccountStatus(params) {
           'data': graphData
         }]
     })
+    // Obtengo los datos para la tabla
+    const sortData = fullData.reverse();
+    setDataTable(sortData);
+  }
+  // Genero la informacion de la tabla
+  const insertDataTable = () => {
+    let rows = <></>
+    if(dataTable){
+      rows = dataTable.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row,index) => {
+        return (
+          <TableRow key={row.index} sx={{ '&:last-child td, &:last-child th': { border: 0 } }} style={(row.type === 'Incremental') ? {backgroundColor: "#ADFFA0"}:{backgroundColor: "#FFA0A0"}}>
+            <TableCell align="center">{row.date.toLocaleString()} </TableCell>
+            <TableCell align="center">{row.type}</TableCell>
+            <TableCell align="center">{row.pointsChanged +' Pts.'}</TableCell>
+            <TableCell align="center">{row.pointsBefore +' Pts.'}</TableCell>
+            <TableCell align="center">{row.pointsAfter +' Pts.'}</TableCell>
+          </TableRow> 
+        )
+      })
+    }
+    return rows;
   }
 
     return (
@@ -131,10 +171,39 @@ function AccountStatus(params) {
                     </Col>
                   </Row>
                   <Row>
-                    <Col xs={12} className='d-flex justify-content-center'>
-                      <Button variant="contained" color="primary" href='/documentAccountStatus' target='_blank'>
-                          Descargar estado de cuenta
-                      </Button>
+                    <Col xs={12} className='mt-4'>
+                      <div className="text-center">
+                          <div><h4>Estado de cuenta</h4></div>
+                      </div>
+                    </Col>
+                  </Row>
+                  <Row xs={12} className='mt-2'>
+                    <Col>
+                      <TablePagination
+                            rowsPerPageOptions={[5, 10, 15]}
+                            component="div"
+                            count={(dataTable) ? dataTable.length:0}
+                            rowsPerPage={rowsPerPage}
+                            page={page}
+                            onPageChange={handleChangePage}
+                            onRowsPerPageChange={handleChangeRowsPerPage}
+                      />
+                      <TableContainer component={Paper}>
+                        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                          <TableHead>
+                            <TableRow style={{backgroundColor: "#f6f6f5"}}>
+                              <TableCell align="center">Fecha</TableCell>
+                              <TableCell align="center">Tipo</TableCell>
+                              <TableCell align="center">Cambio de pts.</TableCell>
+                              <TableCell align="center">Pts.Antes</TableCell>
+                              <TableCell align="center">Pts.Despues</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                             <> { insertDataTable() } </>
+                          </TableBody>
+                        </Table>
+                      </TableContainer>
                     </Col>
                   </Row>
                 </CardContent>
