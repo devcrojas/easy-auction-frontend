@@ -16,7 +16,6 @@ import { Home } from '@mui/icons-material';
 import ProductsAdmin from './components/Admin/ProductsAdmin';
 import MyProducts from './components/MyProducts';
 import MyShoppings from './components/MyShoppings';
-
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 const ProtectedRoute = ({ children }) => {
@@ -63,7 +62,6 @@ root.render(
       <Route exact path="/misresenas" element={<ProtectedRoute> <Views /> </ProtectedRoute>}></Route>
       <Route exact path="/admin" element={<ProtectedRouteAdmin> <Admin /> </ProtectedRouteAdmin>}></Route>
       <Route exact path="/admin/productos" element={ <ProtectedRouteAdmin > <ProductsAdmin /> </ProtectedRouteAdmin>}></Route>
-      <Route exact path="/misresenas" element={<ProtectedRoute> <Views /> </ProtectedRoute>}></Route>
     </Routes>
   </Router>
 );
