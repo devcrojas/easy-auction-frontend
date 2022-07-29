@@ -25,11 +25,11 @@ function MyShoppings() {
     },[])
     return (
         <>
-            <NavBarMenu view={"Products"} user={user.profile}></NavBarMenu>
+            <NavBarMenu view={""} user={user.profile}></NavBarMenu>
                 <Container fluid style={{ background: "#F0F2F5" }}>
                     <Row>
                     <Col xs={3} className="sidebarEasy">
-                        <MenuLateral view={""} imgProfile={profile.file}></MenuLateral>
+                        <MenuLateral view={"MyShops"} imgProfile={profile.file}></MenuLateral>
                     </Col>
                     <Col xs={9}>
                         <ProductsList setPointsUser={setPointsUser} pointsUser={pointsUser}  actualView={'myShoppings'}></ProductsList>

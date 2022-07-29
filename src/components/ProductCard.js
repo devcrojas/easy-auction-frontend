@@ -57,65 +57,67 @@ const ProductCard = (props) => {
     const [display, setDisplay] = useState();
 
     useEffect(() => {
-        const socket = socketIOClient(ENDPOINT);
-        const handlerSocket = (data) => {
-            console.log("socket send ...");
-            //console.log(data);
-            let x = data.find(arr => arr._id === props.product._id);
-            //console.log(x);
-            setWinOffered((typeof x.price.winOffered !== "undefined" && x.price.winOffered !== "") ? x.price.winOffered : "");
-            setOffered((typeof x.price.offered === "undefined") ? "0" : x.price.offered)
-            setMinOffered((typeof x.price.offered !== "undefined") ? x.price.offered + 1 : x.price.initialP);
-            //console.log(props.pointsUser.pts);
-            if (typeof x.price.winOffered !== "undefined" && x.price.winOffered === props.user.id) {
-                setDisabledButtons(true);
-                setMssgDisabledButtons("Vas ganando la subasta.");
-            } else if ((typeof x.price.offered !== "undefined" && props.pointsUser.pts < x.price.offered + 1) || (typeof x.price.offered === "undefined" && props.pointsUser.pts < x.price.initialP)) {
-                //Valida si se puede participar por el saldo, si no bloquea los botones.
-                setDisabledButtons(true);
-                setMssgDisabledButtons("No tienes fondos suficientes.");
-            } else {
-                setDisabledButtons(null);
-                setMssgDisabledButtons(null);
-            }
+        if (props.actualView !== "myShoppings" && props.actualView !== "myProducts") {
+            const socket = socketIOClient(ENDPOINT);
+            const handlerSocket = (data) => {
+                console.log("socket send ...");
+                //console.log(data);
+                let x = data.find(arr => arr._id === props.product._id);
+                //console.log(x);
+                setWinOffered((typeof x.price.winOffered !== "undefined" && x.price.winOffered !== "") ? x.price.winOffered : "");
+                setOffered((typeof x.price.offered === "undefined") ? "0" : x.price.offered)
+                setMinOffered((typeof x.price.offered !== "undefined") ? x.price.offered + 1 : x.price.initialP);
+                //console.log(props.pointsUser.pts);
+                if (typeof x.price.winOffered !== "undefined" && x.price.winOffered === props.user.id) {
+                    setDisabledButtons(true);
+                    setMssgDisabledButtons("Vas ganando la subasta.");
+                } else if ((typeof x.price.offered !== "undefined" && props.pointsUser.pts < x.price.offered + 1) || (typeof x.price.offered === "undefined" && props.pointsUser.pts < x.price.initialP)) {
+                    //Valida si se puede participar por el saldo, si no bloquea los botones.
+                    setDisabledButtons(true);
+                    setMssgDisabledButtons("No tienes fondos suficientes.");
+                } else {
+                    setDisabledButtons(null);
+                    setMssgDisabledButtons(null);
+                }
 
-            setOfferNow((typeof x.price.offered !== "undefined") ? x.price.offered : 0);
+                setOfferNow((typeof x.price.offered !== "undefined") ? x.price.offered : 0);
+            }
+            //console.log(product);
+            const interval = setInterval(() => {
+                var date1 = new Date();
+                var date2 = new Date(product.auctionDate.final);
+
+                if (date2 < date1) {
+                    setDisplay("Subasta Finalizada");
+                    //Update status, and update phase
+                } else {
+                    // get total seconds between the times
+                    var delta = Math.abs(date2 - date1) / 1000;
+                    // calculate (and subtract) whole days
+                    var days = Math.floor(delta / 86400);
+                    delta -= days * 86400;
+
+                    // calculate (and subtract) whole hours
+                    var hours = Math.floor(delta / 3600) % 24;
+                    delta -= hours * 3600;
+
+                    // calculate (and subtract) whole minutes
+                    var minutes = Math.floor(delta / 60) % 60;
+                    delta -= minutes * 60;
+
+                    // what's left is seconds
+                    var seconds = Math.floor(delta % 60);
+                    //console.log(hours + ":" + minutes + ":" + seconds);
+                    setDisplay(((days > 9) ? days : "0" + days) + ":" + ((hours > 9) ? hours : "0" + hours) + ":" + ((minutes > 9) ? minutes : "0" + minutes) + ":" + ((seconds > 9) ? seconds : "0" + seconds));
+                }
+                //console.log(Date.now() - date2);
+            }, 1000);
+            //Validar que la fecha ya haya expirado para que se considere vendido el producto.
+            //clearInterval(interval)
+            //console.log(props);
+            socket.on("FromAPI", handlerSocket);
+            return () => { socket.off('FromAPI', handlerSocket); clearInterval(interval); };
         }
-        //console.log(product);
-        const interval = setInterval(() => {
-            var date1 = new Date();
-            var date2 = new Date(product.auctionDate.final);
-
-            if (date2 < date1) {
-                setDisplay("Subasta Finalizada");
-                //Update status, and update phase
-            } else {
-                // get total seconds between the times
-                var delta = Math.abs(date2 - date1) / 1000;
-                // calculate (and subtract) whole days
-                var days = Math.floor(delta / 86400);
-                delta -= days * 86400;
-
-                // calculate (and subtract) whole hours
-                var hours = Math.floor(delta / 3600) % 24;
-                delta -= hours * 3600;
-
-                // calculate (and subtract) whole minutes
-                var minutes = Math.floor(delta / 60) % 60;
-                delta -= minutes * 60;
-
-                // what's left is seconds
-                var seconds = Math.floor(delta % 60);
-                console.log(hours + ":" + minutes + ":" + seconds);
-                setDisplay(((days > 9) ? days : "0" + days) + ":" + ((hours > 9) ? hours : "0" + hours) + ":" + ((minutes > 9) ? minutes : "0" + minutes) + ":" + ((seconds > 9) ? seconds : "0" + seconds));
-            }
-            //console.log(Date.now() - date2);
-        }, 1000);
-        //Validar que la fecha ya haya expirado para que se considere vendido el producto.
-        //clearInterval(interval)
-        //console.log(props);
-        socket.on("FromAPI", handlerSocket);
-        return () => { socket.off('FromAPI', handlerSocket); clearInterval(interval); };
     }, [])
     // Se obtienen los datos necesarios para el card del producto
     const producto = props.product;
@@ -337,6 +339,7 @@ const ProductCard = (props) => {
         <>
             <Card sx={{ height: '100%', borderRadius: 5 }}
                 elevation={10} key={product._id} id={product._id}>
+                {(props.actualView === 'myShoppings') ? phaseProd : ""}
                 {(producto.profile) ?
                     <>
                         <CardHeader avatar={<Avatar src={producto.profile.file.filePath} />}
