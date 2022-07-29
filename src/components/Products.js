@@ -22,6 +22,7 @@ function Productos() {
     const getPoints = async function () {
       //console.log("Hola");
       let data = await PointsService.getPointsByUserId(user.id);
+      console.log(data[0]);
       setPointsUser(data[0])
     }
     getPoints();

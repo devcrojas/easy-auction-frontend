@@ -21,6 +21,7 @@ import ProductsOffers from './ProductsOffers'
 import { Link } from 'react-router-dom';
 import socketIOClient from "socket.io-client";
 import OffersService from '../services/offers.service';
+import pointsService from '../services/points.service';
 const ENDPOINT = "/";
 
 
@@ -85,10 +86,15 @@ const ProductCard = (props) => {
                 }
 
                 setOfferNow((typeof x.price.offered !== "undefined") ? x.price.offered : 0);
+                console.log(x.profile._id);
+                date1 = new Date()
                 if (date2 < date1) {
                     const closeAuction = async () => {
                         let resultClose = await OffersService.auctionClose(product);
-                        console.log(resultClose);
+                        if(typeof x.price.offered !== "undefined"){
+                            var res = await pointsService.updatePointsByUserId({userId: x.profile._id, pts: x.price.offered});
+                            console.log(res);
+                        }
                         return resultClose;
                     };
                     closeAuction();
@@ -99,6 +105,10 @@ const ProductCard = (props) => {
             if (date2 < date1) {
                 const closeAuction = async () => {
                     let resultClose = await OffersService.auctionClose(product);
+                    if(typeof product.price.offered !== "undefined"){
+                        var res = await pointsService.updatePointsByUserId({userId: product.profile._id, pts: product.price.offered});
+                        console.log(res);
+                    }
                     console.log(resultClose);
                     return resultClose;
                 };
@@ -284,17 +294,6 @@ const ProductCard = (props) => {
                             </Col>
                         </Row>
                     </>
-                    buttonReviews = <>
-                        <Row>
-                            <Col style={{ paddingRight: "0", paddingLeft: "0" }}>
-                                <Tooltip title="Cancelar pedido">
-                                    <Button variant="contained" style={{ width: "100%", borderRadius: "0", backgroundColor: "coral" }} onClick={() => { window.location.href = "/resenas" }}>
-                                        Cancelar pedido
-                                    </Button>
-                                </Tooltip>
-                            </Col>
-                        </Row>
-                    </>
                     break;
                 case 'delivered':
                     phaseProd = <>
@@ -313,15 +312,6 @@ const ProductCard = (props) => {
                                             Hacer una reseña
                                         </Button>
                                     </Link>
-                                </Tooltip>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col style={{ paddingRight: "0", paddingLeft: "0" }}>
-                                <Tooltip title="Devolver producto">
-                                    <Button color="error" style={{ width: "100%", borderRadius: "0" }}>
-                                        Devolver producto
-                                    </Button>
                                 </Tooltip>
                             </Col>
                         </Row>
