@@ -58,11 +58,6 @@ function Reviews() {
         getProducts = async function () { }
     }
 
-
-
-    /* const handleChange = (event) => {
-        setSelectProducts(event.target.value)
-    } */
     const handleClick = value => {
         setEstrellas(value)
         switch (value) {
