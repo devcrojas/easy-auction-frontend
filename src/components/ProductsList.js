@@ -78,7 +78,7 @@ function ProductsList(props) {
             // Si la vista es de mis productos que no muestre los cancelados
             if (props.actualView === 'myProducts' && producto.status !== 'cancelled') {
                 return (
-                    <Col sx={12} lg={6} key={producto._id} className='mb-5'>
+                    <Col sx={12} md={12} lg={6} key={producto._id} className='mb-5'>
                         <ProductCard product={producto} actualView={props.actualView} user={user} pointsUser={props.pointsUser} setPointsUser={props.setPointsUser}></ProductCard>
                     </Col>
                 )
@@ -86,7 +86,7 @@ function ProductsList(props) {
             // Si la vista es de mis compras
             if(props.actualView === 'myShoppings'){
                 return (
-                    <Col sx={12} lg={6} key={producto._id} className='mb-5'>
+                    <Col sx={12} md={12} lg={6} key={producto._id} className='mb-5'>
                         <ProductCard product={producto} actualView={props.actualView} user={user} pointsUser={props.pointsUser} setPointsUser={props.setPointsUser}></ProductCard>
                     </Col>
                 )
