@@ -55,7 +55,6 @@ const ProductCard = (props) => {
     const [offerNow, setOfferNow] = useState((typeof props.product.price.offered !== "undefined") ? props.product.price.offered : 0);
 
     useEffect(() => {
-<<<<<<< HEAD
         //console.log(props);
         //setPointsUser(props.pointsUser);
         setProduct(props.product);
@@ -77,11 +76,9 @@ const ProductCard = (props) => {
         }
 
         //console.log(props);
-=======
->>>>>>> 53eb2e55fe95e781397db17bc8237ec83c7ef979
         const socket = socketIOClient(ENDPOINT);
         const handlerSocket = (data) => {
-            console.log("socket send ...");
+            // console.log("socket send ...");
             //console.log(data);
             let x = data.find(arr => arr._id === props.product._id);
             //console.log(x);
