@@ -57,7 +57,8 @@ const ProductCard = (props) => {
     const [display, setDisplay] = useState();
 
     useEffect(() => {
-        if (props.actualView !== "myShoppings" && props.actualView !== "myProducts") {
+        //console.log(product);
+        if (props.actualView === "productsList") {
             const socket = socketIOClient(ENDPOINT);
             const handlerSocket = (data) => {
                 console.log("socket send ...");
@@ -82,7 +83,6 @@ const ProductCard = (props) => {
 
                 setOfferNow((typeof x.price.offered !== "undefined") ? x.price.offered : 0);
             }
-            //console.log(product);
             const interval = setInterval(() => {
                 var date1 = new Date();
                 var date2 = new Date(product.auctionDate.final);
@@ -112,12 +112,15 @@ const ProductCard = (props) => {
                 }
                 //console.log(Date.now() - date2);
             }, 1000);
-            //Validar que la fecha ya haya expirado para que se considere vendido el producto.
-            //clearInterval(interval)
-            //console.log(props);
             socket.on("FromAPI", handlerSocket);
             return () => { socket.off('FromAPI', handlerSocket); clearInterval(interval); };
         }
+
+
+        //Validar que la fecha ya haya expirado para que se considere vendido el producto.
+        //clearInterval(interval)
+        //console.log(props);
+
     }, [])
     // Se obtienen los datos necesarios para el card del producto
     const producto = props.product;
@@ -392,16 +395,10 @@ const ProductCard = (props) => {
                         <Row className='my-2'>
                             <Col>
                                 <div className='w-100'>
-                                    {(props.actualView === 'myShoppings') ?
-                                        <>
-                                            <div><Typography component="div">En posesion</Typography></div>
-                                        </>
-                                        :
-                                        <>
-                                            <div><Typography component="div" className="text-center" style={{ fontSize: "1rem" }}>Comprar ahora</Typography></div>
-                                            <div><Typography component="div" className="text-center" > <Badge bg="info" style={{ fontSize: "1rem" }}> <em><b>$</b></em>  {product.price.buyNow} </Badge></Typography></div>
-                                        </>
-                                    }
+
+                                    <div><Typography component="div" className="text-center" style={{ fontSize: "1rem" }}>Comprar ahora</Typography></div>
+                                    <div><Typography component="div" className="text-center" > <Badge bg="info" style={{ fontSize: "1rem" }}> <em><b>$</b></em>  {product.price.buyNow} </Badge></Typography></div>
+
                                 </div>
                             </Col>
                             <Col>
@@ -415,7 +412,7 @@ const ProductCard = (props) => {
                             <Col>
                                 {(props.actualView === 'myShoppings') ?
                                     <>
-                                        <Typography component="div" variant='h5' color='success' className='text-center'>Comprado por <em className='text-success'><b>${offered}</b></em></Typography>
+                                        <Typography component="div" variant='h5' color='success' className='text-center'>Comprado por: {winOffered}<em className='text-success'><b>${offered}</b></em></Typography>
                                     </>
                                     :
                                     <>
