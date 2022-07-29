@@ -72,6 +72,7 @@ function ProductsList(props) {
             }
             // Si la vista es la lista de productos que muestre todo como llega
             else {
+                //! Nunca usar una pocision estatica de un array sin validar antes, puede ocasionar problemas si este no llega a existir
                 if (props.pointsUser !== null) {
                     return (
                         <Col sx={12} md={12} lg={6} key={producto._id} className='mb-5'>

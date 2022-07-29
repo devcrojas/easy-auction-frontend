@@ -194,7 +194,7 @@ const ProductCard = (props) => {
                 //Realiza la peticion
                 let resp = await axios.put('/api/products/status/' + producto._id, JSON.stringify(cancelObject), {
                     headers: {
-                        'Authorization':'Bearer '+ localStorage.getItem("token"),
+                        'Authorization': localStorage.getItem("token"),
                         'Content-Type': 'application/json'
                     }
                 });
@@ -221,26 +221,18 @@ const ProductCard = (props) => {
         if (detImages.length >= 1) {
             return (
                 <div className="modal-image-body-container">
-                    <center>
-                        <Zoom scale={0.4}>
-                            <img className='modal-image' src={`\\${principal.filePath}`} alt={principal.nameProduct} />
-                            {
-                                detImages.map(((im, index) => {
-                                    return <img key={index} className='modal-image' src={`\\${im.filePath}`} alt={index} />
-                                }))
-                            }
-                        </Zoom>
-                    </center>
+                    <Zoom scale={0.4}>
+                        <img className='modal-image' src={`\\${principal.filePath}`} alt={principal.nameProduct} />
+                        {
+                            detImages.map(((im, index) => {
+                                return <img key={index} className='modal-image' src={`\\${im.filePath}`} alt={index} />
+                            }))
+                        }
+                    </Zoom>
                 </div>
             );
         } else {
-            return(
-                <div className="modal-image-body-container">
-                    <center>
-                        <img className='modal-image' src={`\\${principal.filePath}`} alt={principal.nameProduct} />
-                    </center>
-                </div>
-                ); 
+            return <img style={{ width: "100%", height: "auto", border: 5 }} src={`\\${principal.filePath}`} alt={principal.nameProduct} />
         }
     }
     return (
