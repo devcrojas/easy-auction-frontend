@@ -18,6 +18,7 @@ import ProductsAdmin from './components/Admin/ProductsAdmin';
 import MyProducts from './components/MyProducts';
 import MyShoppings from './components/MyShoppings';
 import AccountStatus from './components/AccountStatus';
+import Info from './components/Info';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -67,6 +68,7 @@ root.render(
       <Route exact path="/admin" element={<ProtectedRouteAdmin> <Admin /> </ProtectedRouteAdmin>}></Route>
       <Route exact path="/admin/productos" element={ <ProtectedRouteAdmin > <ProductsAdmin /> </ProtectedRouteAdmin>}></Route>
       <Route exact path="/admin/comprasAdmin" element={ <ProtectedRouteAdmin > <ProductsPurchasedAdmin /> </ProtectedRouteAdmin>}></Route>
+      <Route exact path="/info" element={<Info/>}></Route>
 
     </Routes>
   </Router>
