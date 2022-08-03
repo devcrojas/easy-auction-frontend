@@ -89,7 +89,7 @@ function Reviews() {
     }
 
     let sendReview;
-    if (product.review !== 'ocuped') {
+    if (product.review !== true) {
         sendReview = async () => {
             const resena = {
                 userLog: user.id,
@@ -101,7 +101,7 @@ function Reviews() {
                 status: 'active'
             }
             const rewprod = {
-                review: 'ocuped'
+                review: true
             }
             let resp = await fetch('/api/reviews/',
                 {

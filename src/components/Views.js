@@ -34,7 +34,7 @@ function Views() {
             let response = await respReviews.json();
             let rews = response.filter((re) => {
                 if (re.status) {
-                    return re.status !== 'delet'
+                    return re.status !== 'deleted'
                 } else {
                     return re
                 }
@@ -59,7 +59,7 @@ function Views() {
                 'Authorization':'Bearer '+ localStorage.getItem("token"),
                 'Content-type': 'application/json'
             },
-            body: JSON.stringify({ 'status': 'delet' })
+            body: JSON.stringify({ 'status': 'deleted' })
         }
         let optionsP = {
             method: 'PUT',
@@ -67,11 +67,11 @@ function Views() {
                 'Authorization':'Bearer '+ localStorage.getItem("token"),
                 'Content-type': 'application/json'
             },
-            body: JSON.stringify({ 'review': '' })
+            body: JSON.stringify({ 'review': false })
         }
         Swal.fire({
             title: 'Quieres Eliminar esta reseña?',
-            text: "No podrás revertir esto.!",
+            text: 'No podrás revertir esto.!',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
